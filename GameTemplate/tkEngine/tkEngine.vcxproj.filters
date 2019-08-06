@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\gameObject">
+      <UniqueIdentifier>{c54e8c6f-ea7a-442b-86eb-f64301ae8823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debug">
+      <UniqueIdentifier>{7b55621c-b4f1-4692-8113-c24f50987cc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{5a0d3e54-4e7b-4bcc-97db-a7a9f8eb8c14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{544553ca-2056-499c-ab93-0d198bc933cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{a6a630a0-afe0-4410-8511-f333c7327ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\policy">
+      <UniqueIdentifier>{2516c515-2e1c-4a2b-8844-4d61bf64639d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sound">
+      <UniqueIdentifier>{d9e33434-1e20-4051-b5de-dfcf9bc20883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\thread">
+      <UniqueIdentifier>{3afe8e38-fa0c-4799-9ecd-210daabd4f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\timer">
+      <UniqueIdentifier>{0d2904e7-ab42-4d63-94c9-643069947be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{8049c32f-7105-4bbd-bf48-5ac66164be83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\random">
+      <UniqueIdentifier>{d8a78ab4-52cd-40ff-ac95-f7b0cee31efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{0cc819b7-fe0a-4497-8ee3-4611416999c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\modelData">
+      <UniqueIdentifier>{d966a1f0-cf34-4330-9f20-9d3339610be1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\modelData\preset">
+      <UniqueIdentifier>{0f454397-ac31-43de-b306-2a569946b724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\online">
+      <UniqueIdentifier>{e22b0886-6e5a-474a-aa46-cbef8076bf69}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gameObject\tkGameObjectManager.h">
+      <Filter>Source Files\gameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObject\tkTransform.h">
+      <Filter>Source Files\gameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="gameObject\tkgameobject.h">
+      <Filter>Source Files\gameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="debug\tkLog.h">
+      <Filter>Source Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="debug\tkAssert.h">
+      <Filter>Source Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkCamera.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\tkPad.h">
+      <Filter>Source Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tkMath.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tkMatrix.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tkAabb.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="policy\tkScopedResource.h">
+      <Filter>Source Files\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="policy\tkNoncopyable.h">
+      <Filter>Source Files\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\tkSoundSource.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\tkWaveFile.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\tkWaveFileBank.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\tkSoundEngine.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="thread\tkCriticalSection.h">
+      <Filter>Source Files\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="timer\tkStopwatch.h">
+      <Filter>Source Files\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="timer\tkGameTime.h">
+      <Filter>Source Files\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="util\tkNameKey.h">
+      <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\tkUtil.h">
+      <Filter>Source Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="tkEngine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tkEnginePreCompile.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tkEngineConst.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tkEngineStruct.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="random\tkRandom.h">
+      <Filter>Source Files\random</Filter>
+    </ClInclude>
+    <ClInclude Include="math\tkBox.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="light\tkSpotLight.h" />
+    <ClInclude Include="math\tkvector.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkGraphicsEngine.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gameObject\tkTransform.cpp">
+      <Filter>Source Files\gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="gameObject\tkGameObject.cpp">
+      <Filter>Source Files\gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="gameObject\tkgameobjectmanager.cpp">
+      <Filter>Source Files\gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkCamera.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\tkPad.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="math\tkMatrix.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\tkAabb.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\tkMath.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\tkSoundSource.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\tkWaveFile.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\tkWaveFileBank.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\tkSoundEngine.cpp">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="tkEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tkEnginePreCompile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="random\tkRandom.cpp">
+      <Filter>Source Files\random</Filter>
+    </ClCompile>
+    <ClCompile Include="math\tkBox.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\tkVector.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkGraphicsEngine.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MeshContentTask Include="Assets\modelData\preset\vector.FBX">
+      <Filter>Assets\modelData\preset</Filter>
+    </MeshContentTask>
+  </ItemGroup>
+</Project>
