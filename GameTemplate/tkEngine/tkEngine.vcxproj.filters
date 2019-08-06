@@ -137,7 +137,6 @@
     <ClInclude Include="math\tkBox.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="light\tkSpotLight.h" />
     <ClInclude Include="math\tkvector.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>

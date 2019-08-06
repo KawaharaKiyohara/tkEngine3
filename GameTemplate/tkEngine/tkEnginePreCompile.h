@@ -68,7 +68,7 @@ namespace tkEngine {
 }
 #include <WinSock2.h>
 #include <windows.h>
-#include <d3d11.h>
+#include <d3d12.h>
 #include <D3Dcompiler.h>
 #include <stdio.h>
 #include <cstdlib>

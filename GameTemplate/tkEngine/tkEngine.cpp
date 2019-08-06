@@ -120,26 +120,7 @@ namespace tkEngine {
 	        }
 	    }
 	}
-	void CEngine::GameThread()
-	{
-		while (true) {
-			//ロック中の奴を起こす。
-			m_isRunGameThreadCv.notify_all();
-			std::unique_lock<std::mutex> lk(m_isRunGameThreadMtx);
-			m_isRunGameThreadCv.wait(lk, [&] {
-				return m_isRunGameThread == true || m_isReqDeadGameThread == true;
-			});
-
-			if (m_isReqDeadGameThread == true) {
-				//ゲームスレッド終了。
-				break;
-			}
-			//ゲームの更新処理。
-			GameUpdate();
-
-			m_isRunGameThread = false;
-		}
-	}
+	
 	void CEngine::GameUpdate()
 	{
 		//ゲームループ
