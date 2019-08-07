@@ -54,6 +54,18 @@
     <Filter Include="Source Files\online">
       <UniqueIdentifier>{e22b0886-6e5a-474a-aa46-cbef8076bf69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphics\Dx12">
+      <UniqueIdentifier>{940efd52-d60f-4417-b276-d9b9193965ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics\Dx11">
+      <UniqueIdentifier>{45f60477-889f-4d5b-8a5e-e1c357e3399d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics\OpenGL">
+      <UniqueIdentifier>{d51b64dd-f270-49c5-9097-603f01ea5cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics\Dx9">
+      <UniqueIdentifier>{0521ffe1-99f8-460c-a292-3024aa5ca75f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObject\tkGameObjectManager.h">
@@ -143,6 +155,12 @@
     <ClInclude Include="graphics\tkGraphicsEngine.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkIGraphicsEngineImp.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -198,6 +216,9 @@
     </ClCompile>
     <ClCompile Include="graphics\tkGraphicsEngine.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

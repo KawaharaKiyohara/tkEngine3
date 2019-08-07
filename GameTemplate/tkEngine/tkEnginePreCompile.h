@@ -4,20 +4,33 @@
 #pragma warning (disable  : 4127)
 #pragma warning (disable :  4100)
 
+
+#define TK_GRAPHICS_API_DIRECTX_9	9	// DirectX9
+#define TK_GRAPHICS_API_DIRECTX_11	11	// DirectX11
+#define TK_GRAPHICS_API_DIRECTX_12	12	// DirectX12
+#define TK_GRAPHICS_API_OPENGL		100	// OpenGL
+
+/// <summary>
+/// 使用しているグラフィックスAPIの種類。
+/// </summary>
+#define TK_GRAPHICS_API		TK_GRAPHICS_API_DIRECTX_12
+
 #define BUILD_LEVEL_DEBUG		0		//デバッグビルド
 #define BUILD_LEVEL_PREVIEW		1		//プレビュービルド
 #define BUILD_LEVEL_MASTER		2		//マスタービルド。
 
-/*!
-* @brief	ビルドレベル。
-* @details
-*  BUILD_LEVELはBUILD_LEVEL_DEBUG、BUILD_LEVEL_PREVIEW、BUILD_LEVEL_MASTER</br>
-*	の３つの値をとります。この３つの値は下記の意味を持ちます。
-*		BUILD_LEVEL_DEBUG		完全なデバッグビルド。
-*		BUILD_LEVEL_PREVIEW		コードは最適化されているが、デバッグ機能は残っている。
-*		BUILD_LEVEL_MASTER		マスタービルド。デバッグ機能は完全に削除されている。
-* デバッグコードを埋め込む時は、BUILD_LEVEL_MASTERでは無効になるように実装してください。
-*/
+
+/// <summary>
+/// ビルドレベル。
+/// </summary>
+/// <remarks>
+/// BUILD_LEVELはBUILD_LEVEL_DEBUG、BUILD_LEVEL_PREVIEW、BUILD_LEVEL_MASTER
+/// の３つの値をとります。この３つの値は下記の意味を持ちます。
+/// 	BUILD_LEVEL_DEBUG		完全なデバッグビルド。
+/// 	BUILD_LEVEL_PREVIEW		コードは最適化されているが、デバッグ機能は残っている。
+/// 	BUILD_LEVEL_MASTER		マスタービルド。デバッグ機能は完全に削除されている。
+/// デバッグコードを埋め込む時は、BUILD_LEVEL_MASTERでは無効になるように実装してください。
+/// </remarks>
 #ifdef _DEBUG
 #define BUILD_LEVEL		BUILD_LEVEL_DEBUG
 #elif defined(TK_MASTER)
@@ -26,9 +39,10 @@
 #define BUILD_LEVEL		BUILD_LEVEL_PREVIEW
 #endif
 
-/*!
- *@brief	システム単位
- */
+
+/// <summary>
+/// システム単位。
+/// </summary>
 #define TK_SYSTEM_UNIT_CM		0		//基本単位cm
 #define TK_SYSTEM_UNIT_M		1		//基本単位m
 
@@ -86,6 +100,9 @@ namespace tkEngine {
 #include <xaudio2.h>
 #include <x3daudio.h>
 #include <xaudio2fx.h>
+#include <wrl.h>
+
+using Microsoft::WRL::ComPtr;
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"

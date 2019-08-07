@@ -3,6 +3,7 @@
 #include "tkEngine/graphics/tkGraphicsConfig.h"
 
 namespace tkEngine{
+
 	/// <summary>
 	/// エンジン初期化用のパラメータ。
 	/// </summary>

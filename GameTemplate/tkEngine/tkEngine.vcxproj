@@ -817,8 +817,10 @@
     <ClInclude Include="gameObject\tkgameobject.h" />
     <ClInclude Include="gameObject\tkGameObjectManager.h" />
     <ClInclude Include="gameObject\tkTransform.h" />
+    <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\tkCamera.h" />
     <ClInclude Include="graphics\tkGraphicsEngine.h" />
+    <ClInclude Include="graphics\tkIGraphicsEngineImp.h" />
     <ClInclude Include="Input\tkPad.h" />
     <ClInclude Include="math\tkAabb.h" />
     <ClInclude Include="math\tkBox.h" />
@@ -846,6 +848,7 @@
     <ClCompile Include="gameObject\tkGameObject.cpp" />
     <ClCompile Include="gameObject\tkgameobjectmanager.cpp" />
     <ClCompile Include="gameObject\tkTransform.cpp" />
+    <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp" />
     <ClCompile Include="graphics\tkCamera.cpp" />
     <ClCompile Include="graphics\tkGraphicsEngine.cpp" />
     <ClCompile Include="Input\tkPad.cpp" />
