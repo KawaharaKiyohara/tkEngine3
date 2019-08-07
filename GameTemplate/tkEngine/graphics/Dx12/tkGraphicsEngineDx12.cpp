@@ -7,7 +7,7 @@ namespace tkEngine {
 	{
 
 		//DXGIファクトリーの作成。
-		auto dxGiFactory = ComPtr<IDXGIFactory4>();
+		auto dxGiFactory = CreateDXGIFactory();
 		if (dxGiFactory == false) {
 			//ファクトリの作成に失敗した。
 			return false;
@@ -45,12 +45,24 @@ namespace tkEngine {
 	}
 	bool CGraphicsEngineDx12::CreateD3DDevice()
 	{
-		auto hr = D3D12CreateDevice(
-			nullptr,
+		D3D_FEATURE_LEVEL fuatureLevel[] = {
 			D3D_FEATURE_LEVEL_12_1,
-			IID_PPV_ARGS(&m_d3dDevice)
-		);
-		if (FAILED(hr)) {
+			D3D_FEATURE_LEVEL_12_0
+		};
+
+		for(auto fuatureLevel : fuatureLevel) {
+
+			auto hr = D3D12CreateDevice(
+				nullptr,
+				fuatureLevel,
+				IID_PPV_ARGS(&m_d3dDevice)
+			);
+			if (SUCCEEDED(hr)) {
+				//D3Dデバイスの作成に成功した。
+				break;
+			}
+		}
+		if (m_d3dDevice == false) {
 			//D3Dデバイスの作成に失敗した。
 			return false;
 		}

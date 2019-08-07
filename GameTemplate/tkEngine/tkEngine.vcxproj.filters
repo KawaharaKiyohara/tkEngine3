@@ -161,6 +161,15 @@
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkSkinModel.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkISkinModelImp.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkSkinModelDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -218,6 +227,12 @@
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkSkinModel.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkSkinModelDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
