@@ -133,9 +133,6 @@ namespace tkEngine {
 		m_soundEngine.Update();
 		//GameObjectManagerXV
 		GameObjectManager().ExecuteFromGameThread();
-
-
-
 	}
 	void CEngine::Update()
 	{
