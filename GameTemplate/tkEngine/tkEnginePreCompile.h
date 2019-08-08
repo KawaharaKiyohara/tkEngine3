@@ -82,7 +82,11 @@ namespace tkEngine {
 }
 #include <WinSock2.h>
 #include <windows.h>
-#include <d3d12.h>
+
+#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
+	#include <d3d12.h>
+#endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
+
 #include <D3Dcompiler.h>
 #include <stdio.h>
 #include <cstdlib>

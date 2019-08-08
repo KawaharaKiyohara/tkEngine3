@@ -16,7 +16,14 @@ namespace tkEngine {
 		/// <param name="initParam">初期化パラメータ</param>
 		/// <returns>falseが返ってきたら初期化に失敗。</returns>
 		bool Init(HWND hwnd, const SInitParam& initParam);
-		
+		/// <summary>
+		/// 描画。
+		/// </summary>
+		void Render();
+		/// <summary>
+		/// 破棄。
+		/// </summary>
+		void Destroy();
 		/// <summary>
 		/// フレームバッファの幅を取得。
 		/// </summary>
@@ -51,6 +58,6 @@ namespace tkEngine {
 		int	m_frameBufferWidth = 0;		//フレームバッファの幅。
 		int m_frameBufferHeight = 0;	//フレームバッファの高さ。
 		CCamera m_camera3D;				//3Dカメラ。	
-		std::unique_ptr< IGraphicsEngineImp> m_graphicsEngineImp;	//DirectXのバージョンに依存するエンジンの実装。
+		std::unique_ptr< IGraphicsEngineImp> m_imp;	//DirectXのバージョンに依存するエンジンの実装。
 	};
 }

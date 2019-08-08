@@ -12,9 +12,17 @@ namespace tkEngine {
 	bool CGraphicsEngine::Init(HWND hwnd, const SInitParam& initParam)
 	{
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-		m_graphicsEngineImp = std::make_unique <CGraphicsEngineDx12>();
+		m_imp = std::make_unique <CGraphicsEngineDx12>();
 #elif TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_11
 #endif
-		return m_graphicsEngineImp->Init(hwnd, initParam);
+		return m_imp->Init(hwnd, initParam);
+	}
+	void CGraphicsEngine::Render()
+	{
+		m_imp->Render();
+	}
+	void CGraphicsEngine::Destroy()
+	{
+		m_imp->Destroy();
 	}
 }

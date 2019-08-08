@@ -1,29 +1,82 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
-
+#include "tkEngine/graphics/Dx12/d3dx12.h"
 
 namespace tkEngine {
-	bool CGraphicsEngineDx12::Init(HWND hwnd, const SInitParam& initParam)
+	
+	void CGraphicsEngineDx12::WaitForPreviousFrame()
 	{
 
+	}
+	void CGraphicsEngineDx12::Destroy()
+	{
+		WaitForPreviousFrame();
+		CloseHandle(m_fenceEvent);
+	}
+	bool CGraphicsEngineDx12::Init(HWND hwnd, const SInitParam& initParam)
+	{
 		//DXGIファクトリーの作成。
 		auto dxGiFactory = CreateDXGIFactory();
-		if (dxGiFactory == false) {
+		if (!dxGiFactory ) {
 			//ファクトリの作成に失敗した。
 			return false;
 		}
 		//D3Dデバイスの作成。
-		if (CreateD3DDevice() == false) {
+		if (!CreateD3DDevice()) {
 			//デバイスの作成に失敗した。
+			TK_WARNING_MESSAGE_BOX("D3Dデバイスの作成に失敗しました。");
 			return false;
 		}
 
 		//コマンドキューの作成。
-		if (CreateCommandQueue() == false) {
+		if (!CreateCommandQueue()) {
 			//コマンドキューの作成に失敗した。
+			TK_WARNING_MESSAGE_BOX("コマンドキューの作成に失敗しました。");
+			return false;
+		}
+		//スワップチェインの作成。
+		if (!CreateSwapChain(hwnd, initParam, dxGiFactory)) {
+			//スワップチェインの作成に失敗した。
+			TK_WARNING_MESSAGE_BOX("スワップチェインの作成に失敗しました。");
+			return false;
+		}
+		//フレームバッファのRTV用のディスクリプタヒープを作成する。
+		if (!CreateDescriptorHeapForFrameBuffer()) {
+			TK_WARNING_MESSAGE_BOX("ディスクリプタヒープの作成に失敗しました。");
+			return false;
+		}
+		//フレームバッファ用のRTVを作成する。
+		if (!CreateRTVForFameBuffer()) {
+			TK_WARNING_MESSAGE_BOX("フレームバッファ用のRTVの作成に失敗しました。");
+			return false;
+		}
+		//コマンドアロケータの作成。
+		m_d3dDevice->CreateCommandAllocator(
+			D3D12_COMMAND_LIST_TYPE_DIRECT, 
+			IID_PPV_ARGS(&m_commandAllocator));
+		if (!m_commandAllocator) {
+			TK_WARNING_MESSAGE_BOX("コマンドアロケータの作成に失敗しました。");
+			return false;
+		}
+		
+		//コマンドリストの作成。
+		if (!CreateCommandList()) {
+			TK_WARNING_MESSAGE_BOX("コマンドリストの作成に失敗しました。");
+			return false;
+		}
+		//GPUと同期をとるためのオブジェクトを作成する。
+		if (!CreateSynchronizationWithGPUObject()) {
+			TK_WARNING_MESSAGE_BOX("GPUとの同期オブジェクトの作成に失敗しました。");
 			return false;
 		}
 		return true;
+	}
+	void CGraphicsEngineDx12::Render()
+	{
+		//コマンドアロケータをリセット。
+		m_commandAllocator->Reset();
+		//コマンドリストもリセット。
+		m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get());
 	}
 	ComPtr<IDXGIFactory4> CGraphicsEngineDx12::CreateDXGIFactory()
 	{
@@ -87,7 +140,7 @@ namespace tkEngine {
 		ComPtr<IDXGIFactory4> dxgiFactory )
 	{
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-		swapChainDesc.BufferCount = 2;
+		swapChainDesc.BufferCount = FRAME_COUNT;
 		swapChainDesc.Width = initParam.frameBufferWidth;
 		swapChainDesc.Height = initParam.frameBufferHeight;
 		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -107,6 +160,63 @@ namespace tkEngine {
 		//IDXGISwapChain3のインターフェースを取得。
 		swapChain.As(&m_swapChain);
 		m_currentBackBufferIndex = m_swapChain->GetCurrentBackBufferIndex();
+		return true;
+	}
+	bool CGraphicsEngineDx12::CreateDescriptorHeapForFrameBuffer()
+	{
+		//RTV用のディスクリプタヒープを作成する。
+		D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+		desc.NumDescriptors = FRAME_COUNT;
+		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+		desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+		m_rtvDescriptorSize = m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_rtvHeap));
+		if (m_rtvHeap == false) {
+			//ディスクリプタヒープの作成に失敗した。
+			return false;
+		}
+		return true;
+	}
+	bool CGraphicsEngineDx12::CreateRTVForFameBuffer()
+	{
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	
+		//フロントバッファをバックバッファ用のRTVを作成。
+		for (UINT n = 0; n < FRAME_COUNT; n++) {
+			m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n]));
+			m_d3dDevice->CreateRenderTargetView(
+				m_renderTargets[n].Get(), nullptr, rtvHandle
+			);
+			rtvHandle.ptr += m_rtvDescriptorSize;
+		}
+		return true;
+	}
+	bool CGraphicsEngineDx12::CreateCommandList()
+	{
+		//コマンドリストの作成。
+		m_d3dDevice->CreateCommandList(
+			0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_commandAllocator.Get(), nullptr, IID_PPV_ARGS(&m_commandList)
+		);
+		if (!m_commandList) {
+			return false;
+		}
+		//コマンドリストは開かれている状態で作成されるので、いったん閉じる。
+		m_commandList->Close();
+
+		return true;
+	}
+	bool CGraphicsEngineDx12::CreateSynchronizationWithGPUObject()
+	{
+		m_d3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence));
+		if (!m_fence) {
+			//フェンスの作成に失敗した。
+			return false;
+		}
+		m_fenceValue = 1;
+		//同期を行うときのイベントハンドラを作成する。
+		m_fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+		if (m_fenceEvent == nullptr) {
+			return false;
+		}
 		return true;
 	}
 }

@@ -91,7 +91,7 @@ namespace tkEngine{
 		}
 		//•`‰æŒn‚Ìˆ—B
 		{
-			TK_WARNING("•`‰æŒn‚Ìˆ—‚Í‚·‚×‚Ä‚Ý‚¶‚Á‚»[");
+			g_graphicsEngine->Render();
 		}
 		ExecuteDeleteGameObjects();
 	}
