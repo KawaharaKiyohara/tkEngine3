@@ -4,13 +4,26 @@
 
 namespace tkEngine {
 	
-	void CGraphicsEngineDx12::WaitForPreviousFrame()
+	void CGraphicsEngineDx12::WaitDraw()
 	{
+		//描画終了待ち
+		// Signal and increment the fence value.
+		const UINT64 fence = m_fenceValue;
+		m_commandQueue->Signal(m_fence.Get(), fence);
+		m_fenceValue++;
 
+		// Wait until the previous frame is finished.
+		if (m_fence->GetCompletedValue() < fence)
+		{
+			m_fence->SetEventOnCompletion(fence, m_fenceEvent);
+			WaitForSingleObject(m_fenceEvent, INFINITE);
+		}
+
+		m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 	}
 	void CGraphicsEngineDx12::Destroy()
 	{
-		WaitForPreviousFrame();
+		WaitDraw();
 		CloseHandle(m_fenceEvent);
 	}
 	bool CGraphicsEngineDx12::Init(HWND hwnd, const SInitParam& initParam)
@@ -69,14 +82,64 @@ namespace tkEngine {
 			TK_WARNING_MESSAGE_BOX("GPUとの同期オブジェクトの作成に失敗しました。");
 			return false;
 		}
+		//ビューポートを初期化。
+		m_viewport.TopLeftX = 0;
+		m_viewport.TopLeftY = 0;
+		m_viewport.Width = initParam.frameBufferWidth;
+		m_viewport.Height = initParam.frameBufferHeight;
+		m_viewport.MinDepth = D3D12_MIN_DEPTH;
+		m_viewport.MaxDepth = D3D12_MAX_DEPTH;
+
+		//シザリング矩形を初期化。
+		m_scissorRect.left = 0;
+		m_scissorRect.top = 0;
+		m_scissorRect.right = initParam.frameBufferWidth;
+		m_scissorRect.bottom = initParam.frameBufferHeight;
 		return true;
 	}
-	void CGraphicsEngineDx12::Render()
+	void CGraphicsEngineDx12::BeginRender()
 	{
 		//コマンドアロケータをリセット。
 		m_commandAllocator->Reset();
 		//コマンドリストもリセット。
 		m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get());
+		//ビューポートを設定。
+		m_commandList->RSSetViewports(1, &m_viewport);
+		//シザリング矩形を設定。
+		m_commandList->RSSetScissorRects(1, &m_scissorRect);
+		//レンダリングターゲットへの書き込み完了待ち
+		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+		//レンダリングターゲットを設定。
+		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+		
+	}
+	void CGraphicsEngineDx12::EndRender()
+	{
+		// Indicate that the back buffer will now be used to present.
+		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		m_commandList->Close();
+
+		//コマンドを実行。
+		ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
+		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+		// Present the frame.
+		m_swapChain->Present(1, 0);
+
+		//描画完了待ち。
+		WaitDraw();
+		
+	}
+	void CGraphicsEngineDx12::Render()
+	{
+		BeginRender();
+		
+		EndRender();
 	}
 	ComPtr<IDXGIFactory4> CGraphicsEngineDx12::CreateDXGIFactory()
 	{
@@ -169,11 +232,13 @@ namespace tkEngine {
 		desc.NumDescriptors = FRAME_COUNT;
 		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		m_rtvDescriptorSize = m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_rtvHeap));
+		m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_rtvHeap));
 		if (m_rtvHeap == false) {
 			//ディスクリプタヒープの作成に失敗した。
 			return false;
 		}
+		//ディスクリプタヒープのサイズを取得。
+		m_rtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		return true;
 	}
 	bool CGraphicsEngineDx12::CreateRTVForFameBuffer()

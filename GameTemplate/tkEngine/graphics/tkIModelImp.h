@@ -4,9 +4,9 @@ namespace tkEngine {
 	/// <summary>
 	/// スキンモデルの実装のインターフェースクラス。
 	/// </summary>
-	class ISkinModelImp : Noncopyable {
+	class IModelImp : Noncopyable {
 	public:
-		ISkinModelImp();
-		virtual ~ISkinModelImp();
+		IModelImp();
+		virtual ~IModelImp();
 	};
 }

@@ -29,6 +29,14 @@ namespace tkEngine {
 		void Render() override final;
 	private:
 		/// <summary>
+		/// 1フレーム描画開始時の処理。
+		/// </summary>
+		void BeginRender();
+		/// <summary>
+		/// 1フレームの描画終了時の処理。
+		/// </summary>
+		void EndRender();
+		/// <summary>
 		/// DXGIファクトリの作成。
 		/// </summary>
 		/// <returns>作成されたDXGIファクトリ。</returns>
@@ -74,12 +82,14 @@ namespace tkEngine {
 		/// <summary>
 		/// 1フレーム前の描画が終わるのを待つ。
 		/// </summary>
-		void WaitForPreviousFrame();
+		void WaitDraw();
 		
 	private:
 		enum {
 			FRAME_COUNT = 2
 		};
+		D3D12_VIEWPORT						m_viewport;			//ビューポート。
+		D3D12_RECT							m_scissorRect;		//シザリング矩形。
 		ComPtr<ID3D12Device>				m_d3dDevice;		//D3Dデバイス。
 		ComPtr<ID3D12CommandQueue>			m_commandQueue;		//コマンドキュー。
 		ComPtr< IDXGISwapChain3>			m_swapChain;		//スワップチェイン。

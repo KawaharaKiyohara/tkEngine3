@@ -1,19 +1,19 @@
 #include "tkEngine/tkEnginePreCompile.h"
-#include "tkEngine/graphics/tkSkinModel.h"
+#include "tkEngine/graphics/tkModel.h"
 
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-#include "tkEngine/graphics/Dx12/tkSkinModelDx12.h"
+#include "tkEngine/graphics/Dx12/tkModelDx12.h"
 #elif TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_11
-#include "tkEngine/graphics/Dx12/tkSkinModelDx11.h"
+#include "tkEngine/graphics/Dx12/tkModelDx11.h"
 #endif
 
 namespace tkEngine {
-	CSkinModel::CSkinModel()
+	CModel::CModel()
 	{
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-		m_imp = std::make_unique<CSkinModelDx12>();
+		m_imp = std::make_unique<CModelDx12>();
 #elif TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_11
-		m_imp = std::make_unique<CSkinModelDx11>();
+		m_imp = std::make_unique<CModelDx11>();
 #endif
 	}
 }
