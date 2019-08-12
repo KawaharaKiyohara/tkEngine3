@@ -25,6 +25,11 @@ namespace tkEngine {
 		/// <summary>
 		/// ï`âÊÅB
 		/// </summary>
-		virtual void Render() = 0;
+		virtual void Render(
+			std::function<void()> onRender,
+			std::function<void()> onPreForwardRender,
+			std::function<void()> onForwardRender,
+			std::function<void()> onPostRender
+		) = 0;
 	};
 }

@@ -26,7 +26,25 @@ namespace tkEngine {
 		/// <summary>
 		/// 描画。
 		/// </summary>
-		void Render() override final;
+		/// <param name="onRender">G-Bufferへのレンダリングパスで呼ばれる関数。</param>
+		/// <param name="onPreForwardRender">プレフォワードレンダリングのパスで呼ばれる関数。</param>
+		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
+		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
+
+		void Render(
+			std::function<void()> onRender,
+			std::function<void()> onPreForwardRender,
+			std::function<void()> onForwardRender,
+			std::function<void()> onPostRender
+		) override final;
+		/// <summary>
+		/// D3Dデバイスを取得。
+		/// </summary>
+		/// <returns></returns>
+		ComPtr<ID3D12Device> GetD3DDevice()
+		{
+			return m_d3dDevice;
+		}
 	private:
 		/// <summary>
 		/// 1フレーム描画開始時の処理。

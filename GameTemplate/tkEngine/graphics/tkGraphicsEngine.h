@@ -4,6 +4,7 @@
 #include "tkCamera.h"
 
 namespace tkEngine {
+	class CGameObjectManager;
 	/// <summary>
 	/// グラフィックエンジン
 	/// </summary>
@@ -19,7 +20,16 @@ namespace tkEngine {
 		/// <summary>
 		/// 描画。
 		/// </summary>
-		void Render();
+		/// <param name="onRender">G-Bufferへのレンダリングパスで呼ばれる関数。</param>
+		/// <param name="onPreForwardRender">プレフォワードレンダリングのパスで呼ばれる関数。</param>
+		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
+		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
+		void Render(
+			std::function<void()> onRender,
+			std::function<void()> onPreForwardRender, 
+			std::function<void()> onForwardRender,
+			std::function<void()> onPostRender
+		);
 		/// <summary>
 		/// 破棄。
 		/// </summary>
@@ -53,6 +63,14 @@ namespace tkEngine {
 		CCamera& GetCamera3D() 
 		{
 			return m_camera3D;
+		}
+		/// <summary>
+		/// CGraphicsEngineの実装を取得。
+		/// </summary>
+		template<class T>
+		T* GetImplement()
+		{
+			return dynamic_cast<T*>(m_imp.get());
 		}
 	private:
 		int	m_frameBufferWidth = 0;		//フレームバッファの幅。

@@ -135,10 +135,19 @@ namespace tkEngine {
 		WaitDraw();
 		
 	}
-	void CGraphicsEngineDx12::Render()
+	void CGraphicsEngineDx12::Render(
+		std::function<void()> onRender,
+		std::function<void()> onPreForwardRender,
+		std::function<void()> onForwardRender,
+		std::function<void()> onPostRender)
 	{
 		BeginRender();
 		
+		onRender();
+		onPreForwardRender();
+		onForwardRender();
+		onPostRender();
+
 		EndRender();
 	}
 	ComPtr<IDXGIFactory4> CGraphicsEngineDx12::CreateDXGIFactory()

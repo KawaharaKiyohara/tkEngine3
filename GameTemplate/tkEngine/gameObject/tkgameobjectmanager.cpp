@@ -4,6 +4,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/tkEngine.h"
 #include "tkEngine/gameObject/tkgameobjectmanager.h"
+#include "tkEngine/graphics/tkRenderContext.h"
 #include <future>
 
 namespace tkEngine{
@@ -91,7 +92,13 @@ namespace tkEngine{
 		}
 		//•`‰æŒn‚Ìˆ—B
 		{
-			g_graphicsEngine->Render();
+			CRenderContext rc;
+			g_graphicsEngine->Render(
+				[&] {},
+				[&] {ForwardPreRender(rc); },
+				[&] {ForwardRender(rc); },
+				[&] {PostRender(rc); }
+			);
 		}
 		ExecuteDeleteGameObjects();
 	}
