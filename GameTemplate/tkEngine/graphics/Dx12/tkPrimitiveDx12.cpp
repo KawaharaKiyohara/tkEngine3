@@ -5,7 +5,7 @@
 #include "tkEngine/graphics/Dx12/tkIndexBufferDx12.h"
 #include "tkEngine/graphics/Dx12/d3dx12.h"
 #include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
-
+#if 0
 namespace tkEngine {
 	CPrimitiveDx12::CPrimitiveDx12()
 	{
@@ -36,4 +36,5 @@ namespace tkEngine {
 		commandList->DrawIndexedInstanced(m_indexBuffer->GetCount(), 1, 0, 0, 0);
 	}
 }
+#endif
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

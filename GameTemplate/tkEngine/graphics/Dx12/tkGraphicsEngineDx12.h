@@ -2,7 +2,7 @@
 
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
-#include "tkEngine/graphics/tkIGraphicsEngineImp.h"
+#include "tkEngine/graphics/tkGraphicsEngine.h"
 #include <dxgi.h>
 #include <dxgi1_2.h>
 #include <dxgi1_3.h>
@@ -10,9 +10,9 @@
 
 namespace tkEngine {
 	/// <summary>
-	/// DirectX12に依存するグラフィックスエンジンの実装
+	/// DirectX12に依存するグラフィックスエンジン
 	/// </summary>
-	class CGraphicsEngineDx12 : public IGraphicsEngineImp {
+	class CGraphicsEngineDx12 : public IGraphicsEngine {
 	public:
 		/// <summary>
 		/// 初期化
@@ -34,10 +34,10 @@ namespace tkEngine {
 		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
 
 		void Render(
-			std::function<void()> onRender,
-			std::function<void()> onPreForwardRender,
-			std::function<void()> onForwardRender,
-			std::function<void()> onPostRender
+			std::function<void(CRenderContext& rc)> onRender,
+			std::function<void(CRenderContext& rc)> onPreForwardRender,
+			std::function<void(CRenderContext& rc)> onForwardRender,
+			std::function<void(CRenderContext& rc)> onPostRender
 		) override final;
 		/// <summary>
 		/// D3Dデバイスを取得。

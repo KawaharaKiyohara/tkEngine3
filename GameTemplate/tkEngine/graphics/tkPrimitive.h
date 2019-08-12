@@ -5,29 +5,53 @@
 
 namespace tkEngine{
 	/// <summary>
-	/// プリミティブのインターフェース。
+	/// プリミティブクラス。
 	/// </summary>
-	class IPrimitive : Noncopyable {
+	class CPrimitive : Noncopyable {
 	public:
 		/// <summary>
-		/// プリミティブを作成。
+		/// 初期化。
 		/// </summary>
+		/// <param name="srcVertexData">頂点バッファのソースデータ。</param>
 		/// <param name="vertexBufferSize">頂点バッファのサイズ。</param>
 		/// <param name="vertexBufferStride">頂点バッファのストライド。</param>
+		/// <param name="srcIndexData">インデックスバッファのソースデータ。</param>
 		/// <param name="indexBufferSize">インデックスバッファのサイズ。</param>
 		/// <param name="indexBufferStride">インデックスバッファのストライド。</param>
 		/// <param name="enPrimTopology">プリミティブのトポロジー。</param>
 		/// <returns></returns>
-		static std::unique_ptr<IPrimitive> Create(
+		void Init(
+			void* srcVertexData,
 			int vertexBufferSize,
 			int vertexBufferStride,
+			void* srcIndexData,
 			int indexBufferSize,
 			int indexBufferStride,
-			EnPrimitiveTopology enPrimTopology );
+			EnPrimitiveTopology enPrimTopology);
 		/// <summary>
-		/// 描画。
+		/// 頂点バッファを取得。
 		/// </summary>
-		virtual void Draw(CRenderContext& rc) = 0;
+		/// <returns></returns>
+		UPIVertexBuffer& GetVertexBuffer() 
+		{
+			return m_vertexBuffer;
+		}
+		/// <summary>
+		/// インデックスバッファを取得。
+		/// </summary>
+		/// <returns></returns>
+		UPIIndexBuffer& GetIndexBuffer()
+		{
+			return m_indexBuffer;
+		}
+		/// <summary>
+		/// プリミティブのトポロジーを取得。
+		/// </summary>
+		/// <returns></returns>
+		EnPrimitiveTopology GetPrimitiveTopology() const
+		{
+			return m_topology;
+		}
 	protected:
 		UPIVertexBuffer	m_vertexBuffer;	//頂点バッファ。
 		UPIIndexBuffer m_indexBuffer;	//インデックスバッファ。

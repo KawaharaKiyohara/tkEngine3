@@ -117,7 +117,7 @@ namespace tkEngine{
 		HINSTANCE				m_hInst = nullptr;	//!<アプリケーションのインスタンス。
 		HWND					m_hWnd = nullptr;	//!<ウィンドウハンドル。
 		CSoundEngine			m_soundEngine;								//!<サウンドエンジン。
-		CGraphicsEngine			m_graphicsEngine;							//グラフィックエンジン。
+		UPIGraphicsEngine		m_graphicsEngine;							//グラフィックエンジン。
 		CGameTime				m_gameTime;									//ゲームタイム。
 		int						m_screenWidth = 0;							//!<スクリーンの幅。
 		int						m_screenHeight = 0;							//!<スクリーンの高さ。
@@ -137,7 +137,7 @@ namespace tkEngine{
 	};
 	//エンジンの外部にインスタンスを公開するグローバルなアクセスポイント。
 
-	extern CGraphicsEngine* g_graphicsEngine;
+	extern IGraphicsEngine* g_graphicsEngine;
 	extern CCamera* g_camera3D;
 	extern CGameTime* g_gameTime;
 	extern std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;

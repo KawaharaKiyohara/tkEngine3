@@ -152,12 +152,6 @@
     <ClInclude Include="math\tkvector.h">
       <Filter>Source Files\math</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\tkGraphicsEngine.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\tkIGraphicsEngineImp.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
@@ -185,9 +179,6 @@
     <ClInclude Include="graphics\tkRenderContext.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\tkIPrimitive.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\Dx12\tkPrimitiveDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
@@ -202,6 +193,15 @@
     </ClInclude>
     <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkShaderDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkPrimitive.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkGraphicsEngine.h">
+      <Filter>Source Files\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -283,11 +283,14 @@
     <ClCompile Include="graphics\Dx12\tkPrimitiveDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\tkIPrimitive.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkPrimitive.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

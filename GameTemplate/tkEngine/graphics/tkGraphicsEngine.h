@@ -1,63 +1,69 @@
 #pragma once
 
-#include "tkIGraphicsEngineImp.h"
 #include "tkCamera.h"
 
 namespace tkEngine {
 	class CGameObjectManager;
+	class IGraphicsEngine;
+	using UPIGraphicsEngine = std::unique_ptr< IGraphicsEngine>;
 	/// <summary>
-	/// ƒOƒ‰ƒtƒBƒbƒNƒGƒ“ƒWƒ“
+	/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¨ãƒ³ã‚¸ãƒ³
 	/// </summary>
-	class CGraphicsEngine : Noncopyable{
+	class IGraphicsEngine : Noncopyable{
 	public:
 		/// <summary>
-		/// ƒOƒ‰ƒtƒBƒbƒNƒGƒ“ƒWƒ“‚ğ‰Šú‰»B
+		/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¨ãƒ³ã‚¸ãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ä½œæˆã€‚
 		/// </summary>
-		/// <param name="hwnd">ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹</param>
-		/// <param name="initParam">‰Šú‰»ƒpƒ‰ƒ[ƒ^</param>
-		/// <returns>false‚ª•Ô‚Á‚Ä‚«‚½‚ç‰Šú‰»‚É¸”sB</returns>
-		bool Init(HWND hwnd, const SInitParam& initParam);
+		/// <returns></returns>
+		static UPIGraphicsEngine CreateInstance();
 		/// <summary>
-		/// •`‰æB
+		/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¨ãƒ³ã‚¸ãƒ³ã‚’åˆæœŸåŒ–ã€‚
 		/// </summary>
-		/// <param name="onRender">G-Buffer‚Ö‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒOƒpƒX‚ÅŒÄ‚Î‚ê‚éŠÖ”B</param>
-		/// <param name="onPreForwardRender">ƒvƒŒƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌƒpƒX‚ÅŒÄ‚Î‚ê‚éŠÖ”B</param>
-		/// <param name="onForwardRender">ƒtƒHƒ[ƒhƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌƒpƒX‚ÅŒÄ‚Î‚ê‚éŠÖ”B</param>
-		/// <param name="onPostRender">ƒ|ƒXƒgƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌƒpƒX‚ÅŒÄ‚Î‚ê‚éŠÖ”B</param>
-		void Render(
-			std::function<void()> onRender,
-			std::function<void()> onPreForwardRender, 
-			std::function<void()> onForwardRender,
-			std::function<void()> onPostRender
-		);
+		/// <param name="hwnd">ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«</param>
+		/// <param name="initParam">åˆæœŸåŒ–ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+		/// <returns>falseãŒè¿”ã£ã¦ããŸã‚‰åˆæœŸåŒ–ã«å¤±æ•—ã€‚</returns>
+		virtual bool Init(HWND hwnd, const SInitParam& initParam) = 0;
 		/// <summary>
-		/// ”jŠüB
+		/// æç”»ã€‚
 		/// </summary>
-		void Destroy();
+		/// <param name="onRender">G-Bufferã¸ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ‘ã‚¹ã§å‘¼ã°ã‚Œã‚‹é–¢æ•°ã€‚</param>
+		/// <param name="onPreForwardRender">ãƒ—ãƒ¬ãƒ•ã‚©ãƒ¯ãƒ¼ãƒ‰ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®ãƒ‘ã‚¹ã§å‘¼ã°ã‚Œã‚‹é–¢æ•°ã€‚</param>
+		/// <param name="onForwardRender">ãƒ•ã‚©ãƒ¯ãƒ¼ãƒ‰ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®ãƒ‘ã‚¹ã§å‘¼ã°ã‚Œã‚‹é–¢æ•°ã€‚</param>
+		/// <param name="onPostRender">ãƒã‚¹ãƒˆãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®ãƒ‘ã‚¹ã§å‘¼ã°ã‚Œã‚‹é–¢æ•°ã€‚</param>
+		virtual void Render(
+			std::function<void(CRenderContext& rc)> onRender,
+			std::function<void(CRenderContext& rc)> onPreForwardRender,
+			std::function<void(CRenderContext& rc)> onForwardRender,
+			std::function<void(CRenderContext& rc)> onPostRender
+		) = 0;
 		/// <summary>
-		/// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì•‚ğæ“¾B
+		/// ç ´æ£„ã€‚
 		/// </summary>
-		/// <returns>ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì•B</returns>
+		virtual void Destroy() = 0;
+		/// <summary>
+		/// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®å¹…ã‚’å–å¾—ã€‚
+		/// </summary>
+		/// <returns>ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®å¹…ã€‚</returns>
 		int GetFrameBufferWidth() const
 		{
 			return m_frameBufferWidth;
 		}
 		/// <summary>
-		/// ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì‚‚³‚ğæ“¾B
+		/// ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®é«˜ã•ã‚’å–å¾—ã€‚
 		/// </summary>
-		/// <returns>ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì‚‚³B</returns>
+		/// <returns>ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®é«˜ã•ã€‚</returns>
 		int GetFrameBufferHeight() const
 		{
 			return m_frameBufferHeight;
 		}
 		/// <summary>
-		/// ƒOƒ‰ƒtƒBƒbƒNƒXƒŠƒ\[ƒX‚Ì–¾¦“I‚È‰ğ•úB
+		/// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒªã‚½ãƒ¼ã‚¹ã®æ˜ç¤ºçš„ãªè§£æ”¾ã€‚
 		/// </summary>
 		void Release()
 		{
 		}
 		/// <summary>
-		/// 3DƒJƒƒ‰‚ğæ“¾B
+		/// 3Dã‚«ãƒ¡ãƒ©ã‚’å–å¾—ã€‚
 		/// </summary>
 		/// <returns></returns>
 		CCamera& GetCamera3D() 
@@ -65,17 +71,17 @@ namespace tkEngine {
 			return m_camera3D;
 		}
 		/// <summary>
-		/// CGraphicsEngine‚ÌÀ‘•‚ğæ“¾B
+		/// CGraphicsEngineã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å‹å¤‰æ›ã€‚
 		/// </summary>
 		template<class T>
-		T* GetImplement()
+		T* As()
 		{
-			return dynamic_cast<T*>(m_imp.get());
+			return dynamic_cast<T*>(this);
 		}
-	private:
-		int	m_frameBufferWidth = 0;		//ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì•B
-		int m_frameBufferHeight = 0;	//ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‚Ì‚‚³B
-		CCamera m_camera3D;				//3DƒJƒƒ‰B	
-		std::unique_ptr< IGraphicsEngineImp> m_imp;	//DirectX‚Ìƒo[ƒWƒ‡ƒ“‚ÉˆË‘¶‚·‚éƒGƒ“ƒWƒ“‚ÌÀ‘•B
+	protected:
+		int	m_frameBufferWidth = 0;		//ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®å¹…ã€‚
+		int m_frameBufferHeight = 0;	//ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã®é«˜ã•ã€‚
+		CCamera m_camera3D;				//3Dã‚«ãƒ¡ãƒ©ã€‚	
+		CRenderContext m_renderContext;	//ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã€‚ä»Šã¯ä¸€æœ¬ã€‚
 	};
 }

@@ -2,7 +2,8 @@
 
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
-#include "tkEngine/graphics/Dx12/tkPrimitiveDx12.h"
+#include "tkEngine/graphics/tkPrimitive.h"
+#include "tkEngine/graphics/Dx12/tkShaderDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -11,15 +12,22 @@ namespace tkEngine {
 	class CTriangleShapeDx12
 	{
 	public:
-		/// <summary>
-		/// コンストラクタ。
-		/// </summary>
-		CTriangleShapeDx12();
 
+		/// <summary>
+		/// 初期化。
+		/// </summary>
+		void Init();
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="rc">レンダリングコンテキスト。</param>
+		void Draw(CRenderContext& rc);
 	private:
 		CPrimitive m_primitive;
 		ComPtr<ID3D12RootSignature> m_rootSignature;	//ルートシグネチャ。
 		ComPtr<ID3D12PipelineState> m_pipelineState;	//パイプラインステート。
+		CShaderDx12 m_vs;								//頂点シェーダー。
+		CShaderDx12 m_ps;								//ピクセルシェーダー。
 	};
 
 	using CTriangleShape = CTriangleShapeDx12;

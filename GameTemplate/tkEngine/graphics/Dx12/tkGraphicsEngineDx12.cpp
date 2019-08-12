@@ -95,6 +95,9 @@ namespace tkEngine {
 		m_scissorRect.top = 0;
 		m_scissorRect.right = initParam.frameBufferWidth;
 		m_scissorRect.bottom = initParam.frameBufferHeight;
+
+		m_renderContext.SetCommandList(m_commandList);
+
 		return true;
 	}
 	void CGraphicsEngineDx12::BeginRender()
@@ -136,17 +139,17 @@ namespace tkEngine {
 		
 	}
 	void CGraphicsEngineDx12::Render(
-		std::function<void()> onRender,
-		std::function<void()> onPreForwardRender,
-		std::function<void()> onForwardRender,
-		std::function<void()> onPostRender)
+		std::function<void(CRenderContext& rc)> onRender,
+		std::function<void(CRenderContext& rc)> onPreForwardRender,
+		std::function<void(CRenderContext& rc)> onForwardRender,
+		std::function<void(CRenderContext& rc)> onPostRender)
 	{
 		BeginRender();
 		
-		onRender();
-		onPreForwardRender();
-		onForwardRender();
-		onPostRender();
+		onRender( m_renderContext );
+		onPreForwardRender( m_renderContext );
+		onForwardRender( m_renderContext );
+		onPostRender( m_renderContext );
 
 		EndRender();
 	}

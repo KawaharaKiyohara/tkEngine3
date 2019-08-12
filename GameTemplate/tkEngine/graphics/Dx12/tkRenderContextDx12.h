@@ -24,6 +24,14 @@ namespace tkEngine {
 		{
 			return m_commandList;
 		}
+		/// <summary>
+		/// コマンドリストを設定。
+		/// </summary>
+		/// <param name="commandList">コマンドリスト。</param>
+		void SetCommandList(ComPtr<ID3D12GraphicsCommandList> commandList)
+		{
+			m_commandList = commandList;
+		}
 	private:
 		ComPtr<ID3D12GraphicsCommandList> m_commandList;	//コマンドリスト。
 	};

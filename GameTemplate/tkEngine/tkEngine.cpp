@@ -8,15 +8,16 @@
 #include <thread>
 
 namespace tkEngine {
-	CGraphicsEngine* g_graphicsEngine = nullptr;
+	IGraphicsEngine* g_graphicsEngine = nullptr;
 	CCamera* g_camera3D = nullptr;
 	CGameTime* g_gameTime = nullptr;
 	std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;
 
 	CEngine::CEngine()
 	{
-		g_graphicsEngine = &m_graphicsEngine;
-		g_camera3D = &m_graphicsEngine.GetCamera3D();
+		m_graphicsEngine = IGraphicsEngine::CreateInstance();
+		g_graphicsEngine = m_graphicsEngine.get();
+		g_camera3D = &m_graphicsEngine->GetCamera3D();
 		g_gameTime = &m_gameTime;
 		for (int i = 0; i < CPad::CONNECT_PAD_MAX; i++) {
 			g_pad[i] = &m_pad[i];
@@ -38,7 +39,7 @@ namespace tkEngine {
 		//GameObjectManager‚Ì‰Šú‰»B
 		GameObjectManager().Init(initParam.gameObjectPrioMax);
 		//GraphicsEngine‚Ì‰Šú‰»B
-		if (!m_graphicsEngine.Init(m_hWnd, initParam)) {
+		if (!m_graphicsEngine->Init(m_hWnd, initParam)) {
 			return false;
 		}
 		//SoundEngine‚Ì‰Šú‰»
@@ -99,7 +100,7 @@ namespace tkEngine {
 		}
 
 		m_soundEngine.Release();
-		m_graphicsEngine.Release();
+		m_graphicsEngine->Release();
 		
 	}
 	

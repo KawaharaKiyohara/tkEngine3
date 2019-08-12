@@ -48,10 +48,6 @@ namespace tkEngine{
 			static CGameObjectManager instance;
 			return instance;
 		}
-		/// <summary>
-		/// メインスレッドから呼ばれる実行処理。
-		/// </summary>
-		void ExecuteFromMainThread();
 		/*!
 		*@brief	ゲームスレッドから呼ばれる実行処理。
 		*/

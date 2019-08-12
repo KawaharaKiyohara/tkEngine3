@@ -70,17 +70,13 @@ namespace tkEngine{
 			}
 		}
 	}
-	void CGameObjectManager::ExecuteFromMainThread()
-	{
-		//Start
-		Start();
-	}
 	void CGameObjectManager::ExecuteFromGameThread()
 	{
 		
 		//更新系の処理。
 		{
-			
+			//Start
+			Start();
 			//事前アップデート。
 			PreUpdate();
 			//アップデート。
@@ -92,12 +88,11 @@ namespace tkEngine{
 		}
 		//描画系の処理。
 		{
-			CRenderContext rc;
 			g_graphicsEngine->Render(
-				[&] {},
-				[&] {ForwardPreRender(rc); },
-				[&] {ForwardRender(rc); },
-				[&] {PostRender(rc); }
+				[&](CRenderContext& rc) {},
+				[&](CRenderContext& rc) {ForwardPreRender(rc); },
+				[&](CRenderContext& rc) {ForwardRender(rc); },
+				[&](CRenderContext& rc) {PostRender(rc); }
 			);
 		}
 		ExecuteDeleteGameObjects();

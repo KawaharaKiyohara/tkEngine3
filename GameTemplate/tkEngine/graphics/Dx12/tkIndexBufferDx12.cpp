@@ -9,7 +9,7 @@
 namespace tkEngine {
 	CIndexBufferDx12::CIndexBufferDx12(int size, int stride)
 	{
-		auto gfxEngine12 = g_graphicsEngine->GetImplement<CGraphicsEngineDx12>();
+		auto gfxEngine12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngine12->GetD3DDevice();
 		auto hr = d3dDevice->CreateCommittedResource(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),

@@ -18,9 +18,16 @@ bool Game::Start()
 	g_camera3D->SetPosition({ 0.0f, 70.0f, 200.0f });
 	g_camera3D->Update();
 	
+
+	m_triangleShape.Init();
+
 	return true;
 }
 
 void Game::Update()
 {
+}
+void Game::ForwardRender(CRenderContext& renderContext)
+{
+	m_triangleShape.Draw(renderContext);
 }
