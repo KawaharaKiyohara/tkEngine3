@@ -185,6 +185,24 @@
     <ClInclude Include="graphics\tkRenderContext.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkIPrimitive.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkPrimitiveDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkGraphics.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="policy\tkAsable.h">
+      <Filter>Source Files\policy</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -260,6 +278,15 @@
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkPrimitiveDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkIPrimitive.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>

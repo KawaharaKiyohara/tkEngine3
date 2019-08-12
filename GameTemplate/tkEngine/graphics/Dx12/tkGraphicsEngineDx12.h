@@ -1,5 +1,7 @@
 #pragma once
 
+#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
+
 #include "tkEngine/graphics/tkIGraphicsEngineImp.h"
 #include <dxgi.h>
 #include <dxgi1_2.h>
@@ -125,3 +127,5 @@ namespace tkEngine {
 		std::array< ComPtr<ID3D12Resource>, FRAME_COUNT> m_renderTargets;	//フレームバッファ世のレンダリングターゲット。
 	};
 }
+
+#endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

@@ -8,10 +8,10 @@
 #endif
 
 namespace tkEngine {
-	std::unique_ptr<IVertexBuffer> IVertexBuffer::Create(int size, int stride)
+	UPIVertexBuffer IVertexBuffer::Create(int size, int stride)
 	{
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-		return std::make_unique<CVertexBuffer>(size, stride);
+		return std::make_unique<CVertexBufferDx12>(size, stride);
 #else
 
 #endif

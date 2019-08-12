@@ -121,6 +121,8 @@ using Microsoft::WRL::ComPtr;
 #include "tkEngine/debug/tkAssert.h"
 #include "tkEngine/math/tkMath.h"
 #include "tkEngine/math/tkMatrix.h"
+#include "tkEngine/graphics/tkGraphics.h"
+#include "tkEngine/graphics/tkRenderContext.h"
 
 #include "gameObject/tkGameObjectManager.h"
 

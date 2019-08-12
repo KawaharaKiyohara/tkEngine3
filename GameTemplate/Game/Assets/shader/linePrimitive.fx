@@ -1,5 +1,5 @@
-/*!
- * @brief	ƒ‰ƒCƒ“ƒvƒŠƒ~ƒeƒBƒu—p‚ÌƒVƒF[ƒ_[B
+ï»¿/*!
+ * @brief	ãƒ©ã‚¤ãƒ³ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ç”¨ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã€‚
  */
 
 cbuffer CB : register(b0){
@@ -9,7 +9,7 @@ cbuffer CB : register(b0){
 
 
 /*!
- * @brief	’¸“_ƒVƒF[ƒ_[
+ * @brief	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
  */
 float4 VSMain( float4 pos : SV_Position ) : SV_POSITION
 {

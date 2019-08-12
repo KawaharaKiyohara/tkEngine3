@@ -1,10 +1,13 @@
 #include "tkEngine/tkEnginePreCompile.h"
+
+#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
+
 #include "tkEngine/graphics/Dx12/d3dx12.h"
 #include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
 #include "tkEngine/graphics/Dx12/tkIndexBufferDx12.h"
 
 namespace tkEngine {
-	CIndexBuffer::CIndexBuffer(int size, int stride)
+	CIndexBufferDx12::CIndexBufferDx12(int size, int stride)
 	{
 		auto gfxEngine12 = g_graphicsEngine->GetImplement<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngine12->GetD3DDevice();
@@ -29,7 +32,7 @@ namespace tkEngine {
 			m_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
 		}
 	}
-	void CIndexBuffer::Copy(void* srcIndecies)
+	void CIndexBufferDx12::Copy(void* srcIndecies)
 	{
 		UINT8* pIndexDataBegin;
 		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
@@ -38,3 +41,5 @@ namespace tkEngine {
 		m_indexBuffer->Unmap(0, nullptr);
 	}
 }
+
+#endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

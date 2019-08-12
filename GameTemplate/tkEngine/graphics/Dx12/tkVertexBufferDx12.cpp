@@ -1,10 +1,11 @@
 #include "tkEngine/tkEnginePreCompile.h"
+#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 #include "tkEngine/graphics/Dx12/d3dx12.h"
 #include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
 #include "tkEngine/graphics/Dx12/tkVertexBufferDx12.h"
 
 namespace tkEngine {
-	CVertexBuffer::CVertexBuffer(int size, int stride)
+	CVertexBufferDx12::CVertexBufferDx12(int size, int stride)
 	{
 		auto gfxEngine12 = g_graphicsEngine->GetImplement<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngine12->GetD3DDevice();
@@ -22,7 +23,7 @@ namespace tkEngine {
 		m_vertexBufferView.SizeInBytes = size;
 		m_vertexBufferView.StrideInBytes = stride;
 	}
-	void CVertexBuffer::Copy(void* srcVertices)
+	void CVertexBufferDx12::Copy(void* srcVertices)
 	{
 		UINT8* pVertexDataBegin;
 		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
@@ -31,5 +32,5 @@ namespace tkEngine {
 		m_vertexBuffer->Unmap(0, nullptr);
 
 	}
-	
 }
+#endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
