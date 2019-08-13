@@ -7,7 +7,8 @@
 #include "tkEngine/graphics/Dx12/tkIndexBufferDx12.h"
 
 namespace tkEngine {
-	CIndexBufferDx12::CIndexBufferDx12(int size, int stride)
+	CIndexBufferDx12::CIndexBufferDx12(int size, int stride) :
+		IIndexBuffer(size, stride)
 	{
 		auto gfxEngine12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngine12->GetD3DDevice();

@@ -5,6 +5,7 @@
 #include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
 #include "tkEngine/graphics/Dx12/tkVertexBufferDx12.h"
 #include "tkEngine/graphics/Dx12/tkIndexBufferDx12.h"
+#include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
 
 namespace tkEngine {
 	struct Vertex
@@ -76,10 +77,11 @@ namespace tkEngine {
 			enPrimitiveTopology_TriangleList
 		);
 	}
-	void CTriangleShapeDx12::Draw(CRenderContext& rc)
+	void CTriangleShapeDx12::Draw(IRenderContext& rc)
 	{
+		auto rcDx12 = rc.As<CRenderContextDx12>();
 
-		auto commandList = rc.GetCommandList();
+		auto commandList = rcDx12->GetCommandList();
 		//ルートシグネチャを設定。
 		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 		commandList->SetPipelineState(m_pipelineState.Get());

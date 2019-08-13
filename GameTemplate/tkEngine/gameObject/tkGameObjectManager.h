@@ -204,10 +204,10 @@ namespace tkEngine{
 		void PreUpdate();
 		void Update();
 		void PostUpdate();
-		void BeginRender(CRenderContext& rc);
-		void ForwardPreRender(CRenderContext& rc);
-		void ForwardRender(CRenderContext& rc);
-		void PostRender(CRenderContext& rc);
+		void BeginRender(IRenderContext& rc);
+		void ForwardPreRender(IRenderContext& rc);
+		void ForwardRender(IRenderContext& rc);
+		void PostRender(IRenderContext& rc);
 	private:
 		CTransform m_transform;												//!<Transform。
 		typedef std::list<IGameObject*>	GameObjectList;

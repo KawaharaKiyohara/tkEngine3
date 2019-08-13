@@ -1,6 +1,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
 #include "tkEngine/graphics/Dx12/d3dx12.h"
+#include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
 
 namespace tkEngine {
 	
@@ -85,8 +86,8 @@ namespace tkEngine {
 		//ビューポートを初期化。
 		m_viewport.TopLeftX = 0;
 		m_viewport.TopLeftY = 0;
-		m_viewport.Width = initParam.frameBufferWidth;
-		m_viewport.Height = initParam.frameBufferHeight;
+		m_viewport.Width = static_cast<float>(initParam.frameBufferWidth);
+		m_viewport.Height = static_cast<float>(initParam.frameBufferHeight);
 		m_viewport.MinDepth = D3D12_MIN_DEPTH;
 		m_viewport.MaxDepth = D3D12_MAX_DEPTH;
 
@@ -96,7 +97,11 @@ namespace tkEngine {
 		m_scissorRect.right = initParam.frameBufferWidth;
 		m_scissorRect.bottom = initParam.frameBufferHeight;
 
-		m_renderContext.SetCommandList(m_commandList);
+		//レンダリングコンテキストの作成。
+		auto giFactry = Engine().GetGraphicsInstanceFactory();
+		m_renderContext = giFactry->CreateRenderContextInstance();
+		auto rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		rcDx12->SetCommandList(m_commandList);
 
 		return true;
 	}
@@ -139,17 +144,17 @@ namespace tkEngine {
 		
 	}
 	void CGraphicsEngineDx12::Render(
-		std::function<void(CRenderContext& rc)> onRender,
-		std::function<void(CRenderContext& rc)> onPreForwardRender,
-		std::function<void(CRenderContext& rc)> onForwardRender,
-		std::function<void(CRenderContext& rc)> onPostRender)
+		std::function<void(IRenderContext& rc)> onRender,
+		std::function<void(IRenderContext& rc)> onPreForwardRender,
+		std::function<void(IRenderContext& rc)> onForwardRender,
+		std::function<void(IRenderContext& rc)> onPostRender)
 	{
 		BeginRender();
 		
-		onRender( m_renderContext );
-		onPreForwardRender( m_renderContext );
-		onForwardRender( m_renderContext );
-		onPostRender( m_renderContext );
+		onRender( *m_renderContext );
+		onPreForwardRender( *m_renderContext );
+		onForwardRender( *m_renderContext );
+		onPostRender( *m_renderContext );
 
 		EndRender();
 	}

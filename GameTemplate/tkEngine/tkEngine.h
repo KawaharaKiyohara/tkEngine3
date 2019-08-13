@@ -11,6 +11,7 @@
 #include <mutex>
 #include <condition_variable>
 #include "tkEngine/graphics/tkGraphicsEngine.h"
+#include "tkEngine/graphics/tkGraphicsInstanceFactory.h"
 
  /*!
   *@namespace	tkEngine全体の名前空間。
@@ -87,6 +88,14 @@ namespace tkEngine{
 		*/
 		void ResourceUnload();
 
+		/// <summary>
+		/// グラフィックスインスタンスのファクトリを取得。
+		/// </summary>
+		/// <returns></returns>
+		IGraphicsInstanceFactory* GetGraphicsInstanceFactory()
+		{
+			return m_graphisInstanceFactory.get();
+		}
 	private:
 		/*!
 		 *@brief	ウィンドウ初期化。
@@ -117,6 +126,7 @@ namespace tkEngine{
 		HINSTANCE				m_hInst = nullptr;	//!<アプリケーションのインスタンス。
 		HWND					m_hWnd = nullptr;	//!<ウィンドウハンドル。
 		CSoundEngine			m_soundEngine;								//!<サウンドエンジン。
+		UPIGraphicsInstanceFactory m_graphisInstanceFactory;				//グラフィックスインスタンスのファクトリ。
 		UPIGraphicsEngine		m_graphicsEngine;							//グラフィックエンジン。
 		CGameTime				m_gameTime;									//ゲームタイム。
 		int						m_screenWidth = 0;							//!<スクリーンの幅。

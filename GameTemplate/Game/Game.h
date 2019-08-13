@@ -9,7 +9,7 @@ public:
 	~Game();
 	bool Start();
 	void Update();
-	void ForwardRender(CRenderContext& renderContext) override final;
+	void ForwardRender(IRenderContext& renderContext) override final;
 private:
 	CTriangleShape m_triangleShape;
 };

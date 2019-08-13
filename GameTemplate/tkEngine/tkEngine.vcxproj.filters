@@ -203,6 +203,12 @@
     <ClInclude Include="graphics\tkGraphicsEngine.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkGraphicsInstanceFactory.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -256,9 +262,6 @@
     <ClCompile Include="math\tkVector.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\tkGraphicsEngine.cpp">
-      <Filter>Source Files\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
@@ -291,6 +294,15 @@
     </ClCompile>
     <ClCompile Include="graphics\tkPrimitive.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkGraphicsEngine.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkGraphicsInstanceFactory.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

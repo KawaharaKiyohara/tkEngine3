@@ -2,11 +2,13 @@
 
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
+#include "tkEngine/graphics/tkRenderContext.h"
+
 namespace tkEngine {
 	/// <summary>
 	/// レンダリングコンテキスト。
 	/// </summary>
-	class CRenderContext : public CRenderContextBase {
+	class CRenderContextDx12 : public IRenderContext {
 	public:
 		/// <summary>
 		/// 初期化。

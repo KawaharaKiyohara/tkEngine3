@@ -40,11 +40,11 @@ namespace tkEngine{
 			}
 		}
 	}
-	void CGameObjectManager::BeginRender(CRenderContext& rc)
+	void CGameObjectManager::BeginRender(IRenderContext& rc)
 	{
 		TK_WARNING("CGameObjectManager::Begin Render‚ª–¢ŽÀ‘•B");
 	}
-	void CGameObjectManager::ForwardPreRender(CRenderContext& rc)
+	void CGameObjectManager::ForwardPreRender(IRenderContext& rc)
 	{
 		for (GameObjectList objList : m_gameObjectListArray) {
 			for (IGameObject* obj : objList) {
@@ -52,7 +52,7 @@ namespace tkEngine{
 			}
 		}
 	}
-	void CGameObjectManager::ForwardRender(CRenderContext& rc)
+	void CGameObjectManager::ForwardRender(IRenderContext& rc)
 	{
 		for (GameObjectList objList : m_gameObjectListArray) {
 			for (IGameObject* obj : objList) {
@@ -61,7 +61,7 @@ namespace tkEngine{
 		}
 	
 	}
-	void CGameObjectManager::PostRender(CRenderContext& rc)
+	void CGameObjectManager::PostRender(IRenderContext& rc)
 	{
 	
 		for (GameObjectList objList : m_gameObjectListArray) {
@@ -89,10 +89,10 @@ namespace tkEngine{
 		//•`‰æŒn‚Ìˆ—B
 		{
 			g_graphicsEngine->Render(
-				[&](CRenderContext& rc) {},
-				[&](CRenderContext& rc) {ForwardPreRender(rc); },
-				[&](CRenderContext& rc) {ForwardRender(rc); },
-				[&](CRenderContext& rc) {PostRender(rc); }
+				[&](IRenderContext& rc) {},
+				[&](IRenderContext& rc) {ForwardPreRender(rc); },
+				[&](IRenderContext& rc) {ForwardRender(rc); },
+				[&](IRenderContext& rc) {PostRender(rc); }
 			);
 		}
 		ExecuteDeleteGameObjects();

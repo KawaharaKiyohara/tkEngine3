@@ -16,13 +16,13 @@ namespace tkEngine {
 		/// <summary>
 		/// コンストラクタ。
 		/// </summary>
-		virtual ~IIndexBuffer() {}
+		/// <param name="size">インデックスバッファのサイズ。</param>
+		/// <param name="stride">インデックスバッファのストライド。</param>
+		IIndexBuffer(int size, int stride);
 		/// <summary>
-		/// インデックスバッファを作成。
+		/// コンストラクタ。
 		/// </summary>
-		/// <param name="size">インデックスバッファのサイズ</param>
-		/// <returns>作成されたインデックスバッファ。</returns>
-		static UPIIndexBuffer Create( int size, int stride );
+		virtual ~IIndexBuffer() {}
 		/// <summary>
 		/// 頂点データを頂点バッファにコピー。
 		/// </summary>

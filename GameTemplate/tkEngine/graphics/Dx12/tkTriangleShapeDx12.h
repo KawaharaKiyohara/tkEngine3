@@ -21,7 +21,7 @@ namespace tkEngine {
 		/// 描画
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト。</param>
-		void Draw(CRenderContext& rc);
+		void Draw(IRenderContext& rc);
 	private:
 		CPrimitive m_primitive;
 		ComPtr<ID3D12RootSignature> m_rootSignature;	//ルートシグネチャ。

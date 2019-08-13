@@ -15,7 +15,8 @@ namespace tkEngine {
 
 	CEngine::CEngine()
 	{
-		m_graphicsEngine = IGraphicsEngine::CreateInstance();
+		m_graphisInstanceFactory = IGraphicsInstanceFactory::CreateInstance();
+		m_graphicsEngine = m_graphisInstanceFactory->CreateGraphicsEngineInstance();
 		g_graphicsEngine = m_graphicsEngine.get();
 		g_camera3D = &m_graphicsEngine->GetCamera3D();
 		g_gameTime = &m_gameTime;

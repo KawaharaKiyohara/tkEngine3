@@ -1,12 +1,17 @@
 #pragma once
 
 namespace tkEngine {
-	class CRenderContextBase : Noncopyable {
-
+	class IRenderContext : Noncopyable {
+	public:
+		virtual ~IRenderContext() {}
+		/// <summary>
+		/// IRenderContextのインスタンスの型変換。
+		/// </summary>
+		template<class T>
+		T* As()
+		{
+			return dynamic_cast<T*>(this);
+		}
 	};
-
+	using UPIRenderContext = std::unique_ptr<IRenderContext>;
 }
-#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-	#include "tkEngine/graphics/dx12/tkRenderContextDx12.h"
-#else
-#endif

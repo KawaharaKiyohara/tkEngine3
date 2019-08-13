@@ -27,7 +27,7 @@ bool Game::Start()
 void Game::Update()
 {
 }
-void Game::ForwardRender(CRenderContext& renderContext)
+void Game::ForwardRender(IRenderContext& renderContext)
 {
 	m_triangleShape.Draw(renderContext);
 }

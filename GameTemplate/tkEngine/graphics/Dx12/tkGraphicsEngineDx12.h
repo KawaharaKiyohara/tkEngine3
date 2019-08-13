@@ -34,10 +34,10 @@ namespace tkEngine {
 		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
 
 		void Render(
-			std::function<void(CRenderContext& rc)> onRender,
-			std::function<void(CRenderContext& rc)> onPreForwardRender,
-			std::function<void(CRenderContext& rc)> onForwardRender,
-			std::function<void(CRenderContext& rc)> onPostRender
+			std::function<void(IRenderContext& rc)> onRender,
+			std::function<void(IRenderContext& rc)> onPreForwardRender,
+			std::function<void(IRenderContext& rc)> onForwardRender,
+			std::function<void(IRenderContext& rc)> onPostRender
 		) override final;
 		/// <summary>
 		/// D3Dデバイスを取得。

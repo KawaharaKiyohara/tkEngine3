@@ -8,7 +8,7 @@
 
 namespace tkEngine{
 	class CGameObjectManager;
-	class CRenderContext;
+	class IRenderContext;
 	typedef unsigned char	GameObjectPrio;
 	/*!
 	 *@brief	ゲームオブジェクト。
@@ -60,21 +60,14 @@ namespace tkEngine{
 		 *@brief	更新
 		 */
 		virtual void Update() {}
-		/*!
-		 *@brief	描画
-		 */
-		[[deprecated("This function will be delete. please use ForwardRender() function.")]]
-		virtual void Render(CRenderContext& renderContext)
-		{
-			(void)renderContext;
-		}
+		
 		/*!
 		*@brief	フォワードレンダリングのパスから呼ばれる描画処理。
 		*@details
 		* 特殊なシェーディングを行いたいものはこちらでレンダリングを行ってください。
 		* 通常のレンダリングは物理ベースシェーダーが使用されています。
 		*/
-		virtual void ForwardRender(CRenderContext& renderContext)
+		virtual void ForwardRender(IRenderContext& renderContext)
 		{
 			(void)renderContext;
 		}
@@ -105,17 +98,11 @@ namespace tkEngine{
 		 *@brief	Update関数が実行された後で呼ばれる更新関数。
 		 */
 		virtual void PostUpdate() {} 
-		/*!
-		 *@brief	Render関数が実行される前に呼ばれる描画処理。
-		 */
-		[[deprecated("This function will be delete. please use PreForwardRender() function.")]]
-		virtual void PreRender(CRenderContext& renderContext) { 
-			(void)renderContext; 
-		}
+		
 		/*!
 		*@brief	Render関数が実行される前に呼ばれる描画処理。
 		*/
-		virtual void PreForwardRender(CRenderContext& renderContext) {
+		virtual void PreForwardRender(IRenderContext& renderContext) {
 			(void)renderContext;
 		}
 		/*!
@@ -123,7 +110,7 @@ namespace tkEngine{
 		 *@details
 		 * ポストエフェクトの後で実行されます。HUDなどポストエフェクトの影響を受けたくない描画物はここでレンダリングしてください。
 		 */
-		virtual void PostRender(CRenderContext& renderContext) {
+		virtual void PostRender(IRenderContext& renderContext) {
 			(void)renderContext;
 		}
 		/*!
@@ -201,19 +188,19 @@ namespace tkEngine{
 		}
 #endif
 	public:
-		void PostRenderWrapper(CRenderContext& renderContext)
+		void PostRenderWrapper(IRenderContext& renderContext)
 		{
 			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {
 				PostRender(renderContext);
 			}
 		}
-		void ForwardRenderWrapper(CRenderContext& renderContext)
+		void ForwardRenderWrapper(IRenderContext& renderContext)
 		{
 			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {
 				ForwardRender(renderContext);
 			}
 		}
-		void PreForwardRenderWrapper(CRenderContext& renderContext)
+		void PreForwardRenderWrapper(IRenderContext& renderContext)
 		{
 			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {
 				PreForwardRender(renderContext);

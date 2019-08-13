@@ -12,11 +12,6 @@ namespace tkEngine {
 	class IGraphicsEngine : Noncopyable{
 	public:
 		/// <summary>
-		/// グラフィックエンジンのインスタンスの作成。
-		/// </summary>
-		/// <returns></returns>
-		static UPIGraphicsEngine CreateInstance();
-		/// <summary>
 		/// グラフィックエンジンを初期化。
 		/// </summary>
 		/// <param name="hwnd">ウィンドウハンドル</param>
@@ -31,10 +26,10 @@ namespace tkEngine {
 		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
 		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
 		virtual void Render(
-			std::function<void(CRenderContext& rc)> onRender,
-			std::function<void(CRenderContext& rc)> onPreForwardRender,
-			std::function<void(CRenderContext& rc)> onForwardRender,
-			std::function<void(CRenderContext& rc)> onPostRender
+			std::function<void(IRenderContext& rc)> onRender,
+			std::function<void(IRenderContext& rc)> onPreForwardRender,
+			std::function<void(IRenderContext& rc)> onForwardRender,
+			std::function<void(IRenderContext& rc)> onPostRender
 		) = 0;
 		/// <summary>
 		/// 破棄。
@@ -79,9 +74,9 @@ namespace tkEngine {
 			return dynamic_cast<T*>(this);
 		}
 	protected:
-		int	m_frameBufferWidth = 0;		//フレームバッファの幅。
-		int m_frameBufferHeight = 0;	//フレームバッファの高さ。
-		CCamera m_camera3D;				//3Dカメラ。	
-		CRenderContext m_renderContext;	//レンダリングコンテキスト。今は一本。
+		int	m_frameBufferWidth = 0;			//フレームバッファの幅。
+		int m_frameBufferHeight = 0;		//フレームバッファの高さ。
+		CCamera m_camera3D;					//3Dカメラ。	
+		UPIRenderContext m_renderContext;	//レンダリングコンテキスト。今は一本。
 	};
 }
