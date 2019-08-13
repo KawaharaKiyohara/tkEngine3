@@ -1,7 +1,0 @@
-#pragma once
-
-#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-
-
-
-#endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

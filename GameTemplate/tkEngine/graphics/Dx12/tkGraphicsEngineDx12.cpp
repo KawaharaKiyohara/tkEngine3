@@ -1,7 +1,5 @@
 #include "tkEngine/tkEnginePreCompile.h"
-#include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
-#include "tkEngine/graphics/Dx12/d3dx12.h"
-#include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
+#include "dx12Common.h"
 
 namespace tkEngine {
 	

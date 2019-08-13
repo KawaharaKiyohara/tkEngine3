@@ -1,6 +1,6 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-#include "tkEngine/graphics/Dx12/tkShaderDx12.h"
+#include "dx12Common.h"
 
 namespace tkEngine {
 	void CShaderDx12::Load(const wchar_t* filePath, const char* entryFuncName, const char* shaderModel)

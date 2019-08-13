@@ -1,11 +1,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-#include "tkEngine/graphics/dx12/tkTriangleShapeDx12.h"
-#include "tkEngine/graphics/Dx12/d3dx12.h"
-#include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
-#include "tkEngine/graphics/Dx12/tkVertexBufferDx12.h"
-#include "tkEngine/graphics/Dx12/tkIndexBufferDx12.h"
-#include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
+#include "dx12Common.h"
+#include "tkTriangleShapeDx12.h"
 
 namespace tkEngine {
 	struct Vertex

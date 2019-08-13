@@ -2,9 +2,8 @@
 
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
-#include "tkEngine/graphics/Dx12/d3dx12.h"
-#include "tkEngine/graphics/Dx12/tkGraphicsEngineDx12.h"
-#include "tkEngine/graphics/Dx12/tkIndexBufferDx12.h"
+#include "dx12Common.h"
+
 
 namespace tkEngine {
 	CIndexBufferDx12::CIndexBufferDx12(int size, int stride) :

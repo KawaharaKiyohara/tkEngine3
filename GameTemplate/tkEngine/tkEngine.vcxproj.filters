@@ -179,9 +179,6 @@
     <ClInclude Include="graphics\tkRenderContext.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\Dx12\tkPrimitiveDx12.h">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\tkGraphics.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -207,6 +204,9 @@
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\dx12Common.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
   </ItemGroup>
@@ -281,9 +281,6 @@
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\Dx12\tkPrimitiveDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp">

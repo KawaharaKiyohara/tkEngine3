@@ -817,11 +817,11 @@
     <ClInclude Include="gameObject\tkgameobject.h" />
     <ClInclude Include="gameObject\tkGameObjectManager.h" />
     <ClInclude Include="gameObject\tkTransform.h" />
+    <ClInclude Include="graphics\Dx12\dx12Common.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h" />
     <ClInclude Include="graphics\Dx12\tkIndexBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkModelDx12.h" />
-    <ClInclude Include="graphics\Dx12\tkPrimitiveDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
     <ClInclude Include="graphics\Dx12\tkShaderDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h" />
@@ -868,7 +868,6 @@
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkModelDx12.cpp" />
-    <ClCompile Include="graphics\Dx12\tkPrimitiveDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkVertexBufferDx12.cpp" />
