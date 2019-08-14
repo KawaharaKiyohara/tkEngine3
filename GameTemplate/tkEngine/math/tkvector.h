@@ -532,6 +532,16 @@ namespace tkEngine{
 			);
 			DirectX::XMStoreFloat4(&vec, xmv);
 		}
+		/// <summary>
+		/// Y軸周りの回転を加算。
+		/// </summary>
+		/// <returns>加算する回転角度。ラジアン単位。</returns>
+		void AddRotationY(float angle)
+		{
+			CQuaternion addRot;
+			addRot.SetRotation(CVector3::AxisY, angle);
+			*this *= addRot;
+		}
 		/*!
 		*@brief	クォータニオン同士の積。
 		* こっちは乗算の順番が数学基準。

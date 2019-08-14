@@ -22,7 +22,9 @@ namespace tkEngine {
 		/// 描画
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト。</param>
-		void Draw(IRenderContext& rc) override final;
+		/// <param name="mView">ビュー行列</param>
+		/// <param name="mProj">プロジェクション行列。</param>
+		void Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj) override final;
 	private:
 		/// <summary>
 		/// 定数バッファ。

@@ -824,6 +824,7 @@
     <ClInclude Include="graphics\Dx12\tkIndexBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkModelDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkRootSignatureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkShaderDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h" />
     <ClInclude Include="graphics\Dx12\tkVertexBufferDx12.h" />
@@ -871,6 +872,7 @@
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkModelDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkVertexBufferDx12.cpp" />

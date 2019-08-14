@@ -25,7 +25,7 @@ namespace tkEngine {
 		WaitDraw();
 		CloseHandle(m_fenceEvent);
 	}
-	bool CGraphicsEngineDx12::Init(HWND hwnd, const SInitParam& initParam)
+	bool CGraphicsEngineDx12::OnInit(HWND hwnd, const SInitParam& initParam)
 	{
 		//DXGIファクトリーの作成。
 		auto dxGiFactory = CreateDXGIFactory();

@@ -20,7 +20,7 @@ namespace tkEngine {
 		/// <param name="hwnd">ウィンドウハンドル</param>
 		/// <param name="initParam">初期化用のパラメータ</param>
 		/// <returns>falseが返ってきたら初期化に失敗。</returns>
-		bool Init(HWND hwnd, const SInitParam& initParam) override final;
+		bool OnInit(HWND hwnd, const SInitParam& initParam) override final;
 		/// <summary>
 		/// 終了処理。アプリケーションが終了するときに呼び出してください。
 		/// </summary>

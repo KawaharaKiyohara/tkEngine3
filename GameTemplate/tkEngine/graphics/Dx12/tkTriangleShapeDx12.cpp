@@ -69,9 +69,9 @@ namespace tkEngine {
 		//プリミティブを作成。
 		Vertex triangleVertices[] =
 		{
-			{ { 0.0f, 0.25f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-			{ { 0.25f, -0.25f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-			{ { -0.25f, -0.25f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+			{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+			{ { 1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+			{ { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
 		};
 		unsigned short indices[] = {
 			0, 1, 2
@@ -88,17 +88,14 @@ namespace tkEngine {
 		//定数バッファを作成。
 		m_constantBuffer.Init(sizeof(SConstantBuffer), nullptr);
 	}
-	void CTriangleShapeDx12::Draw(IRenderContext& rc)
+	void CTriangleShapeDx12::Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj)
 	{
 		//定数バッファを更新。
 		SConstantBuffer cb;
-		cb.mWorld = CMatrix::Identity;
-		cb.mView = CMatrix::Identity;
-		cb.mProj = CMatrix::Identity;
-		//テスト
-		if (g_pad[0]->IsPress(enButtonLeft)) {
-			cb.mWorld.m[3][0] = 0.3f;
-		}
+		cb.mWorld = m_worldMatrix;
+		cb.mView = mView;
+		cb.mProj = mProj;
+		
 		m_constantBuffer.Update(&cb);
 		auto rcDx12 = rc.As<CRenderContextDx12>();
 

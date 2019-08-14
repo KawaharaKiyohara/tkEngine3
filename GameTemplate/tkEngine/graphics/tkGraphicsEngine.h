@@ -30,7 +30,7 @@ namespace tkEngine {
 		/// <param name="hwnd">ウィンドウハンドル</param>
 		/// <param name="initParam">初期化パラメータ</param>
 		/// <returns>falseが返ってきたら初期化に失敗。</returns>
-		virtual bool Init(HWND hwnd, const SInitParam& initParam) = 0;
+		bool Init(HWND hwnd, const SInitParam& initParam);
 		/// <summary>
 		/// 描画。
 		/// </summary>
@@ -86,6 +86,14 @@ namespace tkEngine {
 		{
 			return dynamic_cast<T*>(this);
 		}
+	private:
+		/// <summary>
+		/// 初期化時に呼ばれる処理。
+		/// </summary>
+		/// <param name="hwnd"></param>
+		/// <param name="initParam"></param>
+		/// <returns></returns>
+		virtual bool OnInit(HWND hwnd, const SInitParam& initParam) = 0;
 	protected:
 		int	m_frameBufferWidth = 0;			//フレームバッファの幅。
 		int m_frameBufferHeight = 0;		//フレームバッファの高さ。

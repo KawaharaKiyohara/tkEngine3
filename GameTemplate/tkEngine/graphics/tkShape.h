@@ -42,7 +42,7 @@ namespace tkEngine{
 		/// 回転を取得。
 		/// </summary>
 		/// <returns>回転</returns>
-		const CQuaternion& GetRotatin() const
+		const CQuaternion& GetRotation() const
 		{
 			return m_rotation;
 		}
@@ -62,7 +62,7 @@ namespace tkEngine{
 		/// 描画。
 		/// </summary>
 		/// <param name="rc"></param>
-		virtual void Draw(IRenderContext& rc) = 0;
+		virtual void Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj) = 0;
 	private:
 		/// <summary>
 		/// ワールド行列を更新。
