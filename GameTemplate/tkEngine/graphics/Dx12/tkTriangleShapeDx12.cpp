@@ -10,18 +10,31 @@ namespace tkEngine {
 		CVector4 color;
 	};
 
-	void CTriangleShapeDx12::Init()
+	CTriangleShapeDx12::CTriangleShapeDx12()
 	{
 		auto gfxEngineDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngineDx12->GetD3DDevice();
 		//空のルートシグネチャを作成。
 		{
-			
-			CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
-			rootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			CD3DX12_DESCRIPTOR_RANGE1 ranges[1];
+			CD3DX12_ROOT_PARAMETER1 rootParameters[1];
+
+			ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+			rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_VERTEX);
+
+			// Allow input layout and deny uneccessary access to certain pipeline stages.
+			D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
+				D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+				D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+				D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+				D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+				D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+
+			CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+			rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
 			ComPtr<ID3DBlob> signature;
 			ComPtr<ID3DBlob> error;
-			D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
+			D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
 			d3dDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature));
 		}
 		//パイプラインステートの作成とシェーダーのコンパイル。
@@ -72,15 +85,34 @@ namespace tkEngine {
 			sizeof(indices[0]),
 			enPrimitiveTopology_TriangleList
 		);
+		//定数バッファを作成。
+		m_constantBuffer.Init(sizeof(SConstantBuffer), nullptr);
 	}
 	void CTriangleShapeDx12::Draw(IRenderContext& rc)
 	{
+		//定数バッファを更新。
+		SConstantBuffer cb;
+		cb.mWorld = CMatrix::Identity;
+		cb.mView = CMatrix::Identity;
+		cb.mProj = CMatrix::Identity;
+		//テスト
+		if (g_pad[0]->IsPress(enButtonLeft)) {
+			cb.mWorld.m[3][0] = 0.3f;
+		}
+		m_constantBuffer.Update(&cb);
 		auto rcDx12 = rc.As<CRenderContextDx12>();
 
 		auto commandList = rcDx12->GetCommandList();
 		//ルートシグネチャを設定。
 		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 		commandList->SetPipelineState(m_pipelineState.Get());
+		//ディスクリプタテーブルを設定する。
+		ID3D12DescriptorHeap* ppHeaps[] = {
+			m_constantBuffer.GetDiscriptorHeap().Get()
+		};
+		commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+		commandList->SetGraphicsRootDescriptorTable(0, ppHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+
 		//プリミティブトポロジーを設定。
 		commandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(m_primitive.GetPrimitiveTopology()));
 		//Dx12版の頂点バッファに型変換。

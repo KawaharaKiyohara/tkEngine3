@@ -24,6 +24,8 @@ namespace tkEngine {
 	private:
 		ComPtr<ID3DBlob>	m_blob;	//コンパイル済みのシェーダーデータ。
 	};
+
+	using UPIShape = std::unique_ptr<IShape>;
 }
 
 #endif

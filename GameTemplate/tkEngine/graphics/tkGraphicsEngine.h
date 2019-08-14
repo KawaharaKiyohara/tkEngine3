@@ -3,9 +3,22 @@
 #include "tkCamera.h"
 
 namespace tkEngine {
-	class CGameObjectManager;
+	//外部に公開するユニークポインタ色々。
+	class IShape;
+	class IVertexBuffer;
+	class IIndexBuffer;
 	class IGraphicsEngine;
+	class IGraphicsInstanceFactory;
+
 	using UPIGraphicsEngine = std::unique_ptr< IGraphicsEngine>;
+	using UPIVertexBuffer = std::unique_ptr < IVertexBuffer >;
+	using UPIIndexBuffer = std::unique_ptr<IIndexBuffer>;
+	using UPIRenderContext = std::unique_ptr<IRenderContext>;
+	using UPIGraphicsInstanceFactory = std::unique_ptr< IGraphicsInstanceFactory>;
+	using UPIShape = std::unique_ptr<IShape>;
+
+	class CGameObjectManager;
+	
 	/// <summary>
 	/// グラフィックエンジン
 	/// </summary>

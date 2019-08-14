@@ -3,6 +3,7 @@
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
 #include "dx12Common.h"
+#include "tkTriangleShapeDx12.h"
 
 namespace tkEngine {
 	UPIGraphicsEngine CGraphicsInstanceFactoryDx12::CreateGraphicsEngineInstance()
@@ -20,6 +21,10 @@ namespace tkEngine {
 	UPIRenderContext CGraphicsInstanceFactoryDx12::CreateRenderContextInstance()
 	{
 		return std::make_unique<CRenderContextDx12>();
+	}
+	UPIShape CGraphicsInstanceFactoryDx12::CreateTriangleShapeInstance()
+	{
+		return std::make_unique<CTriangleShapeDx12>();
 	}
 }
 

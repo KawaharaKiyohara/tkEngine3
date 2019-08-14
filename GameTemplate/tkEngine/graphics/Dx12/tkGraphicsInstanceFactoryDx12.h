@@ -38,6 +38,11 @@ namespace tkEngine {
 		/// </summary>
 		/// <returns></returns>
 		UPIRenderContext CreateRenderContextInstance()override final;
+		/// <summary>
+		/// 三角形形状のインスタンスを作成。
+		/// </summary>
+		/// <returns></returns>
+		UPIShape CreateTriangleShapeInstance()override final;
 	};
 }
 

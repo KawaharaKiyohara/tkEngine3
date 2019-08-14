@@ -132,4 +132,5 @@ using Microsoft::WRL::ComPtr;
 #include "tkEngine/Input/tkPad.h"
 #include "tkEngine/tkEngine.h"
 #include "tkEngine/sound/tkSoundSource.h"
+#include "tkEngine/graphics/tkShape.h"
 

@@ -2,17 +2,7 @@
 
 
 namespace tkEngine {
-	class IVertexBuffer;
-	class IIndexBuffer;
-	class IGraphicsEngine;
-	class IGraphicsInstanceFactory;
-
-	using UPIGraphicsEngine = std::unique_ptr< IGraphicsEngine>;
-	using UPIVertexBuffer = std::unique_ptr < IVertexBuffer >;
-	using UPIIndexBuffer = std::unique_ptr<IIndexBuffer>;
-	using UPIRenderContext = std::unique_ptr<IRenderContext>;
-	using UPIGraphicsInstanceFactory = std::unique_ptr< IGraphicsInstanceFactory>;
-
+	
 	/// <summary>
 	/// グラフィック系のプラットフォームに依存するインスタンスのファクトリーのインターフェースクラス。
 	/// </summary>
@@ -50,5 +40,10 @@ namespace tkEngine {
 		/// </summary>
 		/// <returns></returns>
 		virtual UPIRenderContext CreateRenderContextInstance() = 0;
+		/// <summary>
+		/// 三角形形状のインスタンスを作成。
+		/// </summary>
+		/// <returns></returns>
+		virtual UPIShape CreateTriangleShapeInstance() = 0;
 	};
 }
