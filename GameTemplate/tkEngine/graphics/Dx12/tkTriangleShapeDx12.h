@@ -16,7 +16,12 @@ namespace tkEngine {
 		/// <summary>
 		/// コンストラクタ。
 		/// </summary>
-		CTriangleShapeDx12();
+		/// <param name="textureFilePath">
+		/// テクスチャのファイルパス。
+		/// サポートしている画像はddsファイルのみです。
+		/// nullptrが指定された場合は、テクスチャ無しの三角形が表示されます。
+		/// </param>
+		CTriangleShapeDx12( const wchar_t* textureFilePath );
 	
 		/// <summary>
 		/// 描画
@@ -43,6 +48,12 @@ namespace tkEngine {
 		CShaderDx12 m_vs;								//頂点シェーダー。
 		CShaderDx12 m_ps;								//ピクセルシェーダー。
 		CConstantBufferDx12 m_constantBuffer;			//定数バッファ。
+		CTextureDx12 m_texture;
+		enum {
+			enDescriptorHeap_CB,
+			enDescriptorHeap_SRV,
+			enNumDescriptorHeap
+		};
 	};
 
 }

@@ -9,3 +9,4 @@
 #include "tkShaderDx12.h"
 #include "tkConstantBufferDx12.h"
 #include "tkRootSignatureDx12.h"
+#include "tkTextureDx12.h"

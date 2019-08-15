@@ -8,30 +8,47 @@ namespace tkEngine {
 	{
 		CVector3 position;
 		CVector4 color;
+		CVector2 uv;
 	};
 
-	CTriangleShapeDx12::CTriangleShapeDx12()
+	CTriangleShapeDx12::CTriangleShapeDx12(const wchar_t* textureFilePath)
 	{
 		auto gfxEngineDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngineDx12->GetD3DDevice();
-		//空のルートシグネチャを作成。
+		//ルートシグネチャを作成。
 		{
-			CD3DX12_DESCRIPTOR_RANGE1 ranges[1];
-			CD3DX12_ROOT_PARAMETER1 rootParameters[1];
+			D3D12_STATIC_SAMPLER_DESC sampler = {};
+			sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+			sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+			sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+			sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+			sampler.MipLODBias = 0;
+			sampler.MaxAnisotropy = 0;
+			sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+			sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+			sampler.MinLOD = 0.0f;
+			sampler.MaxLOD = D3D12_FLOAT32_MAX;
+			sampler.ShaderRegister = 0;
+			sampler.RegisterSpace = 0;
+			sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-			ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-			rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_VERTEX);
+			CD3DX12_DESCRIPTOR_RANGE1 ranges[enNumDescriptorHeap];
+			CD3DX12_ROOT_PARAMETER1 rootParameters[enNumDescriptorHeap];
+
+			ranges[enDescriptorHeap_CB].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+			rootParameters[enDescriptorHeap_CB].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_VERTEX);
+			ranges[enDescriptorHeap_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+			rootParameters[enDescriptorHeap_SRV].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
 
 			// Allow input layout and deny uneccessary access to certain pipeline stages.
 			D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
 				D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
 				D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
 				D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-				D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-				D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+				D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS ;
 
 			CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-			rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 0, nullptr, rootSignatureFlags);
+			rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 1, &sampler, rootSignatureFlags);
 			ComPtr<ID3DBlob> signature;
 			ComPtr<ID3DBlob> error;
 			D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
@@ -46,7 +63,8 @@ namespace tkEngine {
 			D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 			{
 				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			};
 
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
@@ -69,9 +87,9 @@ namespace tkEngine {
 		//プリミティブを作成。
 		Vertex triangleVertices[] =
 		{
-			{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-			{ { 1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-			{ { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+			{ { 0.0f, 1.0f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, {0.5f, 0.0f } },
+			{ { 1.0f, -1.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, {0.0f, 1.0f } },
+			{ { -1.0f, -1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, {1.0f, 1.0f} }
 		};
 		unsigned short indices[] = {
 			0, 1, 2
@@ -87,6 +105,11 @@ namespace tkEngine {
 		);
 		//定数バッファを作成。
 		m_constantBuffer.Init(sizeof(SConstantBuffer), nullptr);
+
+		//テクスチャが指定されている。
+		if (textureFilePath != nullptr) {
+			m_texture.InitFromDDSFile(textureFilePath);
+		}
 	}
 	void CTriangleShapeDx12::Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj)
 	{
@@ -104,11 +127,23 @@ namespace tkEngine {
 		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 		commandList->SetPipelineState(m_pipelineState.Get());
 		//ディスクリプタテーブルを設定する。
-		ID3D12DescriptorHeap* ppHeaps[] = {
-			m_constantBuffer.GetDiscriptorHeap().Get()
-		};
-		commandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-		commandList->SetGraphicsRootDescriptorTable(0, ppHeaps[0]->GetGPUDescriptorHandleForHeapStart());
+		int numDescriporHeap = 1;
+		ID3D12DescriptorHeap* ppHeaps[1] = { m_constantBuffer.GetDiscriptorHeap().Get() };
+		commandList->SetDescriptorHeaps(1, ppHeaps);
+		//ディスクリプタヒープをルートシグネチャに登録していくぅ。
+		commandList->SetGraphicsRootDescriptorTable(
+			enDescriptorHeap_CB,
+			ppHeaps[0]->GetGPUDescriptorHandleForHeapStart()
+		);
+		if (m_texture.IsValid()) {
+			ppHeaps[0] = m_texture.GetDiscriptorHeap().Get();
+			commandList->SetDescriptorHeaps(1, ppHeaps);
+			commandList->SetGraphicsRootDescriptorTable(
+				enDescriptorHeap_SRV,
+				ppHeaps[0]->GetGPUDescriptorHandleForHeapStart()
+			);
+		}
+		
 
 		//プリミティブトポロジーを設定。
 		commandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(m_primitive.GetPrimitiveTopology()));

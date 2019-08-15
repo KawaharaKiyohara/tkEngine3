@@ -114,6 +114,9 @@ using Microsoft::WRL::ComPtr;
 
 #include "Photon-cpp/Inc/PhotonPeer.h"
 
+#include "DirectXTK/Inc/DDSTextureLoader.h"
+#include "DirectXTK/Inc/ResourceUploadBatch.h"
+
 #include "tkEngine/tkEngineConst.h"
 #include "tkEngine/policy/tkNoncopyable.h"
 #include "tkEngine/policy/tkScopedResource.h"
@@ -133,4 +136,5 @@ using Microsoft::WRL::ComPtr;
 #include "tkEngine/tkEngine.h"
 #include "tkEngine/sound/tkSoundSource.h"
 #include "tkEngine/graphics/tkShape.h"
+#include "tkEngine/graphics/tkTexture.h"
 

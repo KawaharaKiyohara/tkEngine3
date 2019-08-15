@@ -22,9 +22,13 @@ namespace tkEngine {
 	{
 		return std::make_unique<CRenderContextDx12>();
 	}
-	UPIShape CGraphicsInstanceFactoryDx12::CreateTriangleShapeInstance()
+	UPIShape CGraphicsInstanceFactoryDx12::CreateTriangleShapeInstance(const wchar_t* textureFilePath)
 	{
-		return std::make_unique<CTriangleShapeDx12>();
+		return std::make_unique<CTriangleShapeDx12>(textureFilePath);
+	}
+	UPITexture CGraphicsInstanceFactoryDx12::CreateTextureFromDDSFile(const wchar_t* filePath)
+	{
+		return std::make_unique<CTextureDx12>(filePath);
 	}
 }
 

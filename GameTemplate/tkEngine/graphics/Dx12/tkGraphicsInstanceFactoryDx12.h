@@ -41,8 +41,19 @@ namespace tkEngine {
 		/// <summary>
 		/// 三角形形状のインスタンスを作成。
 		/// </summary>
+		/// /// <param name="textureFilePath">
+		/// 三角形に貼り付けるテクスチャのファイルパス。
+		/// サポートしている画像データはddsファイルのみです。
+		/// nullptrを指定した場合は、テクスチャ無しの三角形が表示されます。
+		/// </param>
 		/// <returns></returns>
-		UPIShape CreateTriangleShapeInstance()override final;
+		UPIShape CreateTriangleShapeInstance(const wchar_t* textureFilePath)override final;
+		/// <summary>
+		/// DDSファイルからテクスチャを作成。
+		/// </summary>
+		/// <param name="filePath">ファイルパス。</param>
+		/// <returns>作成されたテクスチャ</returns>
+		UPITexture CreateTextureFromDDSFile(const wchar_t* filePath) override final;
 	};
 }
 

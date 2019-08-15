@@ -43,9 +43,17 @@ namespace tkEngine {
 		/// D3Dデバイスを取得。
 		/// </summary>
 		/// <returns></returns>
-		ComPtr<ID3D12Device> GetD3DDevice()
+		ComPtr<ID3D12Device> GetD3DDevice() const
 		{
 			return m_d3dDevice;
+		}
+		/// <summary>
+		/// コマンドキューを取得。
+		/// </summary>
+		/// <returns></returns>
+		ComPtr<ID3D12CommandQueue> GetCommandQueue() const
+		{
+			return m_commandQueue;
 		}
 	private:
 		/// <summary>

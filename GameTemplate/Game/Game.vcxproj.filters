@@ -42,4 +42,9 @@
       <Filter>Assets\sprite</Filter>
     </ImageContentTask>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\sprite\title.jpeg">
+      <Filter>Assets\sprite</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

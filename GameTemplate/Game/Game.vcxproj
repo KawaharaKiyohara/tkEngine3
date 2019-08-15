@@ -1,22 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug_Low|Win32">
-      <Configuration>Debug_Low</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_Low|x64">
-      <Configuration>Debug_Low</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_Middle|Win32">
-      <Configuration>Debug_Middle</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug_Middle|x64">
-      <Configuration>Debug_Middle</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -25,44 +9,12 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Preview_Low|Win32">
-      <Configuration>Preview_Low</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Preview_Low|x64">
-      <Configuration>Preview_Low</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Preview_Middle|Win32">
-      <Configuration>Preview_Middle</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Preview_Middle|x64">
-      <Configuration>Preview_Middle</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Preview|Win32">
       <Configuration>Preview</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Preview|x64">
       <Configuration>Preview</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_Low|Win32">
-      <Configuration>Release_Low</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_Low|x64">
-      <Configuration>Release_Low</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_Middle|Win32">
-      <Configuration>Release_Middle</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release_Middle|x64">
-      <Configuration>Release_Middle</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
@@ -87,42 +39,12 @@
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Low|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Middle|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Low|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Low|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
@@ -222,73 +144,23 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Low|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Middle|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Low|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Low|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Low|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Middle|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Low|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Low|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Debug;$(ProjectDir)/Debug;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Debug;$(ProjectDir)/Debug;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Low|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
     <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
@@ -302,35 +174,7 @@
     <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Release;$(ProjectDir)/Release;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Middle|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Release;$(ProjectDir)/Release;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Low|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Release;$(ProjectDir)/Release;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Release;$(ProjectDir)/Preview;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>true</GenerateManifest>
-    <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\8.1\Include\um;$(ProjectDir);$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/../tkEngine/bulletPhysics/src;$(ProjectDir)/Src;$(ProjectDir)/../tkEngine/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\8.1\Lib\winv6.3\um\x86;$(ProjectDir)/../tkEngine/DirectXTK/Bin/Desktop_2015_Win10/Win32/Release;$(ProjectDir)/Preview;$(ProjectDir)/../tkEngine/EffekseerRuntime130\src\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Low|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <GenerateManifest>true</GenerateManifest>
     <ExecutablePath>$(DXSDK_DIR)Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
@@ -505,237 +349,7 @@
       <Outputs>$(OutDir)\%(Identity)</Outputs>
     </CustomBuild>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <OpenMPSupport>false</OpenMPSupport>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;xaudio2.lib;xinput.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTK.lib;tkEngine.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;Effekseer.Debug.lib;EffekseerRendererDX11.Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-    </Link>
-    <Manifest>
-      <EnableDPIAwareness>true</EnableDPIAwareness>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <MeshContentTask>
-      <ContentOutput>%(RelativeDir)\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
-    <ImageContentTask>
-      <ContentOutput>%(RelativeDir)/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <CustomBuild>
-      <Command>call $(ProjectDir)..\tkTools\tkContentTools.bat %(Identity) $(OutDir)</Command>
-    </CustomBuild>
-    <CustomBuild>
-      <Message>tkContentTools</Message>
-    </CustomBuild>
-    <CustomBuild>
-      <Outputs>$(OutDir)\%(Identity)</Outputs>
-    </CustomBuild>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Low|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <OpenMPSupport>false</OpenMPSupport>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;xaudio2.lib;xinput.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTK.lib;tkEngine.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;Effekseer.Debug.lib;EffekseerRendererDX11.Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-    </Link>
-    <Manifest>
-      <EnableDPIAwareness>true</EnableDPIAwareness>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <MeshContentTask>
-      <ContentOutput>%(RelativeDir)\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
-    <ImageContentTask>
-      <ContentOutput>%(RelativeDir)/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <CustomBuild>
-      <Command>call $(ProjectDir)..\tkTools\tkContentTools.bat %(Identity) $(OutDir)</Command>
-    </CustomBuild>
-    <CustomBuild>
-      <Message>tkContentTools</Message>
-    </CustomBuild>
-    <CustomBuild>
-      <Outputs>$(OutDir)\%(Identity)</Outputs>
-    </CustomBuild>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Full</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <OpenMPSupport>false</OpenMPSupport>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;TK_MASTER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;xaudio2.lib;xinput.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTK.lib;tkEngine.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;Effekseer.Release.lib;EffekseerRendererDX11.Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-    </Link>
-    <Manifest>
-      <EnableDPIAwareness>true</EnableDPIAwareness>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <MeshContentTask>
-      <ContentOutput>%(RelativeDir)\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
-    <ImageContentTask>
-      <ContentOutput>%(RelativeDir)/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <CustomBuild>
-      <Command>call $(ProjectDir)..\tkTools\tkContentTools.bat %(Identity) $(OutDir)</Command>
-    </CustomBuild>
-    <CustomBuild>
-      <Message>tkContentTools</Message>
-    </CustomBuild>
-    <CustomBuild>
-      <Outputs>$(OutDir)\%(Identity)</Outputs>
-    </CustomBuild>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Middle|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Full</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <OpenMPSupport>false</OpenMPSupport>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;TK_MASTER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;xaudio2.lib;xinput.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTK.lib;tkEngine.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;Effekseer.Release.lib;EffekseerRendererDX11.Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-    </Link>
-    <Manifest>
-      <EnableDPIAwareness>true</EnableDPIAwareness>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <MeshContentTask>
-      <ContentOutput>%(RelativeDir)\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
-    <ImageContentTask>
-      <ContentOutput>%(RelativeDir)/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <CustomBuild>
-      <Command>call $(ProjectDir)..\tkTools\tkContentTools.bat %(Identity) $(OutDir)</Command>
-    </CustomBuild>
-    <CustomBuild>
-      <Message>tkContentTools</Message>
-    </CustomBuild>
-    <CustomBuild>
-      <Outputs>$(OutDir)\%(Identity)</Outputs>
-    </CustomBuild>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Low|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Full</Optimization>
@@ -807,124 +421,6 @@
       <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;xaudio2.lib;xinput.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTK.lib;tkEngine.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;Effekseer.Release.lib;EffekseerRendererDX11.Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-    </Link>
-    <Manifest>
-      <EnableDPIAwareness>true</EnableDPIAwareness>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <MeshContentTask>
-      <ContentOutput>%(RelativeDir)\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
-    <ImageContentTask>
-      <ContentOutput>%(RelativeDir)/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <CustomBuild>
-      <Command>call $(ProjectDir)..\tkTools\tkContentTools.bat %(Identity) $(OutDir)</Command>
-    </CustomBuild>
-    <CustomBuild>
-      <Message>tkContentTools</Message>
-    </CustomBuild>
-    <CustomBuild>
-      <Outputs>$(OutDir)\%(Identity)</Outputs>
-    </CustomBuild>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Full</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <OpenMPSupport>false</OpenMPSupport>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;xaudio2.lib;xinput.lib;dxguid.lib;winmm.lib;comctl32.lib;DirectXTK.lib;tkEngine.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;Effekseer.Release.lib;EffekseerRendererDX11.Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <LargeAddressAware>true</LargeAddressAware>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
-    </Link>
-    <Manifest>
-      <EnableDPIAwareness>true</EnableDPIAwareness>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>
-      </Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
-      <Command>
-      </Command>
-    </PostBuildEvent>
-    <MeshContentTask>
-      <ContentOutput>%(RelativeDir)\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
-    <ImageContentTask>
-      <ContentOutput>%(RelativeDir)/%(Filename).dds</ContentOutput>
-    </ImageContentTask>
-    <CustomBuild>
-      <Command>call $(ProjectDir)..\tkTools\tkContentTools.bat %(Identity) $(OutDir)</Command>
-    </CustomBuild>
-    <CustomBuild>
-      <Message>tkContentTools</Message>
-    </CustomBuild>
-    <CustomBuild>
-      <Outputs>$(OutDir)\%(Identity)</Outputs>
-    </CustomBuild>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Preview_Low|Win32'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Full</Optimization>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <OpenMPSupport>false</OpenMPSupport>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>..\..\..\DXUT11\Core;..\..\..\DXUT11\Optional;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;DEBUG;PROFILE;_WINDOWS;D3DXFX_LARGEADDRESS_HANDLE;BT_NO_SIMD_OPERATOR_OVERLOADS;USE_LOW_SPEC_SETTINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1389,7 +885,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>winmm.lib;comctl32.lib;tkEngine.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;comctl32.lib;tkEngine.lib;user32.lib</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -1766,23 +1262,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Low|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Middle|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Low|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview_Low|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Middle|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Low|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Middle|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Low|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview_Middle|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview_Low|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1796,6 +1280,9 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Assets\sprite\dummy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Assets\sprite\title.jpeg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

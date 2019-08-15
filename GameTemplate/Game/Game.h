@@ -11,5 +11,6 @@ public:
 	void ForwardRender(IRenderContext& renderContext) override final;
 private:
 	UPIShape m_triangleShape;
+	UPITexture m_texture;
 };
 

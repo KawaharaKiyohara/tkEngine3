@@ -9,6 +9,7 @@ namespace tkEngine {
 	class IIndexBuffer;
 	class IGraphicsEngine;
 	class IGraphicsInstanceFactory;
+	class ITexture;
 
 	using UPIGraphicsEngine = std::unique_ptr< IGraphicsEngine>;
 	using UPIVertexBuffer = std::unique_ptr < IVertexBuffer >;
@@ -16,6 +17,7 @@ namespace tkEngine {
 	using UPIRenderContext = std::unique_ptr<IRenderContext>;
 	using UPIGraphicsInstanceFactory = std::unique_ptr< IGraphicsInstanceFactory>;
 	using UPIShape = std::unique_ptr<IShape>;
+	using UPITexture = std::unique_ptr<ITexture>;
 
 	class CGameObjectManager;
 	

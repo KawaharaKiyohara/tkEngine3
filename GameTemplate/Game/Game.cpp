@@ -18,8 +18,9 @@ bool Game::Start()
 	g_camera3D->SetPosition({ 0.0f, 0.0f, -5.0f });
 	g_camera3D->Update();
 	
-	m_triangleShape = Engine().GetGraphicsInstanceFactory()->CreateTriangleShapeInstance();
-
+	auto factory = Engine().GetGraphicsInstanceFactory();
+	m_triangleShape = factory->CreateTriangleShapeInstance(L"sprite/title.dds");
+	m_texture = Engine().GetGraphicsInstanceFactory()->CreateTextureFromDDSFile(L"sprite/title.dds");
 	return true;
 }
 
