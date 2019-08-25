@@ -346,9 +346,8 @@ rollout tkExporter "tkExporter" width:194 height:248
 			
 			if skinMod != undefined then(
 				--スキンを見つけた。
-				clearSelection()
 				max modify mode
-				select p
+				
 				modPanel.setCurrentObject skinMod
 				numBone = skinOps.GetNumberBones( skinMod )
 				if numBone > 0 then(
@@ -602,15 +601,12 @@ rollout tkExporter "tkExporter" width:194 height:248
 							append ms.indexBuffer vertNos[3]
 						)
 						
-						numVert = meshop.getNumMapVerts p 1
-						break()
 						numVert = getNumVerts p
-						break()
 						for vertNo = 1 to numVert do(
 							--頂点座標
-							pos = meshop.getMapVert p 1 vertNo
+							pos = getVert p vertNo
 							--法線
-							normal = getMapNormal p vertNo
+							normal = getNormal p vertNo
 							--正規化されてないね。
 							normal = normalize normal
 							--UV座標
@@ -622,9 +618,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 							skinMod = p.modifiers[skin]
 							if skinMod != undefined then(
 								--スキンあり。
-								clearSelection()
 								max modify mode
-								select p
 								modPanel.setCurrentObject skinMod
 								numWeight = skinOps.GetVertexWeightCount skinMod vertNo
 								if numWeight > 4 then (

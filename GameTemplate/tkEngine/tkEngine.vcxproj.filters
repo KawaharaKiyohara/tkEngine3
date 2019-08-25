@@ -224,6 +224,12 @@
     <ClInclude Include="graphics\tkTexture.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkMeshPartDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkModelDataDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -326,6 +332,12 @@
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkModelDataDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkMeshPartDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
