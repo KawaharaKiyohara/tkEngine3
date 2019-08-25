@@ -590,27 +590,31 @@ rollout tkExporter "tkExporter" width:194 height:248
 					if numSubMaterial < 0 then(
 						--サブマテリアルがあるので、マテリアルごとに三角形を分割する。
 					)else(
-						
+						--集約しないとサブマテリアルＩＤが取れないぞいぞい。
+						meshObj = copy p 
+						meshObj = convertToMesh copyObj
 						numFace = getNumFaces p
 						--単一マテリアル。
 						for faceNo = 1 to numFace do (
+							matId  = getFaceMatID copyObj faceNo
+							
 							--三角形を構成するインデックスを取得する。
-							vertNos = getFace p faceNo
+							vertNos = getFace copyObj faceNo
 							append ms.indexBuffer vertNos[1]
 							append ms.indexBuffer vertNos[2]
 							append ms.indexBuffer vertNos[3]
 						)
 						
-						numVert = getNumVerts p
+						numVert = getNumVerts meshObj
 						for vertNo = 1 to numVert do(
 							--頂点座標
-							pos = getVert p vertNo
+							pos = getVert meshObj vertNo
 							--法線
-							normal = getNormal p vertNo
+							normal = getNormal meshObj vertNo
 							--正規化されてないね。
 							normal = normalize normal
 							--UV座標
-							uvw = gettvert p vertNo
+							uvw = gettvert meshObj vertNo
 							uv = Point2 uvw.x uvw.y
 							--スキンウェイト
 							skinWeight = #(0.0, 0.0, 0.0, 0.0)
@@ -731,7 +735,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 		for p in selection do (
 			append nodesTmp p
 		) 
-
+		
 		--スケルトンが取得できる？
 		filepath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		TrySaveSkeleton nodesTmp filepath
