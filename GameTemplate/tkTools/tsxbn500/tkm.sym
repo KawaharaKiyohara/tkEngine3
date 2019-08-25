@@ -1,0 +1,56 @@
+/*!
+ *@brief	tkmファイルのシンボル
+ */
+ 
+#include "typedef.h"
+ 
+;
+struct Vector3{
+	float x, y, z;
+};
+struct Vector2{
+	float x, y;
+};
+struct Vector4{
+	float x, y, z, w;
+};
+
+struct Vertex{
+	Vector3 pos;
+	Vector3 normal;
+	Vector2 uv;
+	float weights[4];
+	short indices[4];
+};
+$short TKM_VERSION;		//ファイルバージョン。
+$short numMeshParts;	//メッシュパーツの数。
+
+for( int meshPartsNo = 0; meshPartsNo < numMeshParts; meshPartsNo++ ){
+	$int numPolygon;
+	$int numVertex;
+	$BYTE indexSize;
+	$BYTE pad;
+	$BYTE pad;
+	$BYTE pad;
+	//頂点バッファ。
+	for( int vertNo = 0; vertNo < numVertex; vertNo++ ){
+		$Vertex vertex;
+	}
+	//インデックスバッファ。
+	int numIndex = numPolygon * 3;
+	for( int indexNo = 0; indexNo < numIndex; indexNo++ ){
+		if(indexSize == 2 ){
+			//インデックスのサイズが2バイト。
+			$WORD index;
+		}else{
+			//インデックスのサイズが4バイト。
+			$DWORD index;
+		}
+	}
+	//パディング。
+	if(indexSize == 2 ){
+		if( (numPolygon * 3) % 2 != 0 ){
+			$WORD pad;
+		}
+	}
+}
