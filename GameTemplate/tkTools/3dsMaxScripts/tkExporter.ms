@@ -1,11 +1,14 @@
 /*!
- * @brief	ƒXƒPƒ‹ƒgƒ“ƒGƒNƒXƒ|[ƒ^[B
+ * @brief	ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚¨ã‚¯ã‚¹ãƒãƒ¼ã‚¿ãƒ¼ã€‚
  */
  
 pluginManager.loadClass FBXIMPORTER 
 pluginManager.loadClass FbxExporter
 
---ƒIƒuƒWƒFƒNƒgƒpƒ‰ƒ[ƒ^B
+--tkmãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³
+TKM_VERSION = 100
+
+--ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚
 struct ObjectParam(
 	objName,
 	bindPose,
@@ -13,51 +16,82 @@ struct ObjectParam(
 	parentId,
 	n
 )
---ƒAƒjƒ[ƒVƒ‡ƒ“ƒL[ƒtƒŒ[ƒ€
+--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ 
 struct KeyFrame(
 	boneId,
 	t,
 	localTransform
 )
---ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv
+--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—
 struct AnimationClip(
-	animClipName,		--ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv–¼
-	keyFrames = #()		--ƒL[ƒtƒŒ[ƒ€‚ÌƒŠƒXƒg
+	animClipName,		--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—å
+	keyFrames = #()		--ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒªã‚¹ãƒˆ
 )
---ƒIƒuƒWƒFƒNƒgƒpƒ‰ƒ[ƒ^‚Ì”z—ñB
+--ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®é…åˆ—ã€‚
 g_objectParams = #()
 
 startFrame = 0
 endFrame = 0
 
+struct Vertex(
+	pos = Point3,		--é ‚ç‚¹åº§æ¨™
+	normal = Point3,	--æ³•ç·š
+	uv = Point2,		--UVåº§æ¨™
+	weights = #(),		--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆ
+	indices = #()		--ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+)
+--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã€‚
+struct MeshParts(
+	indexBuffer = #(),
+	vertexBuffer = #()
+)
+--ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã€‚
+struct ModelData(
+	meshParts = #()
+)
 rollout tkExporter "tkExporter" width:194 height:248
 (
 	editText 'animClipStartFrame' "" pos:[90,427] width:58 height:21 align:#left
 	label 'lbl1' "start frame" pos:[22,430] width:60 height:16 align:#left
 	groupBox 'grp1' "Animation clip" pos:[14,401] width:147 height:134 align:#left
-	button 'btn_saveAnimationClip' "Save" pos:[27,496] width:120 height:28 align:#left
+	button 'btn_saveAnimationClip' "Save(*.tka)" pos:[27,496] width:120 height:28 align:#left
 	label 'lbl2' "end frame" pos:[22,461] width:60 height:16 align:#left
 	editText 'animClipEndFrame' "" pos:[90,459] width:58 height:21 align:#left
-	button 'btn_saveSkeleton' "Save Skeleton" pos:[22,364] width:120 height:28 align:#left
+	button 'btn_saveSkeleton' "Save Skeleton(*.tks)" pos:[22,364] width:120 height:28 align:#left
 	label 'lbl3' "Label" pos:[33,423] width:0 height:0 align:#left
-	groupBox 'grp5' "FBX" pos:[13,13] width:145 height:109 align:#left
-	button 'btn_save_fbx' "Save" pos:[27,33] width:120 height:28 align:#left
+	groupBox 'grp5' "Model" pos:[13,13] width:145 height:109 align:#left
+	button 'btn_save_fbx' "Save(*.tkm)" pos:[27,33] width:120 height:28 align:#left
 	groupBox 'grp10' "Level" pos:[13,135] width:145 height:189 align:#left
 	button 'btn_load_locObject' "Load Object" pos:[26,215] width:120 height:28 align:#left
 	editText 'levelName' "" pos:[23,181] width:120 height:24 align:#left
 	label 'lbl4' "edit level name" pos:[23,160] width:121 height:16 align:#left
-	button 'SaveLoc' "Save Level" pos:[26,285] width:120 height:28 align:#left
+	button 'SaveLoc' "Save Level(*.tkl)" pos:[26,285] width:120 height:28 align:#left
 	groupBox 'grp6' "Animation" pos:[3,338] width:164 height:200 align:#left
 	button 'btn_copy_locObject' "Copy Object" pos:[26,249] width:120 height:28 align:#left
-	button 'btn_save_selected_fbx' "Save Selected" pos:[27,79] width:120 height:28 align:#left
+	button 'btn_save_selected_fbx' "Save Selected(*.tkm)" pos:[27,79] width:120 height:28 align:#left
 	
 	on  tkExporter open do
 	(
 		levelName.text = "level00"
 	)
-	
+	/*!
+	 * ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
+	 * ã“ã®é–¢æ•°ã‚’å‘¼ã³å‡ºã™ã«ã¯ã€BuildOutputNodeInfoã‚’å®Ÿè¡Œã—ã¦
+	 * ã‚¹ã‚±ãƒ«ãƒˆãƒ³æƒ…å ±ã‚’æ§‹ç¯‰æ¸ˆã¿ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+	*/
+	fn GetBoneIndex boneName =
+	(
+		boneNo = 0
+		for op in g_objectParams do(
+			if op.objName == boneName then(
+				--è¦‹ã¤ã‘ãŸ
+				return boneNo
+			)
+			boneNo += 1
+		)
+	)
 	/*
-	 *  o—Í‚·‚éƒm[ƒh‚Ìî•ñ‚ğ\’zB
+	 *  å‡ºåŠ›ã™ã‚‹ãƒãƒ¼ãƒ‰ã®æƒ…å ±ã‚’æ§‹ç¯‰ã€‚
 	 */
 	fn BuildOutputNodeInfo n parentId= 
 	(
@@ -67,30 +101,30 @@ rollout tkExporter "tkExporter" width:194 height:248
 		objParam.invBindPose = inverse n.transform
 		objParam.n = n
 		if n.parent == undefined then(
-			--e‚ª‚¢‚È‚¢
+			--è¦ªãŒã„ãªã„
 			objParam.parentId = -1
 		)else(
-			--e‚ª‚¢‚é
+			--è¦ªãŒã„ã‚‹
 			objParam.parentId = parentId
 		)
 
 		append g_objectParams objParam
 		parentId = g_objectParams.count-1
-		--q‹Ÿ‚àB
+		--å­ä¾›ã‚‚ã€‚
 		for child in n.children do(
 			BuildOutputNodeInfo child parentId
 		)
 	)
 	/*
-	 *  ƒXƒPƒ‹ƒgƒ“‚Ì•Û‘¶B
-	*@param[in]  filepath		•Û‘¶‚·‚éƒtƒ@ƒCƒ‹ƒpƒXB
+	 *  ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ä¿å­˜ã€‚
+	*@param[in]  filepath		ä¿å­˜ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚
 	 */
 	fn SaveSkeletonFilePath filepath = 
 	(
 		file = fopen filepath "wb"
 			
 		try(
-			--ƒwƒbƒ_[‚ğo—Í
+			--ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
 			WriteLong file g_objectParams.count
 			
 			for o in g_objectParams do (
@@ -98,13 +132,13 @@ rollout tkExporter "tkExporter" width:194 height:248
 				WriteByte file o.objName.count
 				WriteString file o.objName
 				WriteLong file o.parentId
-				--ƒoƒCƒ“ƒhƒ|[ƒY‚ğo—ÍB
+				--ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’å‡ºåŠ›ã€‚
 				for i = 1 to 4 do(
 					WriteFloat file o.bindPose[i].x
 					WriteFloat file o.bindPose[i].y
 					WriteFloat file o.bindPose[i].z
 				)
-				--ƒoƒCƒ“ƒhƒ|[ƒY‚Ì‹t”‚ğo—ÍB
+				--ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®é€†æ•°ã‚’å‡ºåŠ›ã€‚
 				for i = 1 to 4 do(
 					WriteFloat file o.invBindPose[i].x
 					WriteFloat file o.invBindPose[i].y
@@ -112,12 +146,12 @@ rollout tkExporter "tkExporter" width:194 height:248
 				)
 			)
 		)catch(
-			Messagebox "ƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½"
+			Messagebox "ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸ"
 		)
 		FClose file
 	)
 	/*
-	 *  ƒXƒPƒ‹ƒgƒ“‚Ì•Û‘¶B
+	 *  ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ä¿å­˜ã€‚
 	 */
 	fn SaveSkeleton = 
 	(
@@ -129,7 +163,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 * ƒŒƒxƒ‹ƒf[ƒ^‚ğ•Û‘¶B
+	 * ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã€‚
 	 */
 	fn SaveLevel = 
 	(
@@ -141,7 +175,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 			file = fopen filepath "wb"
 			
 			try(
-				--ƒwƒbƒ_[‚ğo—Í
+				--ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
 				WriteLong file g_objectParams.count
 				
 				for o in g_objectParams do (
@@ -149,13 +183,13 @@ rollout tkExporter "tkExporter" width:194 height:248
 					WriteByte file o.objName.count
 					WriteString file o.objName
 					WriteLong file o.parentId
-					--ƒoƒCƒ“ƒhƒ|[ƒY‚ğo—ÍB
+					--ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’å‡ºåŠ›ã€‚
 					for i = 1 to 4 do(
 						WriteFloat file o.bindPose[i].x
 						WriteFloat file o.bindPose[i].y
 						WriteFloat file o.bindPose[i].z
 					)
-					--ƒoƒCƒ“ƒhƒ|[ƒY‚Ì‹t”‚ğo—ÍB
+					--ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®é€†æ•°ã‚’å‡ºåŠ›ã€‚
 					for i = 1 to 4 do(
 						WriteFloat file o.invBindPose[i].x
 						WriteFloat file o.invBindPose[i].y
@@ -163,13 +197,13 @@ rollout tkExporter "tkExporter" width:194 height:248
 					)
 				)
 			)catch(
-				Messagebox "ƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½"
+				Messagebox "ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸ"
 			)
 			FClose file
 		)
 	)
 	/*
-	 *  ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì•Û‘¶B
+	 *  ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ä¿å­˜ã€‚
 	 */
 	fn SaveAnimationClip=
 	(
@@ -180,7 +214,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 			
 			numKey = endFrame - startFrame + 1
 			if numKey <= 0 then(
-				--1ƒtƒŒ[ƒ€‚¾‚¯o‚·B
+				--1ãƒ•ãƒ¬ãƒ¼ãƒ ã ã‘å‡ºã™ã€‚
 				endFrame = startFrame
 				numKey = 1
 			)
@@ -192,17 +226,17 @@ rollout tkExporter "tkExporter" width:194 height:248
 			matRotList = #()
 
 			file = fopen filepath "wb"
-			--ƒwƒbƒ_[‚ğo—Í
+			--ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
 			WriteLong file numKey
-			--ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚Ì”‚ğo—Í
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã®æ•°ã‚’å‡ºåŠ›
 			numNoteTrack = numNoteTracks selection[1]
 
 			if numNoteTrack > 0 then(
-				--ƒm[ƒgƒL[‚Ì”‚ğo—Í
+				--ãƒãƒ¼ãƒˆã‚­ãƒ¼ã®æ•°ã‚’å‡ºåŠ›
 				nt = getNoteTrack selection[1] 1
 				WriteLong file nt.keys.count
 				for k in nt.keys do(
-					--ƒCƒxƒ“ƒg‚ª”­¶‚·‚éŠÔ‚ğo—Í
+					--ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã™ã‚‹æ™‚é–“ã‚’å‡ºåŠ›
 					if k.time >= numKey then(
 						exit
 					)
@@ -217,7 +251,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 			)
 			
 			fclose file
-			--ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìî•ñ‚ğo—ÍB
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æƒ…å ±ã‚’å‡ºåŠ›ã€‚
 			slidertime=startFrame
 
 			file = fopen filepath "ab"
@@ -229,11 +263,11 @@ rollout tkExporter "tkExporter" width:194 height:248
 				for o in g_objectParams do (
 					n = o.n
 
-					--o—Í
-					WriteLong file boneId -- œID
-					WriteFloat file keyTime -- ŠÔ
+					--å‡ºåŠ›
+					WriteLong file boneId -- éª¨ID
+					WriteFloat file keyTime -- æ™‚é–“
 					
-					--ƒ{[ƒ“ƒ[ƒJƒ‹s—ñ‚É•ÏŠ·‚·‚éB
+					--ãƒœãƒ¼ãƒ³ãƒ­ãƒ¼ã‚«ãƒ«è¡Œåˆ—ã«å¤‰æ›ã™ã‚‹ã€‚
 					
 					transformMatrix = Matrix3 1
 					if n.parent == undefined then(
@@ -258,76 +292,76 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 *  ƒXƒPƒ‹ƒgƒ“‚Ìo—Í‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
+	 *  ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®å‡ºåŠ›ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
 	 */
 	on btn_saveSkeleton pressed do
 	(
 		if selection[1] == undefined then(
-			Messagebox "o—Í‚·‚éƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢BBB"
+			Messagebox "å‡ºåŠ›ã™ã‚‹ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚ã€‚ã€‚"
 		)else(
 			g_objectParams = #()
-			--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
+				--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
 				BuildOutputNodeInfo selection[1] -1
 				SaveSkeleton()
 			)
 		)
 	)
 	/*
-	* Level‚ğ•Û‘¶B
+	* Levelã‚’ä¿å­˜ã€‚
 	*/
 	on SaveLoc pressed do
 	(
-		--Œ»İ•ÒW’†‚Ìƒ‹[ƒg‚ÌƒŒƒxƒ‹‚ğæ“¾B
+		--ç¾åœ¨ç·¨é›†ä¸­ã®ãƒ«ãƒ¼ãƒˆã®ãƒ¬ãƒ™ãƒ«ã‚’å–å¾—ã€‚
 		editLevelObj = getNodeByName levelName.text
 		if editLevelObj == undefined then(
-			Messagebox "•Û‘¶‚·‚éƒŒƒxƒ‹‚ª‘¶İ‚µ‚Ü‚¹‚ñB"
+			Messagebox "ä¿å­˜ã™ã‚‹ãƒ¬ãƒ™ãƒ«ãŒå­˜åœ¨ã—ã¾ã›ã‚“ã€‚"
 		)else(
 			select editLevelObj
 		
-			--ƒXƒPƒ‹ƒgƒ“‚Æ‚µ‚Ä•Û‘¶B
+			--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã¨ã—ã¦ä¿å­˜ã€‚
 			g_objectParams = #()
-			--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
+				--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
 				BuildOutputNodeInfo selection[1] -1
 				SaveLevel()
 			)
 		)
 	)
 		/*
-	 *  ƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ªİ’è‚³‚ê‚Ä‚¢‚éƒm[ƒh‚ª‚ ‚Á‚½‚çA‚»‚Ìƒm[ƒh‚ÉŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ğæ“¾B
+	 *  ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ãŒã‚ã£ãŸã‚‰ã€ãã®ãƒãƒ¼ãƒ‰ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã‚’å–å¾—ã€‚
 	 */
 	fn GetSkeletonRoot nodes =
 	(
 		for p in nodes do
 		(
-			--ƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ğæ“¾B
+			--ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ã‚’å–å¾—ã€‚
 			skinMod = p.modifiers[skin]
 			
 			if skinMod != undefined then(
-				--ƒXƒLƒ“‚ğŒ©‚Â‚¯‚½B
+				--ã‚¹ã‚­ãƒ³ã‚’è¦‹ã¤ã‘ãŸã€‚
 				clearSelection()
 				max modify mode
 				select p
 				modPanel.setCurrentObject skinMod
 				numBone = skinOps.GetNumberBones( skinMod )
 				if numBone > 0 then(
-					--bone”­Œ©‚µ‚½‚¼‚¢‚¼‚¢
+					--boneç™ºè¦‹ã—ãŸãã„ãã„
 					boneName = skinOps.GetBoneName skinMod 1 1 
-					--–¼‘O‚©‚çƒm[ƒh‚ğ‘I‘ğ
+					--åå‰ã‹ã‚‰ãƒãƒ¼ãƒ‰ã‚’é¸æŠ
 					boneNode = getNodebyName(boneName)
 					if boneNode != undefined  then (
-						--ƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ğŒŸõ‚·‚é‚¼
+						--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã‚’æ¤œç´¢ã™ã‚‹ã
 						while boneNode.parent != undefined  do(
 							boneNode = boneNode.parent
 						)
-						--ƒ‹[ƒg‚ğ•Ô‚·‚ñB
+						--ãƒ«ãƒ¼ãƒˆã‚’è¿”ã™ã‚“ã€‚
 						return boneNode
 					)
 				)
@@ -336,34 +370,34 @@ rollout tkExporter "tkExporter" width:194 height:248
 		return undefined
 	)
 	/*
-	 *  ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì•Û‘¶‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
+	 *  ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ä¿å­˜ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
 	 */
 	on btn_saveAnimationClip pressed do
 	(
-		--‚Æ‚è‚ ‚¦‚¸‘SƒNƒŠƒbƒvo—Í‚·‚éB
+		--ã¨ã‚Šã‚ãˆãšå…¨ã‚¯ãƒªãƒƒãƒ—å‡ºåŠ›ã™ã‚‹ã€‚
 		skeletonRoot = GetSkeletonRoot objects
 		
 		if skeletonRoot == undefined  then(
-			--ƒV[ƒ“‚ÉƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½B
+			--ã‚·ãƒ¼ãƒ³ã«ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã€‚
 			if selection[1] == undefined  then(
-				Messagebox "ƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚Ì©“®”»•Ê‚ª‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B\nƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚µ‚ÄƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚ğ•Û‘¶‚µ‚Ä‚­‚¾‚³‚¢B\n"
+				Messagebox "ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è‡ªå‹•åˆ¤åˆ¥ãŒã§ãã¾ã›ã‚“ã§ã—ãŸã€‚\nã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã—ã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã‚’ä¿å­˜ã—ã¦ãã ã•ã„ã€‚\n"
 				return 0
 			)
 			skeletonRoot = selection[1]
 		)
 		g_objectParams = #()
-		--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
+		--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
 		startFrame = animClipStartFrame.text as integer
 		endFrame = animClipEndFrame.text as integer
 		animationRange = interval startFrame endFrame
 		slidertimer = 0
 		animate on(
-			--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
 			BuildOutputNodeInfo skeletonRoot -1
 			try(
 				SaveAnimationClip()
 			)catch(
-				messageBox "ƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½"
+				messageBox "ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸ"
 			)
 		)
 	)
@@ -380,12 +414,12 @@ rollout tkExporter "tkExporter" width:194 height:248
     )
     
 	/*
-	 *@”z’u‚·‚éƒIƒuƒWƒFƒNƒg‚ğƒRƒs[
+	 *ã€€é…ç½®ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚³ãƒ”ãƒ¼
 	 */
 	on btn_copy_locObject pressed do
 	(
 		if selection.count == 0  then(
-			Messagebox "ƒRƒs[‚·‚éƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B"
+			Messagebox "ã‚³ãƒ”ãƒ¼ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚"
 		)else(
 			selectHierarchy()
 			parentObj = copy selection[1]
@@ -401,19 +435,19 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 * ”z’u‚·‚éƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒhB
+	 * é…ç½®ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ­ãƒ¼ãƒ‰ã€‚
 	 */
 	on btn_load_locObject pressed do
 	(
 		
 		if  levelName.text == "" then(
-			Messagebox "•ÒW‚·‚éƒŒƒxƒ‹‚Ì–¼‘O‚ğ“ü—Í‚µ‚Ä‰º‚³‚¢B"
+			Messagebox "ç·¨é›†ã™ã‚‹ãƒ¬ãƒ™ãƒ«ã®åå‰ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„ã€‚"
 		)else(
 			filepath = getOpenFileName caption:"" types: "fbx (*fbx)|*.fbx|All Files (*.*)|*.*|"
 			if filepath != undefined then(
 				editLevelObj = getNodeByName levelName.text
 				if editLevelObj == undefined then(
-					--ƒ_ƒ~[‚ğì‚éB
+					--ãƒ€ãƒŸãƒ¼ã‚’ä½œã‚‹ã€‚
 					editLevelObj = Dummy()
 					editLevelObj.name = levelName.text
 				)
@@ -425,18 +459,18 @@ rollout tkExporter "tkExporter" width:194 height:248
 		
 				filename = getFilenameFile filepath
 				
-				--‘S‚Ä‚ğ•ÒW‰Â”\ƒ|ƒŠƒSƒ“‚É•ÏŠ·‚·‚éB
+				--å…¨ã¦ã‚’ç·¨é›†å¯èƒ½ãƒãƒªã‚´ãƒ³ã«å¤‰æ›ã™ã‚‹ã€‚
 				delObjArray = #()
 				for i=1 to $selection.count do
 				(
 					p = convertToMesh($selection[i]);
-					--•ÒW‰Â”\ƒ|ƒŠƒSƒ“‚É•ÏŠ·‚Å‚«‚È‚©‚Á‚½ê‡‚ÍAíœƒŠƒXƒg‚ÉÏ‚ŞB
+					--ç·¨é›†å¯èƒ½ãƒãƒªã‚´ãƒ³ã«å¤‰æ›ã§ããªã‹ã£ãŸå ´åˆã¯ã€å‰Šé™¤ãƒªã‚¹ãƒˆã«ç©ã‚€ã€‚
 					if p == undefined then(
 						append delObjArray $selection[i]
 					)
 	
 				)
-				--•ÒW‰Â”\ƒ|ƒŠƒSƒ“‚É•ÏŠ·‚Å‚«‚È‚©‚Á‚½ƒIƒuƒWƒFƒNƒg‚ğíœB
+				--ç·¨é›†å¯èƒ½ãƒãƒªã‚´ãƒ³ã«å¤‰æ›ã§ããªã‹ã£ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤ã€‚
 				for i=1 to delObjArray.count do
 				(
 					delete delObjArray[i]
@@ -446,13 +480,13 @@ rollout tkExporter "tkExporter" width:194 height:248
 				importObj.parent = parentBox
 				select p
 				selectMore $.children
-				--Œ‹‡B
+				--çµåˆã€‚
 				while  $selection.count>1 do
 				(
 					attach p $selection[$selection.count];
 				)
 
-				--ƒ_ƒ~[‚ğƒŒƒxƒ‹‚Ì‰º‚É‚Û‚¢‚Á‚Æ‚ÈB
+				--ãƒ€ãƒŸãƒ¼ã‚’ãƒ¬ãƒ™ãƒ«ã®ä¸‹ã«ã½ã„ã£ã¨ãªã€‚
 				$selection[1].pivot = Point3 0 0 0
 				selection[1].name = filename
 				$selection[1].parent = editLevelObj
@@ -460,11 +494,11 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 *  FBXo—Í—p‚Ìİ’è‚ğs‚¤B
+	 *  FBXå‡ºåŠ›ç”¨ã®è¨­å®šã‚’è¡Œã†ã€‚
 	 */
 	fn SetupFbxExportSettings = 
 	(
-		--‘¼‚É‚àƒIƒvƒVƒ‡ƒ“‚ª•K—v‚È‚ç’Ç‰Á‚µ‚Ä‚¢‚Á‚Ä‚­‚¾‚³‚¢B
+		--ä»–ã«ã‚‚ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãŒå¿…è¦ãªã‚‰è¿½åŠ ã—ã¦ã„ã£ã¦ãã ã•ã„ã€‚
 		FBXExporterSetParam "ResetExport"
 		FBXExporterSetParam "ScaleFactor" 1.0
 		FBXExporterSetParam "UpAxis" "Z"
@@ -473,7 +507,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 		FBXExporterSetParam "ASCII" true
 	)
 	/*
-	 *  ƒ}ƒeƒŠƒAƒ‹‚ª“\‚ç‚ê‚Ä‚¢‚È‚¢ƒm[ƒh‚ª‚È‚¢‚©ƒ`ƒFƒbƒN‚ğs‚¤B
+	 *  ãƒãƒ†ãƒªã‚¢ãƒ«ãŒè²¼ã‚‰ã‚Œã¦ã„ãªã„ãƒãƒ¼ãƒ‰ãŒãªã„ã‹ãƒã‚§ãƒƒã‚¯ã‚’è¡Œã†ã€‚
 	 */
 	fn CheckMaterial nodes =
 	(
@@ -481,17 +515,17 @@ rollout tkExporter "tkExporter" width:194 height:248
 		(
 			meshCount = GetTriMeshFaceCount(p)
 			if classof( p ) == BoneGeometry do(
-				--‚±‚¢‚Â‚Íƒ{[ƒ“
+				--ã“ã„ã¤ã¯ãƒœãƒ¼ãƒ³
 				meshCount[1] = 0
 				meshCount[2] = 0
 			)
 			if meshCount[1] > 0 do
 			(
-				--ƒƒbƒVƒ…‚ª‚ ‚éB
+				--ãƒ¡ãƒƒã‚·ãƒ¥ãŒã‚ã‚‹ã€‚
 				if p.material == undefined do
 				(
-					--ƒ}ƒeƒŠƒAƒ‹‚ª’£‚ç‚ê‚Ä‚¢‚È‚¢B
-					errorMessage = "ƒGƒ‰[\n " + p.name + "‚Éƒ}ƒeƒŠƒAƒ‹‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢‚½‚ßo—Í‚Å‚«‚Ü‚¹‚ñB\n"+ "ƒ}ƒeƒŠƒAƒ‹‚ğŠ„‚è“–‚Ä‚Ä‚­‚¾‚³‚¢B\n"
+					--ãƒãƒ†ãƒªã‚¢ãƒ«ãŒå¼µã‚‰ã‚Œã¦ã„ãªã„ã€‚
+					errorMessage = "ã‚¨ãƒ©ãƒ¼\n " + p.name + "ã«ãƒãƒ†ãƒªã‚¢ãƒ«ãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã„ãŸã‚å‡ºåŠ›ã§ãã¾ã›ã‚“ã€‚\n"+ "ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’å‰²ã‚Šå½“ã¦ã¦ãã ã•ã„ã€‚\n"
 					messagebox errorMessage
 					return false				
 				)
@@ -501,32 +535,32 @@ rollout tkExporter "tkExporter" width:194 height:248
 	)
 
 	/*
-	 *  ƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ªİ’è‚³‚ê‚Ä‚¢‚éƒm[ƒh‚ª‚ ‚Á‚½‚çAƒXƒPƒ‹ƒgƒ“‚ğo—Í‚·‚éB
+	 *  ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ãŒã‚ã£ãŸã‚‰ã€ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 	 */
 	fn TrySaveSkeleton nodes filePath = 
 	(
-		--ƒXƒPƒ‹ƒgƒ“‚ğ‘I‘ğo—ˆ‚½‚çæ“¾‚·‚éB
+		--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’é¸æŠå‡ºæ¥ãŸã‚‰å–å¾—ã™ã‚‹ã€‚
 		skeletonRoot = GetSkeletonRoot nodes
 		if skeletonRoot != undefined  then(
 			
-			--ƒXƒPƒ‹ƒgƒ“‚ğ•Û‘¶‚·‚éB
+			--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’ä¿å­˜ã™ã‚‹ã€‚
 			g_objectParams = #()
-			--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
+				--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
 				BuildOutputNodeInfo skeletonRoot -1
-				--ƒtƒ@ƒCƒ‹ƒpƒX‚ÌŠg’£q‚ğtks‚É•ÏX‚·‚éB
+				--ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®æ‹¡å¼µå­ã‚’tksã«å¤‰æ›´ã™ã‚‹ã€‚
 				extPos = findString filepath "."
 				filepath = replace filepath extPos 4 ".tks"
-				--•Û‘¶‚¾\B
+				--ä¿å­˜ã â€•ã€‚
 				SaveSkeletonFilePath filepath
 			)
 		)
 	)
 	/*!
-	 * @brief	FBX‚ÌSave‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
+	 * @brief	FBXã®Saveã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
 	 */
 	on btn_save_fbx pressed do
 	(
@@ -537,25 +571,177 @@ rollout tkExporter "tkExporter" width:194 height:248
 			if filepath != undefined then(
 				exportFile(filepath) #noPrompt
 			)
-			--ƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ª‚ ‚éê‡‚ÉƒXƒPƒ‹ƒgƒ“ƒf[ƒ^‚ğ•Û‘¶‚·‚éB
+			--ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ãŒã‚ã‚‹å ´åˆã«ã‚¹ã‚±ãƒ«ãƒˆãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã™ã‚‹ã€‚
 			TrySaveSkeleton objects filepath
 		)
 	)
+	fn SaveTkm nodes filePath=
+	(
+		md = ModelData meshParts:#()
+		ms = Meshparts indexbuffer:#() vertexBuffer:#()	
+		
+		
+		for p in nodes do (
+			--ç·¨é›†å¯èƒ½é ‚ç‚¹ã«å¤‰æ›ã§ãã‚‹ã‹èª¿ã¹ã‚‹ã€‚
+			if canConvertTo p Mesh then(				
+				--ãƒãƒ†ãƒªã‚¢ãƒ«ã”ã¨ã«ã‚°ãƒ«ãƒ¼ãƒ—åˆ†ã‘ã‚’è¡Œã†ã€‚
+				if p.material != undefined then(
+					--ã‚µãƒ–ãƒãƒ†ãƒªã‚¢ãƒ«ãŒã‚ã‚‹ï¼Ÿ
+					numSubMaterial = getNumSubMtls p.material
+					if numSubMaterial < 0 then(
+						--ã‚µãƒ–ãƒãƒ†ãƒªã‚¢ãƒ«ãŒã‚ã‚‹ã®ã§ã€ãƒãƒ†ãƒªã‚¢ãƒ«ã”ã¨ã«ä¸‰è§’å½¢ã‚’åˆ†å‰²ã™ã‚‹ã€‚
+					)else(
+						
+						numFace = getNumFaces p
+						--å˜ä¸€ãƒãƒ†ãƒªã‚¢ãƒ«ã€‚
+						for faceNo = 1 to numFace do (
+							--ä¸‰è§’å½¢ã‚’æ§‹æˆã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
+							vertNos = getFace p faceNo
+							append ms.indexBuffer vertNos[1]
+							append ms.indexBuffer vertNos[2]
+							append ms.indexBuffer vertNos[3]
+						)
+						
+						numVert = meshop.getNumMapVerts p 1
+						break()
+						numVert = getNumVerts p
+						break()
+						for vertNo = 1 to numVert do(
+							--é ‚ç‚¹åº§æ¨™
+							pos = meshop.getMapVert p 1 vertNo
+							--æ³•ç·š
+							normal = getMapNormal p vertNo
+							--æ­£è¦åŒ–ã•ã‚Œã¦ãªã„ã­ã€‚
+							normal = normalize normal
+							--UVåº§æ¨™
+							uvw = gettvert p vertNo
+							uv = Point2 uvw.x uvw.y
+							--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆ
+							skinWeight = #(0.0, 0.0, 0.0, 0.0)
+							indices = #(-1, -1, -1, -1)
+							skinMod = p.modifiers[skin]
+							if skinMod != undefined then(
+								--ã‚¹ã‚­ãƒ³ã‚ã‚Šã€‚
+								clearSelection()
+								max modify mode
+								select p
+								modPanel.setCurrentObject skinMod
+								numWeight = skinOps.GetVertexWeightCount skinMod vertNo
+								if numWeight > 4 then (
+									--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã®æ•°ãŒ4ã‚’è¶…ãˆã¦ã„ã¾ã™ã€‚
+									numWeight = 4
+								)
+								for skinIndex = 1 to numWeight do (
+									skinWeight[skinIndex] = skinOps.GetVertexWeight skinMod vertNo skinIndex
+									sysytemBoneIndex = skinOps.GetVertexWeightBoneID skinMod vertNo skinIndex
+									--ç¬¬ä¸‰å¼•æ•°ã¯0ã§ã„ã„ã®ã‹ã©ã†ã‹ã‹ä¸æ˜ã€‚
+									--ãªã«ã‹å•é¡ŒãŒèµ·ããŸã‚‰1ã«ã—ã¦ã¿ã‚ˆã†ã€‚
+									boneName = skinOps.GetBoneName skinMod sysytemBoneIndex 0
+									boneNo = GetBoneIndex boneName
+									indices[skinIndex] = boneNo
+								)
+								--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆãŒ4ä»¥ä¸Šãªã‚‰æ­£è¦åŒ–ã™ã‚‹ï¼Ÿ
+							)	
+							--é ‚ç‚¹ä½œæˆ
+							v = vertex pos:pos normal:normal uv:uv weights:skinWeight indices:indices
+							
+							append ms.vertexBuffer v
+						)
+						append md.meshParts ms
+					)
+				)
+			)
+		) 
+		
+		--ä¿å­˜ã ã‚ˆ
+		file = fopen filePath "wb"
+		--try(
+			--ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
+			WriteShort file TKM_VERSION 
+			--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã®æ•°ã‚’å‡ºåŠ›
+			WriteShort file md.meshParts.count
+			--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã‚’å‡ºåŠ›ã—ã¦ã„ãã€‚
+			for meshNo = 1 to md.meshParts.count do(
+				--ãƒãƒªã‚´ãƒ³ã®æ•°ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
+				numPoly = md.meshParts[meshNo].indexBuffer.count / 3
+				WriteLong file numPoly
+				numVertex = md.meshParts[meshNo].vertexBuffer.count
+				WriteLong file numVertex
+				--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚ºã‚’å‡ºåŠ›
+				indexSize = 0
+				if numVertex < 65536  then (
+					--2byte
+					indexSize = 2
+				)else(
+					--4byte
+					indexSize = 4
+				)
+				WriteByte file indexSize
+				--ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+				WriteByte file 0
+				WriteByte file 0
+				WriteByte file 0
+				--é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’å‡ºåŠ›
+				for v in md.meshParts[meshNo].vertexBuffer do (
+					--é ‚ç‚¹åº§æ¨™ã‚’å‡ºåŠ›ã€‚
+					WriteFloat file v.pos.x
+					WriteFloat file v.pos.y
+					WriteFloat file v.pos.z
+					--é ‚ç‚¹æ³•ç·šã‚’å‡ºåŠ›ã€‚
+					WriteFloat file v.normal.x
+					WriteFloat file v.normal.y
+					WriteFloat file v.normal.Z
+					--UVåº§æ¨™ã‚’å‡ºåŠ›
+					WriteFloat file v.uv.x
+					WriteFloat file v.uv.y
+					--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã‚’å‡ºåŠ›
+					WriteFloat file v.weights[1]
+					WriteFloat file v.weights[2]
+					WriteFloat file v.weights[3]
+					WriteFloat file v.weights[4]
+					--ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å‡ºåŠ›ã€‚
+					WriteShort file v.indices[1]
+					WriteShort file v.indices[2]
+					WriteShort file v.indices[3]
+					WriteShort file v.indices[4]
+				)
+				--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’å‡ºåŠ›ã€‚
+				
+				for index in md.meshParts[meshNo].indexBuffer do (
+					if indexSize == 2 then (
+						WriteShort file index
+					)else(
+						WriteLong file index
+					)
+				)
+				--ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
+				if indexSize == 2 then(
+					amari = mod md.meshParts[meshNo].indexBuffer.count 2
+					if amari != 0 then(
+						WriteShort file 0
+					)
+				)
+			)			
+	/*	)catch(
+			messageBox "tkmãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"
+		)*/
+		fclose file
+	)
 	/*!
-	 * @brief	FBX‚ÌSave Selected‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
+	 * @brief	FBXã®Save Selectedã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
 	 */
 	on btn_save_selected_fbx pressed do
 	(
-		
-		if CheckMaterial(selection) then (
-			SetupFbxExportSettings()
-			filepath = getSaveFileName caption:"" types: " (*.fbx)|*.fbx|All Files (*.*)|*.*|"
-			if filepath != undefined then(
-				exportFile(filepath) #noPrompt selectedOnly:true
-			)
-			--ƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ª‚ ‚éê‡‚ÉƒXƒPƒ‹ƒgƒ“ƒf[ƒ^‚ğ•Û‘¶‚·‚éB
-			TrySaveSkeleton selection filepath
-		)
+		--é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’é€€é¿ã•ã›ã‚‹ã€‚
+		nodesTmp = #()
+		for p in selection do (
+			append nodesTmp p
+		) 
+
+		--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ãŒå–å¾—ã§ãã‚‹ï¼Ÿ
+		filepath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
+		TrySaveSkeleton nodesTmp filepath
+		SaveTkm nodesTmp filepath
 	)
 )
 addrollout tkExporter style:#(#style_titlebar, #style_sysmenu)
