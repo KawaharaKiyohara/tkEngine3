@@ -1,30 +1,15 @@
 /*!
- * @brief	スケルトンエクスポーター。
+ * @brief	tkEngine関係のエクスポーター。
  */
  
 pluginManager.loadClass FBXIMPORTER 
 pluginManager.loadClass FbxExporter
 
 include "sub/tkExporterCommon.ms"
+include "sub/tksExporter.ms"
+include "sub/tkaExporter.ms"
 include "sub/tkmExporter.ms"
-
-
---アニメーションキーフレーム
-struct KeyFrame(
-	boneId,
-	t,
-	localTransform
-)
---アニメーションクリップ
-struct AnimationClip(
-	animClipName,		--アニメーションクリップ名
-	keyFrames = #()		--キーフレームのリスト
-)
-
-
-startFrame = 0
-endFrame = 0
-
+include "sub/tklExporter.ms"
 
 
 
@@ -54,207 +39,6 @@ rollout tkExporter "tkExporter" width:194 height:248
 		levelName.text = "level00"
 	)
 	
-	/*
-	 *  出力するノードの情報を構築。
-	 */
-	fn BuildOutputNodeInfo n parentId= 
-	(
-		objParam = ObjectParam "" Matrix3 Matrix3 -1 Node
-		objParam.objName = n.name
-		objParam.bindPose = n.transform
-		objParam.invBindPose = inverse n.transform
-		objParam.n = n
-		if n.parent == undefined then(
-			--親がいない
-			objParam.parentId = -1
-		)else(
-			--親がいる
-			objParam.parentId = parentId
-		)
-
-		append g_objectParams objParam
-		parentId = g_objectParams.count-1
-		--子供も。
-		for child in n.children do(
-			BuildOutputNodeInfo child parentId
-		)
-	)
-	/*
-	 *  スケルトンの保存。
-	*@param[in]  filepath		保存するファイルパス。
-	 */
-	fn SaveSkeletonFilePath filepath = 
-	(
-		file = fopen filepath "wb"
-			
-		try(
-			--ヘッダーを出力
-			WriteLong file g_objectParams.count
-			
-			for o in g_objectParams do (
-				
-				WriteByte file o.objName.count
-				WriteString file o.objName
-				WriteLong file o.parentId
-				--バインドポーズを出力。
-				for i = 1 to 4 do(
-					WriteFloat file o.bindPose[i].x
-					WriteFloat file o.bindPose[i].y
-					WriteFloat file o.bindPose[i].z
-				)
-				--バインドポーズの逆数を出力。
-				for i = 1 to 4 do(
-					WriteFloat file o.invBindPose[i].x
-					WriteFloat file o.invBindPose[i].y
-					WriteFloat file o.invBindPose[i].z
-				)
-			)
-		)catch(
-			Messagebox "ファイルの保存に失敗しました"
-		)
-		FClose file
-	)
-	/*
-	 *  スケルトンの保存。
-	 */
-	fn SaveSkeleton = 
-	(
-		filepath = getSaveFileName caption:"" types: "skeleton (*tks)|*.tks|All Files (*.*)|*.*|"
-		
-		if filepath != undefined then
-		(
-			SaveSkeletonFilePath filepath
-		)
-	)
-	/*
-	 * レベルデータを保存。
-	 */
-	fn SaveLevel = 
-	(
-		filepath = getSaveFileName caption:"" types: "level (*.tkl)|*.tkl|All Files (*.*)|*.*|"
-		
-		if filepath != undefined then
-		(
-			
-			file = fopen filepath "wb"
-			
-			try(
-				--ヘッダーを出力
-				WriteLong file g_objectParams.count
-				
-				for o in g_objectParams do (
-					
-					WriteByte file o.objName.count
-					WriteString file o.objName
-					WriteLong file o.parentId
-					--バインドポーズを出力。
-					for i = 1 to 4 do(
-						WriteFloat file o.bindPose[i].x
-						WriteFloat file o.bindPose[i].y
-						WriteFloat file o.bindPose[i].z
-					)
-					--バインドポーズの逆数を出力。
-					for i = 1 to 4 do(
-						WriteFloat file o.invBindPose[i].x
-						WriteFloat file o.invBindPose[i].y
-						WriteFloat file o.invBindPose[i].z
-					)
-				)
-			)catch(
-				Messagebox "ファイルの保存に失敗しました"
-			)
-			FClose file
-		)
-	)
-	/*
-	 *  アニメーションクリップの保存。
-	 */
-	fn SaveAnimationClip=
-	(
-		filepath = getSaveFileName caption:"" types: "animation clip (*tka)|*.tka|All Files (*.*)|*.*|"
-
-		if filepath != undefined then
-		(
-			
-			numKey = endFrame - startFrame + 1
-			if numKey <= 0 then(
-				--1フレームだけ出す。
-				endFrame = startFrame
-				numKey = 1
-			)
-			deltaTime = 1.0/30
-			keyTime = 0.0
-			
-			numKey *= g_objectParams.Count
-			matTransList = #()
-			matRotList = #()
-
-			file = fopen filepath "wb"
-			--ヘッダーを出力
-			WriteLong file numKey
-			--アニメーションイベントの数を出力
-			numNoteTrack = numNoteTracks selection[1]
-
-			if numNoteTrack > 0 then(
-				--ノートキーの数を出力
-				nt = getNoteTrack selection[1] 1
-				WriteLong file nt.keys.count
-				for k in nt.keys do(
-					--イベントが発生する時間を出力
-					if k.time >= numKey then(
-						exit
-					)
-					invokeTime = k.time * deltaTime
-					
-					WriteFloat file invokeTime
-					WriteLong file k.value.count
-					WriteString file k.value
-				)
-			)else(
-				WriteLong file 0
-			)
-			
-			fclose file
-			--アニメーションの情報を出力。
-			slidertime=startFrame
-
-			file = fopen filepath "ab"
-			
-			for i=startFrame to endFrame do(
-				boneId = 0
-				keyTime = (i - startFrame) * deltaTime
-				
-				for o in g_objectParams do (
-					n = o.n
-
-					--出力
-					WriteLong file boneId -- 骨ID
-					WriteFloat file keyTime -- 時間
-					
-					--ボーンローカル行列に変換する。
-					
-					transformMatrix = Matrix3 1
-					if n.parent == undefined then(
-						transformMatrix =n.transform
-					)else(
-						transformMatrix = n.transform * inverse n.parent.transform
-					)
-					for i = 1 to 4 do(
-						
-						WriteFloat file transformMatrix[i].x
-						WriteFloat file transformMatrix[i].y
-						WriteFloat file transformMatrix[i].z
-					)
-					boneId +=1
-					
-				)
-				slidertime += 1
-			)
-			
-			fclose file
-
-		)
-	)
 	/*
 	 *  スケルトンの出力のボタンが押されたときの処理。
 	 */
@@ -298,40 +82,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 			)
 		)
 	)
-		/*
-	 *  スキンモディファイアが設定されているノードがあったら、そのノードに割り当てられているスケルトンのルートを取得。
-	 */
-	fn GetSkeletonRoot nodes =
-	(
-		for p in nodes do
-		(
-			--スキンモディファイアを取得。
-			skinMod = p.modifiers[skin]
-			
-			if skinMod != undefined then(
-				--スキンを見つけた。
-				max modify mode
-				
-				modPanel.setCurrentObject skinMod
-				numBone = skinOps.GetNumberBones( skinMod )
-				if numBone > 0 then(
-					--bone発見したぞいぞい
-					boneName = skinOps.GetBoneName skinMod 1 1 
-					--名前からノードを選択
-					boneNode = getNodebyName(boneName)
-					if boneNode != undefined  then (
-						--スケルトンのルートを検索するぞ
-						while boneNode.parent != undefined  do(
-							boneNode = boneNode.parent
-						)
-						--ルートを返すん。
-						return boneNode
-					)
-				)
-			)
-		)
-		return undefined
-	)
+	
 	/*
 	 *  アニメーションクリップの保存のボタンが押されたときの処理。
 	 */
@@ -469,59 +220,9 @@ rollout tkExporter "tkExporter" width:194 height:248
 		FBXExporterSetParam "Triangulate" true
 		FBXExporterSetParam "ASCII" true
 	)
-	/*
-	 *  マテリアルが貼られていないノードがないかチェックを行う。
-	 */
-	fn CheckMaterial nodes =
-	(
-		for p in nodes do
-		(
-			meshCount = GetTriMeshFaceCount(p)
-			if classof( p ) == BoneGeometry do(
-				--こいつはボーン
-				meshCount[1] = 0
-				meshCount[2] = 0
-			)
-			if meshCount[1] > 0 do
-			(
-				--メッシュがある。
-				if p.material == undefined do
-				(
-					--マテリアルが張られていない。
-					errorMessage = "エラー\n " + p.name + "にマテリアルが割り当てられていないため出力できません。\n"+ "マテリアルを割り当ててください。\n"
-					messagebox errorMessage
-					return false				
-				)
-			)
-		)
-		return true
-	)
+	
 
-	/*
-	 *  スキンモディファイアが設定されているノードがあったら、スケルトンを出力する。
-	 */
-	fn TrySaveSkeleton nodes filePath = 
-	(
-		--スケルトンを選択出来たら取得する。
-		skeletonRoot = GetSkeletonRoot nodes
-		if skeletonRoot != undefined  then(
-			
-			--スケルトンを保存する。
-			g_objectParams = #()
-			--アニメーション時間を0にする。
-			animationRange = interval 0 animationRange.end
-			slidertime = 0
-			at time 0(
-				--アニメーション進行中の処理。
-				BuildOutputNodeInfo skeletonRoot -1
-				--ファイルパスの拡張子をtksに変更する。
-				extPos = findString filepath "."
-				filepath = replace filepath extPos 4 ".tks"
-				--保存だ―。
-				SaveSkeletonFilePath filepath
-			)
-		)
-	)
+	
 	/*!
 	 * @brief	FBXのSaveのボタンが押されたときの処理。
 	 */
