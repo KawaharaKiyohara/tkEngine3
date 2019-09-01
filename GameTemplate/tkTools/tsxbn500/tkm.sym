@@ -1,5 +1,5 @@
 /*!
- *@brief	tkmƒtƒ@ƒCƒ‹‚ÌƒVƒ“ƒ{ƒ‹
+ *@brief	tkmãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚·ãƒ³ãƒœãƒ«
  */
  
 #include "typedef.h"
@@ -22,35 +22,39 @@ struct Vertex{
 	float weights[4];
 	short indices[4];
 };
-$short TKM_VERSION;		//ƒtƒ@ƒCƒ‹ƒo[ƒWƒ‡ƒ“B
-$short numMeshParts;	//ƒƒbƒVƒ…ƒp[ƒc‚Ì”B
+$short TKM_VERSION;		//ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã€‚
+$short numMeshParts;	//ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã®æ•°ã€‚
 
 for( int meshPartsNo = 0; meshPartsNo < numMeshParts; meshPartsNo++ ){
-	$int numPolygon;
+	$int numMaterial;
 	$int numVertex;
 	$BYTE indexSize;
 	$BYTE pad;
 	$BYTE pad;
 	$BYTE pad;
-	//’¸“_ƒoƒbƒtƒ@B
+	
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã€‚
 	for( int vertNo = 0; vertNo < numVertex; vertNo++ ){
 		$Vertex vertex;
 	}
-	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@B
-	int numIndex = numPolygon * 3;
-	for( int indexNo = 0; indexNo < numIndex; indexNo++ ){
-		if(indexSize == 2 ){
-			//ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒY‚ª2ƒoƒCƒgB
-			$WORD index;
-		}else{
-			//ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒY‚ª4ƒoƒCƒgB
-			$DWORD index;
+	for( int indexBufferNo = 0; indexBufferNo < numMaterial; indexBufferNo++){
+		//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã€‚
+		$int numPolygon;
+		int numIndex = numPolygon * 3;
+		for( int indexNo = 0; indexNo < numIndex; indexNo++ ){
+			if(indexSize == 2 ){
+				//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚ºãŒ2ãƒã‚¤ãƒˆã€‚
+				$WORD index;
+			}else{
+				//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚ºãŒ4ãƒã‚¤ãƒˆã€‚
+				$DWORD index;
+			}
 		}
-	}
-	//ƒpƒfƒBƒ“ƒOB
-	if(indexSize == 2 ){
-		if( (numPolygon * 3) % 2 != 0 ){
-			$WORD pad;
+		//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°ã€‚
+		if(indexSize == 2 ){
+			if( (numPolygon * 3) % 2 != 0 ){
+				$WORD pad;
+			}
 		}
 	}
 }

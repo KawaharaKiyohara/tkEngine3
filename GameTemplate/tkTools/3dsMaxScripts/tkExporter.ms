@@ -38,7 +38,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 	(
 		levelName.text = "level00"
 	)
-	
+
 	/*
 	 *  スケルトンの出力のボタンが押されたときの処理。
 	 */
@@ -254,7 +254,8 @@ rollout tkExporter "tkExporter" width:194 height:248
 		--スケルトンが取得できる？
 		filepath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		TrySaveSkeleton nodesTmp filepath
-		SaveTkm nodesTmp filepath
+		expoter = TkmExporter()
+		expoter.SaveTkm nodesTmp filepath
 	)
 )
 addrollout tkExporter style:#(#style_titlebar, #style_sysmenu)
