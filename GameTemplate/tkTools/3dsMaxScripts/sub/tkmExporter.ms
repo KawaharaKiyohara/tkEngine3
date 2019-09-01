@@ -40,6 +40,26 @@ private
 	md = ModelData,	--メッシュデータ。
 	ms = Meshparts,	--メッシュパーツ。
 
+	--ファイルパスからファイル名を抽出して、ファイルに出力する。
+	fn WriteFileToFileNameFromFilePath file filePath = 
+	(
+		hoge = filePath as string
+		tokens = FilterString hoge "\/"
+		nameLen = 0
+		if tokens.count != 0 then( 
+			nameLen = tokens[tokens.count].count
+			WriteLong file nameLen --ファイル名の長さを出力。
+			WriteString file tokens[tokens.count]
+			--パディングを出力する。
+			amari = mod nameLen 4
+			for i = 0 to amari where( i < amari ) do (
+				WriteByte file 255
+			)
+		)else(
+			WriteLong file 0 --ファイル名の長さを出力。
+		)
+
+	),
 	--頂点バッファの構築。
 	fn BuildMeshPatrs_VertexBuffer c_node meshObj =(
 		numVert = getNumVerts meshObj
@@ -104,7 +124,8 @@ private
 					mat = getSubMtl c_node.material matId
 					diffMap = mat.diffuseMap
 					albedoFileName = diffMap.fileName
-					newMat = tkMaterial albedoMap:albedoFileName id:matId
+					--法線マップとスペキュラマップはまだ未対応。
+					newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:matId
 					append ms.materials newMat
 				)
 			)
@@ -169,9 +190,7 @@ private
 				--マテリアルの数を出力する。
 				numMat = md.meshParts[meshNo].materials.count
 				WriteLong file numMat
-				--マテリアルの情報を出力する。
-				--todo これはちょっと後。
-
+				
 				--頂点数を出力。
 				numVertex = md.meshParts[meshNo].vertexBuffer.count
 				WriteLong file numVertex
@@ -190,6 +209,17 @@ private
 				WriteByte file 0
 				WriteByte file 0
 				WriteByte file 0
+
+				--マテリアルの情報を出力する。
+				for tkMat in md.meshParts[meshNo].materials do (
+					--ファイル名だけを抽出する。
+					--アルベド。
+					WriteFileToFileNameFromFilePath file tkMat.albedoMap
+					--法線マップ
+					WriteFileToFileNameFromFilePath file tkMat.normalMap
+					--スペキュラマップ。
+					WriteFileToFileNameFromFilePath file tkMat.specMap
+				)
 
 				--頂点バッファを出力
 				for v in md.meshParts[meshNo].vertexBuffer do (

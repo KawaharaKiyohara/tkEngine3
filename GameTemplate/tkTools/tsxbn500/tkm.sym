@@ -33,6 +33,31 @@ for( int meshPartsNo = 0; meshPartsNo < numMeshParts; meshPartsNo++ ){
 	$BYTE pad;
 	$BYTE pad;
 	
+	//マテリアル情報。
+	for( int matNo = 0; matNo < numMaterial; matNo++){
+		//アルベド。
+		$int albedoMapNameLen;
+		if( albedoMapNameLen > 0){
+			$BYTE texName[albedoMapNameLen+1];
+			int numPad = albedoMapNameLen % 4;
+			$BYTE pading[numPad];
+		}
+		//法線マップ
+		$int normalMapNameLen;
+		if( normalMapNameLen > 0){
+			$BYTE texName[normalMapNameLen+1];
+			int numPad = normalMapNameLen % 4;
+			$BYTE pading[numPad];
+		}
+
+		//スペキュラマップ
+		$int specMapNameLen;
+		if( specMapNameLen > 0){
+			$BYTE texName[specMapNameLen+1];
+			int numPad = specMapNameLen % 4;
+			$BYTE pading[numPad];
+		}
+	}
 	//頂点バッファ。
 	for( int vertNo = 0; vertNo < numVertex; vertNo++ ){
 		$Vertex vertex;

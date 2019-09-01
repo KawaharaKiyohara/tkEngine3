@@ -1,5 +1,5 @@
 /*!
- *@brief	tkaƒtƒ@ƒCƒ‹‚ÌƒVƒ“ƒ{ƒ‹
+ *@brief	tkaãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚·ãƒ³ãƒœãƒ«
  */
 
 #maxloop 100000
@@ -9,42 +9,42 @@ struct Vector3{
 	float m[3];
 };
 /*!
-*@brief	ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ìƒwƒbƒ_[B
+*@brief	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ãƒ˜ãƒƒãƒ€ãƒ¼ã€‚
 */
 struct AnimClipHeader {
-	UINT numKey;				//!<ƒL[ƒtƒŒ[ƒ€‚Ì”B
-	UINT numAnimationEvent;	//!<ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚Ì”B
+	UINT numKey;				//!<ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®æ•°ã€‚
+	UINT numAnimationEvent;	//!<ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã®æ•°ã€‚
 };
 /*!
-*@brief	ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg
-*@ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚Í–¢‘Î‰B
-* ‚â‚è‚½‚©‚Á‚½‚ç©•ª‚ÅÀ‘•‚·‚é‚æ‚¤‚ÉB
+*@brief	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
+*@ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã¯æœªå¯¾å¿œã€‚
+* ã‚„ã‚ŠãŸã‹ã£ãŸã‚‰è‡ªåˆ†ã§å®Ÿè£…ã™ã‚‹ã‚ˆã†ã«ã€‚
 */
 struct AnimationEventData {
-	float invokeTime;					//!<ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ª”­¶‚·‚éŠÔ(’PˆÊ:•b)
-	UINT eventNameLength;		//!<ƒCƒxƒ“ƒg–¼‚Ì’·‚³B
+	float invokeTime;					//!<ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã™ã‚‹æ™‚é–“(å˜ä½:ç§’)
+	UINT eventNameLength;		//!<ã‚¤ãƒ™ãƒ³ãƒˆåã®é•·ã•ã€‚
 };
 
 /*!
-*@brief	ƒL[ƒtƒŒ[ƒ€B
+*@brief	ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã€‚
 */
 struct Keyframe {
-	UINT boneIndex;			//!<ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒXB
-	float time;				//!<ŠÔB
-	Vector3 transform[4];	//!<ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€B
+	UINT boneIndex;			//!<ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€‚
+	float time;				//!<æ™‚é–“ã€‚
+	Vector3 transform[4];	//!<ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã€‚
 };
 
-//ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ìƒwƒbƒ_[B
+//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ãƒ˜ãƒƒãƒ€ãƒ¼ã€‚
 $AnimClipHeader animClipHeader;
 
-//ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒgB
+//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã€‚
 for(int i = 0; i < animClipHeader.numAnimationEvent; i++){
 	$AnimationEventData animEventData;
-	//ƒCƒxƒ“ƒg–¼‚ğo—ÍB
+	//ã‚¤ãƒ™ãƒ³ãƒˆåã‚’å‡ºåŠ›ã€‚
 	$BYTE eventName[animEventData.eventNameLength+1];
 }
 
-//ƒL[ƒtƒŒ[ƒ€B
+//ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã€‚
 for( int i = 0; i < animClipHeader.numKey; i++){
 	$Keyframe keyFrame;
 }
