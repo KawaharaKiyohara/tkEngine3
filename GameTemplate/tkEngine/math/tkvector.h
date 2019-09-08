@@ -31,6 +31,11 @@ namespace tkEngine{
 			vec = _v.vec;
 			return *this;
 		}
+		void Set(float _x, float _y)
+		{
+			vec.x = _x;
+			vec.y = _y;
+		}
 		union {
 			DirectX::XMFLOAT2 vec;
 			struct { float x, y; };

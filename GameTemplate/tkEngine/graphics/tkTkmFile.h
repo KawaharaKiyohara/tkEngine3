@@ -35,18 +35,25 @@ namespace tkEngine {
 			short indices[4];		//スキンインデックス。
 		};
 		/// <summary>
-		/// インデックスバッファ。
+		/// 32ビットのインデックスバッファ。
 		/// </summary>
-		struct SIndexBuffer {
-			std::vector< int > indices;	//インデックス。
+		struct SIndexBuffer32 {
+			std::vector< std::uint32_t > indices;	//インデックス。
+		};
+		/// <summary>
+		/// 16ビットのインデックスバッファ。
+		/// </summary>
+		struct SIndexbuffer16 {
+			std::vector< std::uint16_t > indices;	//インデックス。
 		};
 		/// <summary>
 		/// メッシュパーツ。
 		/// </summary>
 		struct SMeshParts {
-			std::vector< SMaterial > materials;			//マテリアルの配列。
-			std::vector< SVertex >	vertexBuffer;		//頂点バッファ。
-			std::vector<SIndexBuffer> indexBufferArray;	//インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。
+			std::vector< SMaterial > materials;				//マテリアルの配列。
+			std::vector< SVertex >	vertexBuffer;			//頂点バッファ。
+			std::vector<SIndexBuffer32> indexBuffer32Array;	//インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。
+			std::vector< SIndexbuffer16> indexBuffer16Array;
 		};
 		/// <summary>
 		/// 3Dモデルを非同期ロード。
@@ -70,7 +77,17 @@ namespace tkEngine {
 			return m_isLoaded;
 		}
 	private:
+		/// <summary>
+		/// テクスチャ名をロード。
+		/// </summary>
+		/// <param name="fp"></param>
+		/// <returns></returns>
 		std::string LoadTextureFileName(FILE* fp);
+		/// <summary>
+		/// インデックスバッファをロード。
+		/// </summary>
+		template<class T>
+		void LoadIndexBuffer(std::vector<T>& indexBuffer, int numIndex, FILE* fp);
 	private:
 		bool m_isLoaded = false;	//ロード済みフラグ。
 		std::string m_filePath;		//ファイルパス。

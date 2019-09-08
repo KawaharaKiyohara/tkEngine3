@@ -40,7 +40,7 @@ namespace tkEngine {
 			float normal[3];				//法線。
 			float uv[2];					//UV座標。
 			float weights[4];				//スキンウェイト。
-			std::int16_t indices[2];		//スキンインデックス。
+			std::int16_t indices[4];		//スキンインデックス。
 		};
 	};
 	std::string CTkmFile::LoadTextureFileName(FILE* fp)
@@ -51,12 +51,21 @@ namespace tkEngine {
 		if (fileNameLen > 0) {
 			//文字列を記録できる領域をスタックから確保。
 			char* localFileName = reinterpret_cast<char*>(alloca(fileNameLen + 1));
-			fread(localFileName, fileNameLen, 1, fp);
-			//最後にヌル文字を入れる。
-			localFileName[fileNameLen] = '\0';
+			//ヌル文字分も読み込むので＋１
+			fread(localFileName, fileNameLen + 1, 1, fp);
 			fileName = localFileName;
 		}
 		return fileName;
+	}
+	template<class T>
+	void CTkmFile::LoadIndexBuffer(std::vector<T>& indices, int numIndex, FILE* fp)
+	{
+		indices.resize(numIndex);
+		for (int indexNo = 0; indexNo < numIndex; indexNo++) {
+			T index;
+			fread(&index, sizeof(index), 1, fp);
+			indices[indexNo] = index;
+		}
 	}
 	void CTkmFile::LoadAsync(const char* filePath)
 	{
@@ -96,6 +105,55 @@ namespace tkEngine {
 				//スペキュラマップのファイル名をロード。
 				material.specularMapFileName = LoadTextureFileName(fp);
 			}
+			//続いて頂点バッファ。
+			meshParts.vertexBuffer.resize(meshPartsHeader.numVertex);
+			for (int vertNo = 0; vertNo < meshPartsHeader.numVertex; vertNo++) {
+				tkmFileFormat::SVertex vertexTmp;
+				fread(&vertexTmp, sizeof(vertexTmp), 1, fp);
+				auto& vertex = meshParts.vertexBuffer[vertNo];
+				vertex.pos.Set(vertexTmp.pos[0], vertexTmp.pos[1], vertexTmp.pos[2]);
+				vertex.normal.Set(vertexTmp.normal[0], vertexTmp.normal[1], vertexTmp.normal[2]);
+				vertex.uv.Set(vertexTmp.uv[0], vertexTmp.uv[1]);
+				vertex.skinWeights.Set(vertexTmp.weights[0], vertexTmp.weights[1], vertexTmp.weights[2], vertexTmp.weights[3]);
+				vertex.indices[0] = vertexTmp.indices[0];
+				vertex.indices[1] = vertexTmp.indices[1];
+				vertex.indices[2] = vertexTmp.indices[2];
+				vertex.indices[3] = vertexTmp.indices[3];
+			}
+			//続いてインデックスバッファ。
+			//インデックスバッファはマテリアルの数分だけ存在するんじゃよ。
+			if (meshPartsHeader.indexSize == 2) {
+				//16bitのインデックスバッファ。
+				meshParts.indexBuffer16Array.resize(meshPartsHeader.numMaterial);
+			}
+			else {
+				//32bitのインデックスバッファ。
+				meshParts.indexBuffer32Array.resize(meshPartsHeader.numMaterial);
+			}
+			for (int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
+				//ポリゴン数をロード。
+				int numPolygon;
+				fread(&numPolygon, sizeof(numPolygon), 1, fp);
+				//トポロジーはトライアングルリストオンリーなので、3を乗算するとインデックスの数になる。
+				int numIndex = numPolygon * 3;
+				if (meshPartsHeader.indexSize == 2) {
+					LoadIndexBuffer(
+						meshParts.indexBuffer16Array[materialNo].indices,
+						numIndex,
+						fp 
+					);
+				}
+				else {
+					LoadIndexBuffer(
+						meshParts.indexBuffer32Array[materialNo].indices,
+						numIndex,
+						fp
+					);
+				}
+
+			}
 		}
+
+		fclose(fp);
 	}
 }
