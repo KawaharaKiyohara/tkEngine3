@@ -11,6 +11,10 @@ namespace tkEngine {
 	/// 3Dモデルデータクラス。
 	/// </summary>
 	class  CModelDataDx12 : Noncopyable {
+	public:
+		
+	private:
+		
 	};
 }
 

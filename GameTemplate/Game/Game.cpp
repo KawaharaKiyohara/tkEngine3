@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
+#include "tkEngine/graphics/tkTkmFile.h"
 
 Game::Game()
 {
@@ -11,6 +12,8 @@ Game::~Game()
 }
 bool Game::Start()
 {
+	CTkmFile tkmFile;
+	tkmFile.LoadAsync("modelData/test.tkm");
 	//ƒJƒƒ‰‚ğİ’èB
 	g_camera3D->SetTarget({ 0.0f, 00.0f, 0.0f });
 	g_camera3D->SetNear(0.1f);
