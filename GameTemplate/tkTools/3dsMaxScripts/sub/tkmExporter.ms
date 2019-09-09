@@ -106,27 +106,41 @@ private
 	--マテリアル情報を構築する。
 	fn BuildMeshParts_Material c_node meshObj numFace  =
 	(
-		numSubMaterial = getNumSubMtls c_node.material
-		matIds = #()
-		for faceNo = 1 to numFace do (
-			matId  = getFaceMatID meshObj faceNo
-			if numSubMaterial > 0 then(
-				regist = 0
-				--登録済みのマテリアルかどうか調べる。
-				for tkMat in ms.materials do (
-					if matId == tkMat.id then(
-						--登録済み
-						regist = 1
+		if c_node.material != undefined then(
+			numSubMaterial = getNumSubMtls c_node.material
+			if numSubMaterial == 0 then(
+				--サブマテリアルはない。
+				diffMap = c_node.material.diffuseMap
+				albedoFileName = diffMap.fileName
+				--法線マップとスペキュラマップはまだ未対応。
+				newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:matId
+				append ms.materials newMat
+			)else(
+				--マルチマテリアル。
+				--面ごとに異なるマテリアルが貼り付けられている。
+				matIds = #()
+				for faceNo = 1 to numFace do (
+					matId  = getFaceMatID meshObj faceNo
+					
+					if numSubMaterial > 0 then(
+						regist = 0
+						--登録済みのマテリアルかどうか調べる。
+						for tkMat in ms.materials do (
+							if matId == tkMat.id then(
+								--登録済み
+								regist = 1
+							)
+						)
+						if regist == 0 then(
+							--未登録のマテリアルなので、追加する。
+							mat = getSubMtl c_node.material matId
+							diffMap = mat.diffuseMap
+							albedoFileName = diffMap.fileName
+							--法線マップとスペキュラマップはまだ未対応。
+							newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:matId
+							append ms.materials newMat
+						)
 					)
-				)
-				if regist == 0 then(
-					--未登録のマテリアルなので、追加する。
-					mat = getSubMtl c_node.material matId
-					diffMap = mat.diffuseMap
-					albedoFileName = diffMap.fileName
-					--法線マップとスペキュラマップはまだ未対応。
-					newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:matId
-					append ms.materials newMat
 				)
 			)
 		)
@@ -161,7 +175,7 @@ private
 		--集約しないとサブマテリアルＩＤが取れないぞいぞい。
 		meshObj = copy c_node 
 		meshObj = convertToMesh meshObj
-		numFace = getNumFaces c_node
+		numFace = getNumFaces meshObj
 		
 		--マテリアル情報から構築する。
 		BuildMeshParts_Material c_node meshObj numFace
@@ -279,17 +293,30 @@ private
 public
 	fn SaveTkm nodes filePath=
 	(
-		md = ModelData meshParts:#()
-
+		--選択しているノードを退避させる。
+		nodesTmp = #()
 		for p in nodes do (
-			--編集可能頂点に変換できるか調べる。
-			if canConvertTo p Mesh then(
-				--メッシュパーツをビルド				
-				BUildMeshParts p
-			)
+			append nodesTmp p
 		) 
-		--保存。
-		InternalSave filePath
+		
+		
+		filepath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
+		if filePath != undefined then(
+			--スケルトンが取得できる？
+			TrySaveSkeleton nodesTmp filepath
+
+			md = ModelData meshParts:#()
+
+			for p in nodesTmp do (
+				--編集可能頂点に変換できるか調べる。
+				if canConvertTo p Mesh then(
+					--メッシュパーツをビルド				
+					BUildMeshParts p
+				)
+			) 
+			--保存。
+			InternalSave filePath
+		)
 	)
 
 )
