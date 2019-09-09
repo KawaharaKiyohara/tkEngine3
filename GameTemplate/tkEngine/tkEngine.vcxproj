@@ -316,6 +316,7 @@
     <ClInclude Include="graphics\tkRenderContext.h" />
     <ClInclude Include="graphics\tkShape.h" />
     <ClInclude Include="graphics\tkTexture.h" />
+    <ClInclude Include="graphics\tkTkmFile.h" />
     <ClInclude Include="graphics\tkVertexBuffer.h" />
     <ClInclude Include="Input\tkPad.h" />
     <ClInclude Include="math\tkAabb.h" />
@@ -364,6 +365,7 @@
     <ClCompile Include="graphics\tkPrimitive.cpp" />
     <ClCompile Include="graphics\tkModel.cpp" />
     <ClCompile Include="graphics\tkShape.cpp" />
+    <ClCompile Include="graphics\tkTkmFile.cpp" />
     <ClCompile Include="graphics\tkVertexBuffer.cpp" />
     <ClCompile Include="Input\tkPad.cpp" />
     <ClCompile Include="math\tkAabb.cpp" />
