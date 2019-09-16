@@ -1,6 +1,7 @@
 #pragma once
 
 namespace tkEngine {
+	class CGraphicsEngineDx12;
 	class CTextureDx12 : public ITexture{
 	public:
 		/// <summary>

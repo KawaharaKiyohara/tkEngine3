@@ -130,7 +130,7 @@ namespace tkEngine {
 		int numDescriporHeap = 1;
 		ID3D12DescriptorHeap* ppHeaps[1] = { m_constantBuffer.GetDiscriptorHeap().Get() };
 		commandList->SetDescriptorHeaps(1, ppHeaps);
-		//ディスクリプタヒープをルートシグネチャに登録していくぅ。
+		//ディスクリプタヒープをルートシグネチャに登録していく。
 		commandList->SetGraphicsRootDescriptorTable(
 			enDescriptorHeap_CB,
 			ppHeaps[0]->GetGPUDescriptorHandleForHeapStart()

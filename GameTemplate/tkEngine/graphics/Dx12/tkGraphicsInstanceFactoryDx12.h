@@ -15,31 +15,31 @@ namespace tkEngine {
 	class CGraphicsInstanceFactoryDx12 : public IGraphicsInstanceFactory {
 	public:
 		/// <summary>
-		/// グラフィックエンジンのインスタンスを作成。
+		/// グラフィックエンジンを作成。
 		/// </summary>
 		/// <returns></returns>
-		UPIGraphicsEngine CreateGraphicsEngineInstance() override final;
+		UPIGraphicsEngine CreateGraphicsEngine() override final;
 		/// <summary>
-		/// 頂点バッファのインスタンスを作成。
+		/// 頂点バッファの作成。
 		/// </summary>
 		/// <param name="size">頂点バッファのサイズ</param>
 		/// <param name="stride">ストライド</param>
 		/// <returns></returns>
-		UPIVertexBuffer CreateVertexBufferInstance(int size, int stride) override final;
+		UPIVertexBuffer CreateVertexBuffer(int size, int stride) override final;
 		/// <summary>
-		/// インデックスバッファのインスタンスを作成。
+		/// インデックスバッファを作成。
 		/// </summary>
 		/// <param name="size">インデックスバッファのサイズ。</param>
 		/// <param name="stride">ストライド</param>
 		/// <returns></returns>
-		UPIIndexBuffer CreateIndexBufferInstance(int size, int stride) override final;
+		UPIIndexBuffer CreateIndexBuffer(int size, int stride) override final;
 		/// <summary>
-		/// レンダリングコンテキストのインスタンスを作成。
+		/// レンダリングコンテキストを作成。
 		/// </summary>
 		/// <returns></returns>
-		UPIRenderContext CreateRenderContextInstance()override final;
+		UPIRenderContext CreateRenderContext()override final;
 		/// <summary>
-		/// 三角形形状のインスタンスを作成。
+		/// 三角形形状を作成。
 		/// </summary>
 		/// /// <param name="textureFilePath">
 		/// 三角形に貼り付けるテクスチャのファイルパス。
@@ -47,13 +47,19 @@ namespace tkEngine {
 		/// nullptrを指定した場合は、テクスチャ無しの三角形が表示されます。
 		/// </param>
 		/// <returns></returns>
-		UPIShape CreateTriangleShapeInstance(const wchar_t* textureFilePath)override final;
+		UPIShape CreateTriangleShape(const wchar_t* textureFilePath)override final;
 		/// <summary>
 		/// DDSファイルからテクスチャを作成。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <returns>作成されたテクスチャ</returns>
 		UPITexture CreateTextureFromDDSFile(const wchar_t* filePath) override final;
+		/// <summary>
+		/// TKMファイルからメッシュパーツを作成。
+		/// </summary>
+		/// <param name="tkmFile">tkmファイル</param>
+		/// <returns>作成されたメッシュパーツ。</returns>
+		UPIMeshParts CreateMeshPartsFromTkmFile(const CTkmFile& tkmFile) override final;
 	};
 }
 

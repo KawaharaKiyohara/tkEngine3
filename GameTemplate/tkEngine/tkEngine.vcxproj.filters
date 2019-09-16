@@ -161,9 +161,6 @@
     <ClInclude Include="graphics\tkModel.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\Dx12\tkModelDx12.h">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\tkIndexBuffer.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
@@ -224,14 +221,17 @@
     <ClInclude Include="graphics\tkTexture.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\Dx12\tkMeshPartDx12.h">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\Dx12\tkModelDataDx12.h">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\tkTkmFile.h">
       <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkMeshParts.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkMeshPartsDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkMaterialDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -292,9 +292,6 @@
     <ClCompile Include="graphics\tkModel.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\Dx12\tkModelDx12.cpp">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\tkIndexBuffer.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
@@ -337,14 +334,17 @@
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\Dx12\tkModelDataDx12.cpp">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics\Dx12\tkMeshPartDx12.cpp">
-      <Filter>Source Files\graphics\Dx12</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\tkTkmFile.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkMeshParts.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

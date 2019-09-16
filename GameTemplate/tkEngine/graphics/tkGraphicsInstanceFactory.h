@@ -2,7 +2,7 @@
 
 
 namespace tkEngine {
-	
+	class CTkmFile;
 	/// <summary>
 	/// グラフィック系のプラットフォームに依存するインスタンスのファクトリーのインターフェースクラス。
 	/// </summary>
@@ -20,26 +20,26 @@ namespace tkEngine {
 		/// グラフィックエンジンのインスタンスを作成。
 		/// </summary>
 		/// <returns></returns>
-		virtual UPIGraphicsEngine CreateGraphicsEngineInstance() = 0;
+		virtual UPIGraphicsEngine CreateGraphicsEngine() = 0;
 		/// <summary>
 		/// 頂点バッファのインスタンスを作成。
 		/// </summary>
 		/// <param name="size">頂点バッファのサイズ</param>
 		/// <param name="stride">ストライド</param>
 		/// <returns></returns>
-		virtual UPIVertexBuffer CreateVertexBufferInstance(int size, int stride) = 0;
+		virtual UPIVertexBuffer CreateVertexBuffer(int size, int stride) = 0;
 		/// <summary>
 		/// インデックスバッファのインスタンスを作成。
 		/// </summary>
 		/// <param name="size">インデックスバッファのサイズ。</param>
 		/// <param name="stride">ストライド</param>
 		/// <returns></returns>
-		virtual UPIIndexBuffer CreateIndexBufferInstance(int size, int stride) = 0;
+		virtual UPIIndexBuffer CreateIndexBuffer(int size, int stride) = 0;
 		/// <summary>
 		/// レンダリングコンテキストのインスタンスを作成。
 		/// </summary>
 		/// <returns></returns>
-		virtual UPIRenderContext CreateRenderContextInstance() = 0;
+		virtual UPIRenderContext CreateRenderContext() = 0;
 		/// <summary>
 		/// 三角形形状のインスタンスを作成。
 		/// </summary>
@@ -49,12 +49,18 @@ namespace tkEngine {
 		/// nullptrを指定した場合は、テクスチャ無しの三角形が表示されます。
 		/// </param>
 		/// <returns></returns>
-		virtual UPIShape CreateTriangleShapeInstance(const wchar_t* textureFilePath ) = 0;
+		virtual UPIShape CreateTriangleShape(const wchar_t* textureFilePath ) = 0;
 		/// <summary>
 		/// DDSファイルからテクスチャを作成。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
 		/// <returns>作成されたテクスチャ</returns>
 		virtual UPITexture CreateTextureFromDDSFile(const wchar_t* filePath) = 0;
+		/// <summary>
+		/// TKMファイルからメッシュパーツを作成。
+		/// </summary>
+		/// <param name="tkmFile">tkmファイル</param>
+		/// <returns>作成されたメッシュパーツ。</returns>
+		virtual UPIMeshParts CreateMeshPartsFromTkmFile(const CTkmFile& tkmFile) = 0;
 	};
 }

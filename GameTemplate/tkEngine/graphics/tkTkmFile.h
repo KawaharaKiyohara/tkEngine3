@@ -49,12 +49,17 @@ namespace tkEngine {
 		/// <summary>
 		/// メッシュパーツ。
 		/// </summary>
-		struct SMeshParts {
+		struct SMesh {
 			std::vector< SMaterial > materials;				//マテリアルの配列。
 			std::vector< SVertex >	vertexBuffer;			//頂点バッファ。
 			std::vector<SIndexBuffer32> indexBuffer32Array;	//インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。
 			std::vector< SIndexbuffer16> indexBuffer16Array;
 		};
+		/// <summary>
+		/// デストラクタ。
+		/// </summary>
+		~CTkmFile();
+
 		/// <summary>
 		/// 3Dモデルを非同期ロード。
 		/// </summary>
@@ -76,6 +81,24 @@ namespace tkEngine {
 		{
 			return m_isLoaded;
 		}
+		/// <summary>
+		/// メッシュパーツに対してクエリを行う。
+		/// </summary>
+		/// <param name="func">クエリ関数</param>
+		void QueryMeshParts(std::function<void(const SMesh& mesh)> func) const
+		{
+			for (auto& mesh : m_meshParts) {
+				func(mesh);
+			}
+		}
+		/// <summary>
+		/// メッシュの数を取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetNumMesh() const
+		{
+			return (int)(m_meshParts.size());
+		}
 	private:
 		/// <summary>
 		/// テクスチャ名をロード。
@@ -89,8 +112,9 @@ namespace tkEngine {
 		template<class T>
 		void LoadIndexBuffer(std::vector<T>& indexBuffer, int numIndex, FILE* fp);
 	private:
-		bool m_isLoaded = false;	//ロード済みフラグ。
-		std::string m_filePath;		//ファイルパス。
-		std::vector< SMeshParts>	m_meshParts;	//メッシュパーツ。
+		bool m_isLoaded = false;						//ロード済みフラグ。
+		std::string m_filePath;							//ファイルパス。
+		std::vector< SMesh	>		m_meshParts;		//メッシュパーツ。
+		std::unique_ptr< std::thread > m_loadThread;	//ロードスレッド。
 	};
 }

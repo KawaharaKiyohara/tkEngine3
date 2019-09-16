@@ -3,7 +3,7 @@
 #include "dx12Common.h"
 
 namespace tkEngine {
-	CVertexBufferDx12::CVertexBufferDx12(int size, int stride)
+	void CVertexBufferDx12::Init(int size, int stride)
 	{
 		auto gfxEngine12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngine12->GetD3DDevice();

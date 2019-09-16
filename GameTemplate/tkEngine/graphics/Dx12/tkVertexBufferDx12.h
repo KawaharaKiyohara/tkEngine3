@@ -9,12 +9,13 @@ namespace tkEngine {
 	class CVertexBufferDx12 : public IVertexBuffer {
 		
 	public:
+		
 		/// <summary>
-		/// コンストラクタ。
+		/// 初期化。
 		/// </summary>
-		/// <param name="size">頂点バッファのサイズ。</param>
-		/// <param name="stride">頂点バッファのストライド。一個の頂点のサイズ。</param>
-		CVertexBufferDx12(int size, int stride);
+		/// <param name="size">頂点バッファのサイズ</param>
+		/// <param name="stride">頂点バッファのストライド。一個の頂点のサイズ</param>
+		void Init(int size, int stride);
 		/// <summary>
 		/// 頂点データを頂点バッファにコピー。
 		/// </summary>

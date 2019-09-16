@@ -296,9 +296,8 @@
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h" />
     <ClInclude Include="graphics\Dx12\tkIndexBufferDx12.h" />
-    <ClInclude Include="graphics\Dx12\tkMeshPartDx12.h" />
-    <ClInclude Include="graphics\Dx12\tkModelDataDx12.h" />
-    <ClInclude Include="graphics\Dx12\tkModelDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkMaterialDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkMeshPartsDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRootSignatureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkShaderDx12.h" />
@@ -311,6 +310,7 @@
     <ClInclude Include="graphics\tkGraphicsInstanceFactory.h" />
     <ClInclude Include="graphics\tkIModelImp.h" />
     <ClInclude Include="graphics\tkIndexBuffer.h" />
+    <ClInclude Include="graphics\tkMeshParts.h" />
     <ClInclude Include="graphics\tkPrimitive.h" />
     <ClInclude Include="graphics\tkModel.h" />
     <ClInclude Include="graphics\tkRenderContext.h" />
@@ -350,9 +350,8 @@
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp" />
-    <ClCompile Include="graphics\Dx12\tkMeshPartDx12.cpp" />
-    <ClCompile Include="graphics\Dx12\tkModelDataDx12.cpp" />
-    <ClCompile Include="graphics\Dx12\tkModelDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp" />
@@ -362,6 +361,7 @@
     <ClCompile Include="graphics\tkGraphicsEngine.cpp" />
     <ClCompile Include="graphics\tkGraphicsInstanceFactory.cpp" />
     <ClCompile Include="graphics\tkIndexBuffer.cpp" />
+    <ClCompile Include="graphics\tkMeshParts.cpp" />
     <ClCompile Include="graphics\tkPrimitive.cpp" />
     <ClCompile Include="graphics\tkModel.cpp" />
     <ClCompile Include="graphics\tkShape.cpp" />
