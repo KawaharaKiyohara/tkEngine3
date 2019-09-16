@@ -56,6 +56,11 @@ namespace tkEngine {
 			std::vector< SIndexbuffer16> indexBuffer16Array;
 		};
 		/// <summary>
+		/// デストラクタ。
+		/// </summary>
+		~CTkmFile();
+		
+		/// <summary>
 		/// 3Dモデルを非同期ロード。
 		/// </summary>
 		/// <remarks>
@@ -89,8 +94,9 @@ namespace tkEngine {
 		template<class T>
 		void LoadIndexBuffer(std::vector<T>& indexBuffer, int numIndex, FILE* fp);
 	private:
-		bool m_isLoaded = false;	//ロード済みフラグ。
-		std::string m_filePath;		//ファイルパス。
-		std::vector< SMeshParts>	m_meshParts;	//メッシュパーツ。
+		bool m_isLoaded = false;						//ロード済みフラグ。
+		std::string m_filePath;							//ファイルパス。
+		std::vector< SMeshParts	>	m_meshParts;		//メッシュパーツ。
+		std::unique_ptr< std::thread > m_loadThread;	//ロードスレッド。
 	};
 }

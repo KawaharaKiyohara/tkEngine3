@@ -43,6 +43,13 @@ namespace tkEngine {
 			std::int16_t indices[4];		//スキンインデックス。
 		};
 	};
+	CTkmFile::~CTkmFile()
+	{
+		if (m_loadThread) {
+			//読み込みスレッドが終わるまで待機。
+			m_loadThread->join();
+		}
+	}
 	std::string CTkmFile::LoadTextureFileName(FILE* fp)
 	{
 		std::string fileName;
@@ -71,7 +78,9 @@ namespace tkEngine {
 	{
 		//ファイル読み込みは別スレッドで行う。
 		m_filePath = filePath;
-		std::thread th([&]() {	Load(m_filePath.c_str());  });
+		m_loadThread = std::make_unique<std::thread>(
+			[&]() {	Load(m_filePath.c_str());  } );
+
 	}
 	void CTkmFile::Load(const char* filePath)
 	{
@@ -155,5 +164,7 @@ namespace tkEngine {
 		}
 
 		fclose(fp);
+		//読み込み終わりの印。
+		m_isLoaded = true;
 	}
 }

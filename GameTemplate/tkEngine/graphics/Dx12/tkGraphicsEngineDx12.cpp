@@ -97,7 +97,7 @@ namespace tkEngine {
 
 		//レンダリングコンテキストの作成。
 		auto giFactry = Engine().GetGraphicsInstanceFactory();
-		m_renderContext = giFactry->CreateRenderContextInstance();
+		m_renderContext = giFactry->CreateRenderContext();
 		auto rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		rcDx12->SetCommandList(m_commandList);
 

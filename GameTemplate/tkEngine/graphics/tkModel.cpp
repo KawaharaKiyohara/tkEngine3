@@ -1,19 +1,27 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/tkModel.h"
 
-#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-#include "tkEngine/graphics/Dx12/tkModelDx12.h"
-#elif TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_11
-#include "tkEngine/graphics/Dx12/tkModelDx11.h"
-#endif
+
 
 namespace tkEngine {
-	CModel::CModel()
+	void CModel::LoadTkmFileAsync(const char* filePath)
 	{
-#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
-		m_imp = std::make_unique<CModelDx12>();
-#elif TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_11
-		m_imp = std::make_unique<CModelDx11>();
-#endif
+		m_tkmFile.LoadAsync(filePath);
+	}
+	bool CModel::IsInited() const
+	{
+		return m_tkmFile.IsLoaded();
+	}
+	void CModel::CreateMeshParts()
+	{
+		if (m_tkmFile.IsLoaded()) {
+			TK_WARNING_MESSAGE_BOX("この関数はtkmファイルのロードが完了してから呼び出してください。");
+			return;
+		}
+
+		//メッシュパーツの作成。
+		auto factory = Engine().GetGraphicsInstanceFactory();
+		m_meshParts = factory->CreateMeshPartsFromTkmFile(m_tkmFile);
+
 	}
 }

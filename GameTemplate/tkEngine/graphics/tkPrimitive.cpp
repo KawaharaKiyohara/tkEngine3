@@ -13,8 +13,8 @@ namespace tkEngine {
 	{
 		//頂点バッファとインデックスバッファを作成。
 		auto factory = Engine().GetGraphicsInstanceFactory();
-		m_vertexBuffer = factory->CreateVertexBufferInstance(vertexBufferSize, vertexBufferStride);
-		m_indexBuffer = factory->CreateIndexBufferInstance(indexBufferSize, indexBufferStride);
+		m_vertexBuffer = factory->CreateVertexBuffer(vertexBufferSize, vertexBufferStride);
+		m_indexBuffer = factory->CreateIndexBuffer(indexBufferSize, indexBufferStride);
 		m_vertexBuffer->Copy(srcVertexData);
 		m_indexBuffer->Copy(srcIndexData);
 		m_topology = enPrimTopology;

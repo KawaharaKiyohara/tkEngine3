@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tkEngine/graphics/tkModel.h"
 
 class Game : public IGameObject
 {
@@ -10,7 +11,11 @@ public:
 	void Update();
 	void ForwardRender(IRenderContext& renderContext) override final;
 private:
-	UPIShape m_triangleShape;
-	UPITexture m_texture;
+	enum EnInitStep {
+		enInitStep_LoadStart,	//読み込み開始。
+		enInitStep_Loaded,		//読み込み終了。
+	};
+	EnInitStep m_initStep = enInitStep_LoadStart;	//初期化ステップ。
+	CModel m_model;									//モデルクラス。
 };
 
