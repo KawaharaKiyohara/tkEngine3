@@ -30,6 +30,13 @@ namespace tkEngine {
 		/// </summary>
 		/// <returns></returns>
 		bool IsInited() const;
+		/// <summary>
+		/// 描画
+		/// </summary>
+		/// <param name="rc">レンダリングコンテキスト</param>
+		/// <param name="mView">ビュー行列</param>
+		/// <param name="mProj">プロジェクション行列</param>
+		void Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj);
 	private:
 		CTkmFile m_tkmFile;			//tkmファイル。
 		UPIMeshParts m_meshParts;	//メッシュパーツ。

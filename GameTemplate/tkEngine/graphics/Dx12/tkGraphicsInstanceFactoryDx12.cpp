@@ -13,11 +13,15 @@ namespace tkEngine {
 	}
 	UPIVertexBuffer CGraphicsInstanceFactoryDx12::CreateVertexBuffer(int size, int stride)
 	{
-		return std::make_unique<CVertexBufferDx12>(size, stride);
+		auto vb = std::make_unique<CVertexBufferDx12>();
+		vb->Init(size, stride);
+		return vb;
 	}
 	UPIIndexBuffer CGraphicsInstanceFactoryDx12::CreateIndexBuffer(int size, int stride)
 	{
-		return std::make_unique<CIndexBufferDx12>(size, stride);
+		auto ib = std::make_unique<CIndexBufferDx12>();
+		ib->Init(size, stride);
+		return ib;
 	}
 	UPIRenderContext CGraphicsInstanceFactoryDx12::CreateRenderContext()
 	{
@@ -33,7 +37,9 @@ namespace tkEngine {
 	}
 	UPIMeshParts CGraphicsInstanceFactoryDx12::CreateMeshPartsFromTkmFile(const CTkmFile& tkmFile)
 	{
-		return std::make_unique<CMeshPartsDx12>(tkmFile);
+		auto meshParts = std::make_unique<CMeshPartsDx12>();
+		meshParts->InitFromTkmFile(tkmFile);
+		return meshParts;
 	}
 }
 

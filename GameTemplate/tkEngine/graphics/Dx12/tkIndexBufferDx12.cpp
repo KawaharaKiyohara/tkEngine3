@@ -6,8 +6,7 @@
 
 
 namespace tkEngine {
-	CIndexBufferDx12::CIndexBufferDx12(int size, int stride) :
-		IIndexBuffer(size, stride)
+	void CIndexBufferDx12::InitSub(int size, int stride)
 	{
 		auto gfxEngine12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = gfxEngine12->GetD3DDevice();

@@ -3,9 +3,5 @@
 
 
 namespace tkEngine {
-	IIndexBuffer::IIndexBuffer(int size, int stride)
-	{
-		m_count = size / stride;
-	}
-
+	
 }

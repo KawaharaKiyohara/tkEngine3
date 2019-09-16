@@ -10,14 +10,10 @@ namespace tkEngine {
 	/// </summary>
 	class CIndexBufferDx12 : public IIndexBuffer {
 	public:
+
+	
 		/// <summary>
-		/// コンストラクタ。
-		/// </summary>
-		/// <param name="size">インデックスバッファのサイズ。</param>
-		/// <param name="stride">ストライド。</param>
-		CIndexBufferDx12(int size, int stride);
-		/// <summary>
-		/// コンストラクタ。
+		/// デストラクタ。
 		/// </summary>
 		virtual ~CIndexBufferDx12() {}
 		/// <summary>
@@ -33,6 +29,13 @@ namespace tkEngine {
 		{
 			return m_indexBufferView;
 		}
+	private:
+		/// <summary>
+		/// コンストラクタ。
+		/// </summary>
+		/// <param name="size">インデックスバッファのサイズ。</param>
+		/// <param name="stride">ストライド。</param>
+		void InitSub(int size, int stride) override final;
 	private:
 		ComPtr<ID3D12Resource> m_indexBuffer;			//インデックスバッファ。
 		D3D12_INDEX_BUFFER_VIEW m_indexBufferView;	//インデックスバッファビュー。

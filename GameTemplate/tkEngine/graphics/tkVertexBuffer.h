@@ -9,8 +9,14 @@ namespace tkEngine {
 	/// </summary>
 	class IVertexBuffer : public Noncopyable{
 	public:
+		
 		virtual~ IVertexBuffer() {}
-	
+		/// <summary>
+		/// 初期化。
+		/// </summary>
+		/// <param name="size">頂点バッファのサイズ</param>
+		/// <param name="stride">頂点バッファのストライド。一個の頂点のサイズ</param>
+		virtual void Init(int size, int stride) = 0;
 		/// <summary>
 		/// 頂点データを頂点バッファにコピー。
 		/// </summary>

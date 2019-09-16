@@ -16,13 +16,17 @@ namespace tkEngine {
 		/// <summary>
 		/// コンストラクタ。
 		/// </summary>
+		virtual ~IIndexBuffer() {}
+		/// <summary>
+		/// 初期化処理。
+		/// </summary>
 		/// <param name="size">インデックスバッファのサイズ。</param>
 		/// <param name="stride">インデックスバッファのストライド。</param>
-		IIndexBuffer(int size, int stride);
-		/// <summary>
-		/// コンストラクタ。
-		/// </summary>
-		virtual ~IIndexBuffer() {}
+		void Init(int size, int stride)
+		{
+			m_count = size / stride;
+			InitSub( size, stride );
+		}
 		/// <summary>
 		/// 頂点データを頂点バッファにコピー。
 		/// </summary>
@@ -44,6 +48,16 @@ namespace tkEngine {
 		{
 			return m_count;
 		}
+	private:
+		/// <summary>
+		/// サブクラスで定義する初期化関数。
+		/// </summary>
+		/// <remarks>
+		/// グラフィックスAPIに依存する初期化処理はこの関数をオーバーライドして実装してください。
+		/// </remarks>
+		/// <param name="size"></param>
+		/// <param name="stride"></param>
+		virtual void InitSub(int size, int stride) = 0;
 	private:
 		int m_count = 0;		//インデックスの数。
 	};
