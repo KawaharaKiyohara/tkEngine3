@@ -296,6 +296,7 @@
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h" />
     <ClInclude Include="graphics\Dx12\tkIndexBufferDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkMaterialDx12.h" />
     <ClInclude Include="graphics\Dx12\tkMeshPartsDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRootSignatureDx12.h" />
@@ -349,6 +350,7 @@
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />

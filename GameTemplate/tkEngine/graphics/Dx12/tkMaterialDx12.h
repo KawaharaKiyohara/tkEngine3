@@ -23,7 +23,7 @@ namespace tkEngine {
 		ComPtr<ID3D12PipelineState> m_pipelineState;	//パイプラインステート。
 	};
 
-	using UPCMaterialDx12 = std::make_unique< CMaterialDx12>;
+	using UPCMaterialDx12 = std::unique_ptr< CMaterialDx12>;
 }
 
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
