@@ -21,9 +21,10 @@ namespace tkEngine {
 		/// 描画。
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
+		/// <param name="mWorld">ワールド行列</param>
 		/// <param name="mView">ビュー行列</param>
 		/// <param name="mProj">プロジェクション行列</param>
-		virtual void Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj) = 0;
+		virtual void Draw(IRenderContext& rc, const CMatrix& mWorld, const CMatrix& mView, const CMatrix& mProj) = 0;
 		/// <summary>
 		/// 派生クラスに型変換。
 		/// 

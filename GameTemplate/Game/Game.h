@@ -16,6 +16,7 @@ private:
 		enInitStep_Loaded,		//読み込み終了。
 	};
 	EnInitStep m_initStep = enInitStep_LoadStart;	//初期化ステップ。
+	CVector3 m_position = CVector3::Zero;
 	CModel m_model;									//モデルクラス。
 };
 

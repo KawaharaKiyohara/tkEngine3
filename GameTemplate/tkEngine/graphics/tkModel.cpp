@@ -23,8 +23,12 @@ namespace tkEngine {
 		auto factory = Engine().GetGraphicsInstanceFactory();
 		m_meshParts = factory->CreateMeshPartsFromTkmFile(m_tkmFile);
 	}
-	void CModel::Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj)
+	void CModel::Draw(
+		IRenderContext& rc, 
+		const CMatrix& mWorld, 
+		const CMatrix& mView, 
+		const CMatrix& mProj)
 	{
-		m_meshParts->Draw(rc, mView, mProj);
+		m_meshParts->Draw(rc, mWorld, mView, mProj);
 	}
 }

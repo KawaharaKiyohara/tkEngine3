@@ -71,7 +71,8 @@ namespace tkEngine {
 		for (int indexNo = 0; indexNo < numIndex; indexNo++) {
 			T index;
 			fread(&index, sizeof(index), 1, fp);
-			indices[indexNo] = index;
+			indices[indexNo] = index-1;	//todo maxのインデックスは1から開始しているので、-1する。
+										//todo エクスポーターで減らすようにしましょう。
 		}
 	}
 	void CTkmFile::LoadAsync(const char* filePath)

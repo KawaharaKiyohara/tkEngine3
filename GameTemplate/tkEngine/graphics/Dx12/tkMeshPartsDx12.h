@@ -38,9 +38,10 @@ namespace tkEngine {
 		/// 描画。
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
+		/// <param name="mWorld">ワールド行列</param>
 		/// <param name="mView">ビュー行列</param>
 		/// <param name="mProj">プロジェクション行列</param>
-		virtual void Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj) override final;
+		virtual void Draw(IRenderContext& rc, const CMatrix& mWorld, const CMatrix& mView, const CMatrix& mProj) override final;
 	private:
 		/// <summary>
 		/// tkmメッシュからメッシュを作成。
@@ -48,8 +49,24 @@ namespace tkEngine {
 		/// <param name="mesh">メッシュ</param>
 		/// <param name="meshNo">メッシュ番号</param>
 		void CreateMeshFromTkmMesh(const CTkmFile::SMesh& mesh, int meshNo);
+		/// <summary>
+		/// 共通定数バッファの作成。
+		/// </summary>
+		void CreateCommonConstantBuffer();
 	private:
-		std::vector< UPSMesh > m_meshs;		//メッシュ。
+		/// <summary>
+		/// 定数バッファ。
+		/// </summary>
+		/// <remarks>
+		/// この構造体を変更したら、SimpleModel.fxのCBも変更するように。
+		/// </remarks>
+		struct SConstantBuffer {
+			CMatrix mWorld;		//ワールド行列。
+			CMatrix mView;		//ビュー行列。
+			CMatrix mProj;		//プロジェクション行列。
+		};
+		CConstantBufferDx12 m_commonConstantBuffer;		//メッシュ共通の定数バッファ。
+		std::vector< UPSMesh > m_meshs;					//メッシュ。
 	};
 }
 
