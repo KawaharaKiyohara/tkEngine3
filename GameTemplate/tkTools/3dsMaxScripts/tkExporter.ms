@@ -221,23 +221,15 @@ rollout tkExporter "tkExporter" width:194 height:248
 		FBXExporterSetParam "ASCII" true
 	)
 	
-
 	
 	/*!
 	 * @brief	FBXのSaveのボタンが押されたときの処理。
 	 */
 	on btn_save_fbx pressed do
 	(
-		if CheckMaterial(objects) then (
-			SetupFbxExportSettings()
-			
-			filepath = getSaveFileName caption:"" types: " (*.fbx)|*.fbx|All Files (*.*)|*.*|"
-			if filepath != undefined then(
-				exportFile(filepath) #noPrompt
-			)
-			--スキンモディファイアがある場合にスケルトンデータを保存する。
-			TrySaveSkeleton objects filepath
-		)
+		--全オブジェクトをtkmファイルとして出力する。
+		expoter = TkmExporter()
+		expoter.SaveTkm objects filepath 
 	)
 	
 	/*!
@@ -245,17 +237,9 @@ rollout tkExporter "tkExporter" width:194 height:248
 	 */
 	on btn_save_selected_fbx pressed do
 	(
-		--選択しているノードを退避させる。
-		nodesTmp = #()
-		for p in selection do (
-			append nodesTmp p
-		) 
-		
-		--スケルトンが取得できる？
-		filepath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
-		TrySaveSkeleton nodesTmp filepath
+		--選択されているオブジェクトをtkmファイルとして出力する。
 		expoter = TkmExporter()
-		expoter.SaveTkm nodesTmp filepath
+		expoter.SaveTkm selection filepath
 	)
 )
 addrollout tkExporter style:#(#style_titlebar, #style_sysmenu)
