@@ -14,6 +14,8 @@ namespace tkEngine {
 			CreateMeshFromTkmMesh(mesh, meshNo);
 			meshNo++;
 		});
+		//共通定数バッファの作成。
+		m_commonConstantBuffer.Init(sizeof(SConstantBuffer), nullptr);
 	}
 	void CMeshPartsDx12::CreateMeshFromTkmMesh(const CTkmFile::SMesh& tkmMesh, int meshNo)
 	{
@@ -32,7 +34,7 @@ namespace tkEngine {
 				auto ib = std::make_unique< CIndexBufferDx12>();
 				ib->Init(tkIb.indices.size() * 2, 2);
 				ib->Copy((void*)&tkIb.indices.at(0));
-				mesh->m_indexBufferArray.push_back(ib);
+				mesh->m_indexBufferArray.push_back(std::move(ib));
 			}
 		}
 		else {
@@ -42,7 +44,7 @@ namespace tkEngine {
 				auto ib = std::make_unique< CIndexBufferDx12>();
 				ib->Init(tkIb.indices.size() * 4, 4);
 				ib->Copy((void*)&tkIb.indices.at(0));
-				mesh->m_indexBufferArray.push_back(ib);
+				mesh->m_indexBufferArray.push_back(std::move(ib));
 			}
 		}
 		//マテリアルを作成。
@@ -50,12 +52,17 @@ namespace tkEngine {
 		for (auto& tkmMat : tkmMesh.materials) {
 			auto mat = std::make_unique<CMaterialDx12>();
 			mat->InitFromTkmMaterila(tkmMat);
-			mesh->m_materials.push_back(mat);
+			mesh->m_materials.push_back(std::move(mat));
 		}
 
 		m_meshs[meshNo] = std::move(mesh);
 	}
-	void CMeshPartsDx12::Draw(IRenderContext& rc, const CMatrix& mView, const CMatrix& mProj)
+	
+	void CMeshPartsDx12::Draw(
+		IRenderContext& rc, 
+		const CMatrix& mWorld, 
+		const CMatrix& mView, 
+		const CMatrix& mProj)
 	{
 		//レンダリングコンテキストをDx12版にダウンキャスト
 		auto rcDx12 = rc.As<CRenderContextDx12>();
@@ -65,16 +72,39 @@ namespace tkEngine {
 		//プリミティブのトポロジーはトライアングルリストのみ。
 		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+		//定数バッファを更新する。
+		SConstantBuffer cb;
+		cb.mWorld = mWorld;
+		cb.mView = mView;
+		cb.mProj = mProj;
+
+		m_commonConstantBuffer.Update(&cb);
+
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
 			commandList->IASetVertexBuffers(0, 1, &mesh->m_vertexBuffer.GetView());
 			//マテリアルごとにドロー。
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
+				//このマテリアルが貼られているメッシュの描画開始。
+				mesh->m_materials[matNo]->BeginRender(rc);
+
+				{
+					//todo カリカリカリ。
+					ID3D12DescriptorHeap* ppHeaps[1] = { m_commonConstantBuffer.GetDiscriptorHeap().Get() };
+					commandList->SetDescriptorHeaps(1, ppHeaps);
+					//ディスクリプタヒープをルートシグネチャに登録していく。
+					commandList->SetGraphicsRootDescriptorTable(
+						0,
+						ppHeaps[0]->GetGPUDescriptorHandleForHeapStart()
+					);
+				}
+
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];
 				commandList->IASetIndexBuffer(&ib->GetView());
 				//ドローコール。
 				commandList->DrawIndexedInstanced(ib->GetCount(), 1, 0, 0, 0);
+				mesh->m_materials[matNo]->EndRender(rc);
 			}
 		}
 	}

@@ -18,7 +18,7 @@ bool Game::Start()
 		g_camera3D->SetTarget({ 0.0f, 00.0f, 0.0f });
 		g_camera3D->SetNear(0.1f);
 		g_camera3D->SetFar(10000.0f);
-		g_camera3D->SetPosition({ 0.0f, 0.0f, -5.0f });
+		g_camera3D->SetPosition({ 0.0f, 0.0f, -200.0f });
 		g_camera3D->Update();
 		//読み込み開始ステップ。
 		m_model.LoadTkmFileAsync("modelData/test.tkm");
@@ -43,8 +43,13 @@ void Game::Update()
 }
 void Game::ForwardRender(IRenderContext& renderContext)
 {
+	m_position.x += g_pad[0]->GetLStickXF();
+	m_position.y += g_pad[0]->GetLStickYF();
+	CMatrix mWorld;
+	mWorld.MakeTranslation(m_position);
 	m_model.Draw(
 		renderContext, 
+		mWorld,
 		g_camera3D->GetViewMatrix(), 
 		g_camera3D->GetProjectionMatrix());
 }
