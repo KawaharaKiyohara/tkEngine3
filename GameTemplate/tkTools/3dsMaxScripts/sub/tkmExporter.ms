@@ -113,7 +113,7 @@ private
 				diffMap = c_node.material.diffuseMap
 				albedoFileName = diffMap.fileName
 				--法線マップとスペキュラマップはまだ未対応。
-				newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:matId
+				newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:-1
 				append ms.materials newMat
 			)else(
 				--マルチマテリアル。
@@ -147,15 +147,24 @@ private
 	),
 	--インデックスバッファを構築する。
 	--インデックスバッファの数はマテリアルの数分だけ構築されます。
+	
 	fn BuildMeshParts_IndexBuffer c_node meshObj numFace = 
 	(
+		
 		--マテリアルの数分だけインデックスバッファを作成する。
 		for tkMat in ms.materials do (
 			indices = #()
 			for faceNo = 1 to numFace do (
 				matId  = getFaceMatID meshObj faceNo
+				
 				if tkMat.id == matId then(
 					--現在調査中のマテリアルIDと同じ？
+					--三角形を構成するインデックスを取得する。
+					vertNos = getFace meshObj faceNo
+					append indices vertNos[1]
+					append indices vertNos[2]
+					append indices vertNos[3]
+				)else if tkMat.id == -1 then(
 					--三角形を構成するインデックスを取得する。
 					vertNos = getFace meshObj faceNo
 					append indices vertNos[1]
