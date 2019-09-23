@@ -24,6 +24,14 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="rc"></param>
 		void EndRender(IRenderContext& rc);
+		/// <summary>
+		/// アルベドマップを取得。
+		/// </summary>
+		/// <returns></returns>
+		CTextureDx12& GetAlbedoMap()
+		{
+			return m_albedoMap;
+		}
 	private:
 		/// <summary>
 		/// パイプラインステートを初期化。
@@ -35,6 +43,11 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="tkmMat">tkmMat</param>
 		void InitRootSignature(const CTkmFile::SMaterial& tkmMat);
+		/// <summary>
+		/// テクスチャを初期化。
+		/// </summary>
+		/// <param name="tkmMat"></param>
+		void InitTexture(const CTkmFile::SMaterial& tkmMat);
 	private:
 		CShaderDx12		m_vs;			//頂点シェーダー。
 		CShaderDx12		m_ps;			//ピクセルシェーダー。

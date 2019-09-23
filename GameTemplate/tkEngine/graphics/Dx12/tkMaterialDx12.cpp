@@ -11,14 +11,27 @@ namespace tkEngine {
 		enDescriptorHeap_SRV,
 		enNumDescriptorHeap
 	};
+	
+	void CMaterialDx12::InitTexture(const CTkmFile::SMaterial& tkmMat)
+	{
+		if (tkmMat.albedoMap != nullptr) {
+			m_albedoMap.InitFromMemory(tkmMat.albedoMap.get(), tkmMat.albedoMapSize);
+		}
+		if (tkmMat.normalMap != nullptr) {
+			m_normalMap.InitFromMemory(tkmMat.normalMap.get(), tkmMat.normalMapSize);
+		}
+		if (tkmMat.specularMap != nullptr) {
+			m_specularMap.InitFromMemory(tkmMat.specularMap.get(), tkmMat.specularMapSize);
+		}
+	}
 	void CMaterialDx12::InitFromTkmMaterila(const CTkmFile::SMaterial& tkmMat)
 	{
 		//todo シェーダーは仮。
 		m_vs.Load(L"shader/SimpleModel.fx", "VSMainNoTexture", "vs_5_0");
 		m_ps.Load(L"shader/SimpleModel.fx", "PSMainNoTexture", "ps_5_0");
-		//todo	テクスチャはまだアセットパイプラインができていないので後回し。
+
 		//テクスチャをロード。
-		//mat->m_albedoMap.InitFromDDSFile
+		InitTexture(tkmMat);
 		//ルートシグネチャを作成。
 		InitRootSignature(tkmMat);
 		//パイプラインステートを作成。
@@ -31,9 +44,9 @@ namespace tkEngine {
 
 		D3D12_STATIC_SAMPLER_DESC sampler = {};
 		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-		sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-		sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-		sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+		sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 		sampler.MipLODBias = 0;
 		sampler.MaxAnisotropy = 0;
 		sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
@@ -106,6 +119,7 @@ namespace tkEngine {
 		//ルートシグネチャとパイプラインステートを設定。
 		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 		commandList->SetPipelineState(m_pipelineState.Get());
+
 	}
 	
 	void CMaterialDx12::EndRender(IRenderContext& rc)

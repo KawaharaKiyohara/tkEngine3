@@ -19,13 +19,17 @@ namespace tkEngine {
 		/// <param name="filePath">ロードするテクスチャのファイルパス。</param>
 		void InitFromDDSFile(const wchar_t* filePath);
 		/// <summary>
-		/// SRVのディスクリプタヒープを取得する。
+		/// メモリからテクスチャを初期化する。
 		/// </summary>
-		/// <returns></returns>
-		ComPtr<ID3D12DescriptorHeap> GetDiscriptorHeap() const
-		{
-			return m_srvHeap;
-		}
+		/// <param name="memory">テクスチャデータが格納されているメモリの先頭アドレス</param>
+		/// <param name="size">テクスチャのサイズ。</param>
+		void InitFromMemory(const char* memory, unsigned int size);
+		
+		/// <summary>
+		/// SRVに登録。
+		/// </summary>
+		/// <param name="descriptorHandle"></param>
+		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle);
 	private:
 		/// <summary>
 		/// DDSファイルからテクスチャをロード。
@@ -39,12 +43,20 @@ namespace tkEngine {
 			ComPtr<ID3D12Device> device
 		);
 		/// <summary>
-		/// SRV用のディスクリプタヒープの初期化。
+		/// メモリからテクスチャをロード。
 		/// </summary>
+		/// <param name="memory">テクスチャデータが格納されているメモリの先頭アドレス。</param>
+		/// <param name="size">テクスチャのサイズ。</param>
+		/// <param name="ge12">Dx12版のグラフィックスエンジン</param>
 		/// <param name="device">D3Dデバイス</param>
-		void InitSrvDescriptorHeap(ComPtr<ID3D12Device> device);
+		void LoadTextureFromMemory(
+			const char* memory, 
+			unsigned int size,
+			CGraphicsEngineDx12* ge12,
+			ComPtr<ID3D12Device> device
+		);
+		
 	private:
-		ComPtr< ID3D12DescriptorHeap> m_srvHeap;	//SRVヒープ。
 		ComPtr< ID3D12Resource>	m_texture;	//テクスチャ。
 		D3D12_RESOURCE_DESC m_textureDesc;	//テクスチャ情報
 	};

@@ -13,9 +13,11 @@ namespace tkEngine {
 			//tkmファイルのメッシュ情報からメッシュを作成する。
 			CreateMeshFromTkmMesh(mesh, meshNo);
 			meshNo++;
-		});
+			});
 		//共通定数バッファの作成。
 		m_commonConstantBuffer.Init(sizeof(SConstantBuffer), nullptr);
+		//ディスクリプタヒープを作成。
+		CreateDescriptorHeaps();
 	}
 	void CMeshPartsDx12::CreateMeshFromTkmMesh(const CTkmFile::SMesh& tkmMesh, int meshNo)
 	{
@@ -23,7 +25,7 @@ namespace tkEngine {
 		int numVertex = (int)tkmMesh.vertexBuffer.size();
 		int vertexStride = sizeof(CTkmFile::SVertex);
 		auto& mesh = std::make_unique<SMesh>();
-		
+
 		mesh->m_vertexBuffer.Init(vertexStride * numVertex, vertexStride);
 		mesh->m_vertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
 		//インデックスバッファを作成。
@@ -57,7 +59,34 @@ namespace tkEngine {
 
 		m_meshs[meshNo] = std::move(mesh);
 	}
-	
+	void CMeshPartsDx12::CreateDescriptorHeaps()
+	{
+		auto ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto device = ge12->GetD3DDevice();
+		m_cbrSrvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		ComPtr< ID3D12DescriptorHeap> heap;
+		//マテリアルごとにディスクリプタヒープを作成する。
+		for (auto& mesh : m_meshs) {
+			for (auto& mat : mesh->m_materials) {
+
+				D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+				srvHeapDesc.NumDescriptors = 2;
+				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
+				TK_ASSERT(SUCCEEDED(hr), "CMeshPartsDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
+				//ディスクリプタヒープに定数バッファとテクスチャを登録してく。
+				auto handle = heap->GetCPUDescriptorHandleForHeapStart();
+				m_commonConstantBuffer.RegistConstantBufferView(handle);
+				handle.ptr += m_cbrSrvDescriptorSize;
+				auto& albedoMap = mat->GetAlbedoMap();
+				albedoMap.RegistShaderResourceView(handle);
+
+				m_descriptorHeaps.push_back(std::move(heap));
+				
+			}
+		}
+	}
 	void CMeshPartsDx12::Draw(
 		IRenderContext& rc, 
 		const CMatrix& mWorld, 
@@ -80,6 +109,7 @@ namespace tkEngine {
 
 		m_commonConstantBuffer.Update(&cb);
 
+		int heapNo = 0;
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
 			commandList->IASetVertexBuffers(0, 1, &mesh->m_vertexBuffer.GetView());
@@ -88,14 +118,22 @@ namespace tkEngine {
 				//このマテリアルが貼られているメッシュの描画開始。
 				mesh->m_materials[matNo]->BeginRender(rc);
 
-				{
-					//todo カリカリカリ。
-					ID3D12DescriptorHeap* ppHeaps[1] = { m_commonConstantBuffer.GetDiscriptorHeap().Get() };
-					commandList->SetDescriptorHeaps(1, ppHeaps);
-					//ディスクリプタヒープをルートシグネチャに登録していく。
+				auto& descriptorHeap = m_descriptorHeaps[heapNo];
+				heapNo++;
+				ID3D12DescriptorHeap* ppHeap[] = { descriptorHeap.Get() };
+				commandList->SetDescriptorHeaps(1, ppHeap);
+				auto gpuHandle = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+				//ディスクリプタヒープをルートシグネチャに登録していく。
+				commandList->SetGraphicsRootDescriptorTable(
+					0,
+					gpuHandle
+				);
+				auto& albeoMap = mesh->m_materials[matNo]->GetAlbedoMap();
+				if (albeoMap.IsValid()) {
+					gpuHandle.ptr += m_cbrSrvDescriptorSize;
 					commandList->SetGraphicsRootDescriptorTable(
-						0,
-						ppHeaps[0]->GetGPUDescriptorHandleForHeapStart()
+						1,
+						gpuHandle
 					);
 				}
 

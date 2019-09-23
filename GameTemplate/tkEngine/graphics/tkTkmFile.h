@@ -20,9 +20,15 @@ namespace tkEngine {
 		/// マテリアル
 		/// </summary>
 		struct SMaterial {
-			std::string albedoMapFileName;		//アルベドマップのファイル名。
-			std::string normalMapFileName;		//法線マップのファイル名。
-			std::string specularMapFileName;	//スペキュラマップのファイル名。	
+			std::string albedoMapFileName;			//アルベドマップのファイル名。
+			std::string normalMapFileName;			//法線マップのファイル名。
+			std::string specularMapFileName;		//スペキュラマップのファイル名。
+			std::unique_ptr<char[]>	albedoMap;		//ロードされたアルベドマップ。(ddsファイル)
+			unsigned int albedoMapSize;				//アルベドマップのサイズ。(ddsファイル)
+			std::unique_ptr<char[]>	normalMap;		//ロードされた法線マップ。(ddsファイル)
+			unsigned int normalMapSize;				//法線マップのサイズ。
+			std::unique_ptr<char[]>	specularMap;	//ロードされたスペキュラマップ。(ddsファイル)
+			unsigned int specularMapSize;			//スペキュラマップのサイズ。(ddsファイル)
 		};
 		/// <summary>
 		/// 頂点。
@@ -111,6 +117,11 @@ namespace tkEngine {
 		/// </summary>
 		template<class T>
 		void LoadIndexBuffer(std::vector<T>& indexBuffer, int numIndex, FILE* fp);
+		/// <summary>
+		/// マテリアルを構築。
+		/// </summary>
+		/// <param name="tkmMat"></param>
+		void BuildMaterial(SMaterial& tkmMat, FILE* fp);
 	private:
 		bool m_isLoaded = false;						//ロード済みフラグ。
 		std::string m_filePath;							//ファイルパス。

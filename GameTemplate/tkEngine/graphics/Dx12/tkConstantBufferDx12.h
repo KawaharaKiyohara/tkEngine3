@@ -22,18 +22,15 @@ namespace tkEngine{
 		/// <param name="data"></param>
 		void Update(void* data);
 		/// <summary>
-		/// ディスクリプタヒープの取得。
+		/// ディスクリプタヒープにConstantBufferViewを登録。
 		/// </summary>
-		/// <returns></returns>
-		ComPtr<ID3D12DescriptorHeap> GetDiscriptorHeap() const
-		{
-			return m_cbvHeap;
-		}
+		/// <param name="descriptorHandle"></param>
+		void RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle);
     private:
 		ComPtr<ID3D12Resource>	m_constantBuffer;	//定数バッファ。
-		ComPtr<ID3D12DescriptorHeap> m_cbvHeap;		//ディスクリプタヒープ。
 		void* m_constBufferCPU = nullptr;			//CPU側からアクセスできるする定数バッファのアドレス。
 		int m_size = 0;								//定数バッファのサイズ。
+		int m_allocSize = 0;
     };
 }
 

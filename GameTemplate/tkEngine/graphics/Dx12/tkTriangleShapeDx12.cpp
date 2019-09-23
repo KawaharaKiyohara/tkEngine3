@@ -126,6 +126,7 @@ namespace tkEngine {
 		//ルートシグネチャを設定。
 		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
 		commandList->SetPipelineState(m_pipelineState.Get());
+#if 0 //todo これ考え方を間違えていたぽい。
 		//ディスクリプタテーブルを設定する。
 		int numDescriporHeap = 1;
 		ID3D12DescriptorHeap* ppHeaps[1] = { m_constantBuffer.GetDiscriptorHeap().Get() };
@@ -143,7 +144,7 @@ namespace tkEngine {
 				ppHeaps[0]->GetGPUDescriptorHandleForHeapStart()
 			);
 		}
-		
+#endif	
 
 		//プリミティブトポロジーを設定。
 		commandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(m_primitive.GetPrimitiveTopology()));

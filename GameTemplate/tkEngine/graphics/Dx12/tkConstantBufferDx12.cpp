@@ -2,8 +2,8 @@
 #include "dx12Common.h"
 #include "tkConstantBufferDx12.h"
 
-namespace tkEngine{
-	
+namespace tkEngine {
+
 	CConstantBufferDx12::~CConstantBufferDx12()
 	{
 		//アンマーップ
@@ -18,34 +18,21 @@ namespace tkEngine{
 		//D3Dデバイスを取得。
 		auto device = geDx12->GetD3DDevice();
 
-		//ディスクリプタヒープの作成。
-		{
-			D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
-			cbvHeapDesc.NumDescriptors = 1;
-			cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-			cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-			device->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&m_cbvHeap));
-		}
+
 		//定数バッファは256バイトアライメントが要求されるので、256の倍数に切り上げる。
-		auto allocSize = (size + 256) & 0xFFFFFF00;
+		m_allocSize = (size + 256) & 0xFFFFFF00;
 		//定数バッファの作成。
 		{
 			device->CreateCommittedResource(
 				&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 				D3D12_HEAP_FLAG_NONE,
-				&CD3DX12_RESOURCE_DESC::Buffer(allocSize),
+				&CD3DX12_RESOURCE_DESC::Buffer(m_allocSize),
 				D3D12_RESOURCE_STATE_GENERIC_READ,
 				nullptr,
 				IID_PPV_ARGS(&m_constantBuffer)
 			);
 		}
-		//ディスクリプタを作成して、ディスクリプタヒープに登録する。
-		{
-			D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
-			desc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
-			desc.SizeInBytes = allocSize;
-			device->CreateConstantBufferView(&desc, m_cbvHeap->GetCPUDescriptorHandleForHeapStart());
-		}
+		
 		//定数バッファをCPUからアクセス可能な仮想アドレス空間にマッピングする。
 		//マップ、アンマップのオーバーヘッドを軽減するためにはこのインスタンスが生きている間は行わない。
 		{
@@ -55,6 +42,17 @@ namespace tkEngine{
 		if (srcData != nullptr) {
 			Update(srcData);
 		}
+	}
+	void CConstantBufferDx12::RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle)
+	{
+		//Dx12版のグラフィックスエンジンに型変換。
+		auto geDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		//D3Dデバイスを取得。
+		auto device = geDx12->GetD3DDevice();
+		D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
+		desc.BufferLocation = m_constantBuffer->GetGPUVirtualAddress();
+		desc.SizeInBytes = m_allocSize;
+		device->CreateConstantBufferView(&desc, descriptorHandle);
 	}
 	void CConstantBufferDx12::Update(void* data)
 	{

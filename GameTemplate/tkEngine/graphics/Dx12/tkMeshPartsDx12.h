@@ -53,6 +53,10 @@ namespace tkEngine {
 		/// 共通定数バッファの作成。
 		/// </summary>
 		void CreateCommonConstantBuffer();
+		/// <summary>
+		/// ディスクリプタヒープを作成。
+		/// </summary>
+		void CreateDescriptorHeaps();
 	private:
 		/// <summary>
 		/// 定数バッファ。
@@ -67,6 +71,8 @@ namespace tkEngine {
 		};
 		CConstantBufferDx12 m_commonConstantBuffer;		//メッシュ共通の定数バッファ。
 		std::vector< UPSMesh > m_meshs;					//メッシュ。
+		std::vector<ComPtr< ID3D12DescriptorHeap>>	m_descriptorHeaps;
+		int m_cbrSrvDescriptorSize = 0;	
 	};
 }
 

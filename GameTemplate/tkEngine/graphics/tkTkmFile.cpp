@@ -2,7 +2,7 @@
 #include "tkEngine/graphics/tkTkmFile.h"
 
 namespace tkEngine {
-		
+
 	/// <summary>
 	/// TKMファイルフォーマット。
 	/// </summary>
@@ -71,9 +71,60 @@ namespace tkEngine {
 		for (int indexNo = 0; indexNo < numIndex; indexNo++) {
 			T index;
 			fread(&index, sizeof(index), 1, fp);
-			indices[indexNo] = index-1;	//todo maxのインデックスは1から開始しているので、-1する。
+			indices[indexNo] = index - 1;	//todo maxのインデックスは1から開始しているので、-1する。
 										//todo エクスポーターで減らすようにしましょう。
 		}
+	}
+
+	void CTkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp)
+	{
+		//アルベドのファイル名をロード。
+		tkmMat.albedoMapFileName = LoadTextureFileName(fp);
+		//法線マップのファイル名をロード。
+		tkmMat.normalMapFileName = LoadTextureFileName(fp);
+		//スペキュラマップのファイル名をロード。
+		tkmMat.specularMapFileName = LoadTextureFileName(fp);
+
+		//これプラットフォームに依存するな・・・。マルチプラットフォームめんどくさ・・・。
+		std::string texFilePath = m_filePath;
+		auto loadTexture = [&](
+			std::string& texFileName, 
+			std::unique_ptr<char[]>& ddsFileMemory, 
+			unsigned int& fileSize
+		) {
+			int filePathLength = texFilePath.length();
+			if (texFileName.length() > 0) {
+				//モデルのファイルパスからラストのフォルダ区切りを探す。
+				auto replaseStartPos = texFilePath.find_last_of('/');
+				if (replaseStartPos == std::string::npos) {
+					replaseStartPos == texFilePath.find_last_of('\\');
+				}
+				replaseStartPos += 1;
+				auto replaceLen = filePathLength - replaseStartPos;
+				texFilePath.replace(replaseStartPos, replaceLen, texFileName);
+				//拡張子をddsに変更する。
+				replaseStartPos = texFilePath.find_last_of('.') + 1;
+				replaceLen = texFilePath.length() - replaseStartPos;
+				texFilePath.replace(replaseStartPos, replaceLen, "dds");
+				
+				//テクスチャをロード。
+				auto texFileFp = fopen(texFilePath.c_str(), "rb");
+				if (texFileFp != nullptr) {
+					//ファイルサイズを取得。
+					fseek(texFileFp, 0L, SEEK_END);		
+					fileSize = ftell(texFileFp);
+					fseek(texFileFp, 0L, SEEK_SET);
+
+					ddsFileMemory = std::make_unique<char[]>(fileSize);
+					fread(ddsFileMemory.get(), fileSize, 1, texFileFp);
+					fclose(texFileFp);
+				}
+			}
+		};
+		//テクスチャをロード。
+		loadTexture( tkmMat.albedoMapFileName, tkmMat.albedoMap, tkmMat.albedoMapSize );
+		loadTexture( tkmMat.normalMapFileName, tkmMat.normalMap, tkmMat.normalMapSize );
+		loadTexture( tkmMat.specularMapFileName, tkmMat.specularMap, tkmMat.specularMapSize );
 	}
 	void CTkmFile::LoadAsync(const char* filePath)
 	{
@@ -105,15 +156,10 @@ namespace tkEngine {
 			fread(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
 			//マテリアル情報を記録できる領域を確保。
 			meshParts.materials.resize(meshPartsHeader.numMaterial);
-			//マテリアル情報をロードしていく。
+			//マテリアル情報を構築していく。
 			for (int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
 				auto& material = meshParts.materials[materialNo];
-				//アルベドのファイル名をロード。
-				material.albedoMapFileName = LoadTextureFileName(fp);
-				//法線マップのファイル名をロード。
-				material.normalMapFileName = LoadTextureFileName(fp);
-				//スペキュラマップのファイル名をロード。
-				material.specularMapFileName = LoadTextureFileName(fp);
+				BuildMaterial(material, fp);
 			}
 			//続いて頂点バッファ。
 			meshParts.vertexBuffer.resize(meshPartsHeader.numVertex);
