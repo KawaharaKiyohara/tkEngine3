@@ -62,6 +62,11 @@ namespace tkEngine {
 			TK_WARNING_MESSAGE_BOX("フレームバッファ用のRTVの作成に失敗しました。");
 			return false;
 		}
+		//フレームバッファ用のDSVを作成する。
+		if (!CreateDSVForFrameBuffer(initParam)) {
+			TK_WARNING_MESSAGE_BOX("フレームバッファ用のDSVの作成に失敗しました。");
+			return false;
+		}
 		//コマンドアロケータの作成。
 		m_d3dDevice->CreateCommandAllocator(
 			D3D12_COMMAND_LIST_TYPE_DIRECT, 
@@ -117,10 +122,20 @@ namespace tkEngine {
 		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+		//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		//レンダリングターゲットを設定。
-		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+		
 		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
 		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		m_commandList->ClearDepthStencilView(
+			dsvHandle,
+			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+			1.0f,
+			0,
+			0,
+			nullptr);
 
 		
 	}
@@ -249,11 +264,23 @@ namespace tkEngine {
 		desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_rtvHeap));
 		if (m_rtvHeap == false) {
-			//ディスクリプタヒープの作成に失敗した。
+			//RTV用のディスクリプタヒープの作成に失敗した。
 			return false;
 		}
-		//ディスクリプタヒープのサイズを取得。
+		//ディスクリプタのサイズを取得。
 		m_rtvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+		//DSV用のディスクリプタヒープを作成する。
+		desc.NumDescriptors = 1;
+		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+		m_d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_dsvHeap));
+		if (m_dsvHeap == false) {
+			//DSV用のディスクリプタヒープの作成に失敗した。
+
+			return false;
+		}
+		//ディスクリプタのサイズを取得。
+		m_dsvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 		return true;
 	}
 	bool CGraphicsEngineDx12::CreateRTVForFameBuffer()
@@ -268,6 +295,48 @@ namespace tkEngine {
 			);
 			rtvHandle.ptr += m_rtvDescriptorSize;
 		}
+		return true;
+	}
+
+	bool CGraphicsEngineDx12::CreateDSVForFrameBuffer(const SInitParam& initParam)
+	{
+		D3D12_CLEAR_VALUE dsvClearValue;
+		dsvClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+		dsvClearValue.DepthStencil.Depth = 1.0f;
+		dsvClearValue.DepthStencil.Stencil = 0;
+
+		CD3DX12_RESOURCE_DESC desc(
+			D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+			0,
+			static_cast<UINT>(initParam.frameBufferWidth),
+			static_cast<UINT>(initParam.frameBufferHeight),
+			1,
+			1,
+			DXGI_FORMAT_D32_FLOAT,
+			1,
+			0,
+			D3D12_TEXTURE_LAYOUT_UNKNOWN,
+			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE);
+
+		auto hr = m_d3dDevice->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE,
+			&desc,
+			D3D12_RESOURCE_STATE_DEPTH_WRITE,
+			&dsvClearValue,
+			IID_PPV_ARGS(&m_depthStencilBuffer)
+		);
+		if (FAILED(hr)) {
+			//深度ステンシルバッファの作成に失敗。
+			return false;
+		}
+		//ディスクリプタを作成
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+		m_d3dDevice->CreateDepthStencilView(
+			m_depthStencilBuffer.Get(), nullptr, dsvHandle
+		);
+
 		return true;
 	}
 	bool CGraphicsEngineDx12::CreateCommandList()

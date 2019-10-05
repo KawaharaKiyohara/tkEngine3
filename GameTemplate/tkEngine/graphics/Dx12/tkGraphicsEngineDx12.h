@@ -98,6 +98,11 @@ namespace tkEngine {
 		/// <returns>falseが返ってきたら作成に失敗。</returns>
 		bool CreateRTVForFameBuffer();
 		/// <summary>
+		/// フレームバッファのための深度ステンシルビューを作成する。
+		/// </summary>
+		/// <returns>falseが返ってきたら作成に失敗。</returns>
+		bool CreateDSVForFrameBuffer(const SInitParam& initParam);
+		/// <summary>
 		/// コマンドリストの作成。
 		/// </summary>
 		/// <returns>falseが返ってきたら作成に失敗。</returns>
@@ -122,6 +127,7 @@ namespace tkEngine {
 		ComPtr<ID3D12CommandQueue>			m_commandQueue;		//コマンドキュー。
 		ComPtr< IDXGISwapChain3>			m_swapChain;		//スワップチェイン。
 		ComPtr< ID3D12DescriptorHeap>		m_rtvHeap;			//フレームバッファのRTV用のディスクリプタヒープ。
+		ComPtr< ID3D12DescriptorHeap>		m_dsvHeap;			//フレームバッファ用の深度ステンシルバッファビューのディスクリプタヒープ。
 		ComPtr<ID3D12CommandAllocator>		m_commandAllocator;	//コマンドアロケータ。
 		ComPtr<ID3D12GraphicsCommandList>	m_commandList;		//コマンドリスト。
 		ComPtr<ID3D12PipelineState>			m_pipelineState;	//パイプラインステート。
@@ -131,8 +137,10 @@ namespace tkEngine {
 		ComPtr<ID3D12Fence> m_fence;
 		UINT64 m_fenceValue;
 		UINT m_rtvDescriptorSize = 0;						//フレームバッファのディスクリプタのサイズ。
+		UINT m_dsvDescriptorSize = 0;						//深度ステンシルバッファのディスクリプタのサイズ。
 		int m_currentBackBufferIndex = 0;					//現在のバックバッファの番号。
-		std::array< ComPtr<ID3D12Resource>, FRAME_COUNT> m_renderTargets;	//フレームバッファ世のレンダリングターゲット。
+		std::array< ComPtr<ID3D12Resource>, FRAME_COUNT> m_renderTargets;	//フレームバッファ用のレンダリングターゲット。
+		ComPtr<ID3D12Resource> m_depthStencilBuffer;	//深度ステンシルバッファ。
 	};
 }
 

@@ -17,6 +17,7 @@ private:
 	};
 	EnInitStep m_initStep = enInitStep_LoadStart;	//初期化ステップ。
 	CVector3 m_position = CVector3::Zero;
+	CQuaternion m_rotation = CQuaternion::Identity;
 	CModel m_model;									//モデルクラス。
 };
 

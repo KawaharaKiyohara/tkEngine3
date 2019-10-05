@@ -4,7 +4,8 @@
  
 #include "typedef.h"
  
-;
+#maxloop -1
+
 struct Vector3{
 	float x, y, z;
 };

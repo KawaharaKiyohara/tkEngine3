@@ -231,11 +231,7 @@ namespace tkEngine{
 			);
 			mat = lm;
 		}
-		[[deprecated("This function will be delete. please use Multiply() function.")]]
-		void Mul(const CMatrix& m0, const CMatrix& m1)
-		{
-			Multiply(m0, m1);
-		}
+		
 		/*!
 		*@brief	s—ñ‚Ì‘ã“ü‰‰Zq
 		*@details

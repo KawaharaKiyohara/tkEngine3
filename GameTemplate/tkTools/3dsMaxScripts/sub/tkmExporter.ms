@@ -11,7 +11,8 @@ struct Vertex(
 	normal = Point3,	--法線
 	uv = Point2,		--UV座標
 	weights = #(),		--スキンウェイト
-	indices = #()		--ボーンインデックス
+	indices = #(),		--ボーンインデックス
+	texVertNo
 )
 --マテリアル。
 struct tkMaterial(
@@ -37,9 +38,9 @@ struct ModelData(
 
 struct TkmExporter(
 private
-	md = ModelData,	--メッシュデータ。
-	ms = Meshparts,	--メッシュパーツ。
-
+	md = ModelData,		--メッシュデータ。
+	ms = Meshparts,		--メッシュパーツ。
+	newVertNosInFace = #(),	--
 	--ファイルパスからファイル名を抽出して、ファイルに出力する。
 	fn WriteFileToFileNameFromFilePath file filePath = 
 	(
@@ -61,7 +62,14 @@ private
 
 	),
 	--頂点バッファの構築。
-	fn BuildMeshPatrs_VertexBuffer c_node meshObj =(
+	fn BuildMeshPatrs_VertexBuffer c_node meshObj numFace =(
+		--maxでは、テクスチャ頂点という概念があり、
+		--UV座標のみ別の頂点バッファになっている。
+		--tkEngine2では別の頂点バッファになっていると非効率なため、
+		--二つの頂点バッファを結合して一つにする。
+
+		--3DSMAX上での頂点バッファを構築する。
+		maxVertexBuffer = #()
 		numVert = getNumVerts meshObj
 		for vertNo = 1 to numVert do(
 			--頂点座標
@@ -71,8 +79,8 @@ private
 			--正規化されてないね。
 			normal = normalize normal
 			--UV座標
-			uvw = gettvert meshObj vertNo
-			uv = Point2 uvw.x uvw.y
+		--	uvw = gettvert meshObj vertNo
+		--	uv = Point2 uvw.x uvw.y
 			--スキンウェイト
 			skinWeight = #(0.0, 0.0, 0.0, 0.0)
 			indices = #(-1, -1, -1, -1)
@@ -98,9 +106,41 @@ private
 				--スキンウェイトが4以上なら正規化する？
 			)	
 			--頂点作成
-			v = vertex pos:pos normal:normal uv:uv weights:skinWeight indices:indices
-			
-			append ms.vertexBuffer v
+			v = vertex pos:pos normal:normal weights:skinWeight indices:indices
+			append maxVertexBuffer v
+		)
+		--続いてテクスチャ頂点バッファを作成する。
+		maxTVertexBuffer = #()
+		numTVert = getNumTVerts meshObj
+		for vertNo = 1 to numTVert do(
+			--UV座標
+			uvw = gettvert meshObj vertNo
+			uv = Point2 uvw.x uvw.y
+			append maxTVertexBuffer uv
+		)
+		--tkEngineで利用する頂点バッファを構築する。
+		newVertNo = numVert + 1
+		for faceNo = 1 to numFace do (
+			tvertNos = getTVFace meshObj faceNo
+			vertNos = getFace meshObj faceNo
+			for i = 1 to 3  do(
+				maxVertex = maxVertexBuffer[vertNos[i]]
+				maxTVertex = maxTVertexBuffer[tvertNos[i]]
+				v = vertex pos:maxVertex.pos normal:maxVertex.normal weights:maxVertex.weights indices:maxVertex.indices uv:maxTVertex texVertNo:tvertNos[i]
+				--すでに何かのポリゴンで使用されている頂点　かつ　テクスチャ頂点番号が違う。
+				--新しい頂点として追加する。
+				vertNoInFace = vertNos[i]
+				if ms.vertexBuffer[vertNos[i]] == undefined then(
+					--未登録の頂点
+					ms.vertexBuffer[vertNos[i]] = v
+				)else if ms.vertexBuffer[vertNos[i]].texVertNo != tvertNos[i] then(
+					--登録済みだけど、テクスチャ番号が異なっているので頂点を増やす。
+					ms.vertexBuffer[newVertNo] = v
+					vertNoInFace = newVertNo
+					newVertNo = newVertNo + 1
+				)
+				append newVertNosInFace vertNoInFace
+			)
 		)
 	),
 	--マテリアル情報を構築する。
@@ -154,23 +194,23 @@ private
 		--マテリアルの数分だけインデックスバッファを作成する。
 		for tkMat in ms.materials do (
 			indices = #()
+			no = 1
+			
 			for faceNo = 1 to numFace do (
 				matId  = getFaceMatID meshObj faceNo
-				
 				if tkMat.id == matId then(
 					--現在調査中のマテリアルIDと同じ？
 					--三角形を構成するインデックスを取得する。
-					vertNos = getFace meshObj faceNo
-					append indices vertNos[1]
-					append indices vertNos[2]
-					append indices vertNos[3]
+					append indices newVertNosInFace[ no ]
+					append indices newVertNosInFace[ no + 1 ]
+					append indices newVertNosInFace[ no + 2 ]
 				)else if tkMat.id == -1 then(
 					--三角形を構成するインデックスを取得する。
-					vertNos = getFace meshObj faceNo
-					append indices vertNos[1]
-					append indices vertNos[2]
-					append indices vertNos[3]
+					append indices newVertNosInFace[ no ]
+					append indices newVertNosInFace[ no + 1 ]
+					append indices newVertNosInFace[ no + 2 ]
 				)
+				no = no + 3
 			)	
 			--インデックスバッファを追加＾－＾
 			append ms.indexBufferArray indices
@@ -179,6 +219,7 @@ private
 	--メッシュパーツをビルドする。
 	fn BuildMeshParts c_node = 
 	(
+		newVertNosInFace = #()
 		--メッシュ―パーツを作成。
 		ms = Meshparts materials:#() indexBufferArray:#() vertexBuffer:#()	
 		--集約しないとサブマテリアルＩＤが取れないぞいぞい。
@@ -189,11 +230,11 @@ private
 		--マテリアル情報から構築する。
 		BuildMeshParts_Material c_node meshObj numFace
 
+		--頂点バッファを構築する。
+		BuildMeshPatrs_VertexBuffer c_node meshObj numFace
+
 		--インデックスバッファを構築する。
 		BuildMeshParts_IndexBuffer c_node meshObj numFace
-
-		--頂点バッファを構築する。
-		BuildMeshPatrs_VertexBuffer c_node meshObj
 
 		--メッシュパーツを追加。
 		append md.meshParts ms
@@ -285,13 +326,7 @@ private
 							WriteLong file index
 						)
 					)
-					--パディング
-					if indexSize == 2 then(
-						amari = mod indexBuffer.count 2
-						if amari != 0 then(
-							WriteShort file 0
-						)
-					)
+					
 				)
 			)			
 	/*	)catch(
