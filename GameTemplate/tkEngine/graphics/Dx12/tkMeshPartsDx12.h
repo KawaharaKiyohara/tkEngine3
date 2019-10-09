@@ -13,7 +13,6 @@
 #include "tkEngine/graphics/Dx12/tkMaterialDx12.h"
 
 namespace tkEngine {
-	using UPCIndexBufferDx12 = std::unique_ptr<CIndexBufferDx12>;
 	/// <summary>
 	/// ƒƒbƒVƒ…
 	/// </summary>

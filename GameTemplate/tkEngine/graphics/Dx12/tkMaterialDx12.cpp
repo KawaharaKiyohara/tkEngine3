@@ -117,12 +117,10 @@ namespace tkEngine {
 	
 	void CMaterialDx12::BeginRender(IRenderContext& rc)
 	{
-		auto rcDx12 = rc.As<CRenderContextDx12>();
-		auto commandList = rcDx12->GetCommandList();
 		//ルートシグネチャとパイプラインステートを設定。
-		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
-		commandList->SetPipelineState(m_pipelineState.Get());
-
+		auto& rcDx12 = rc.As<CRenderContextDx12>();
+		rcDx12.SetRootSignature(m_rootSignature);
+		rcDx12.SetPipelineState(m_pipelineState);
 	}
 	
 	void CMaterialDx12::EndRender(IRenderContext& rc)

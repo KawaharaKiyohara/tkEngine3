@@ -120,12 +120,12 @@ namespace tkEngine {
 		cb.mProj = mProj;
 		
 		m_constantBuffer.Update(&cb);
-		auto rcDx12 = rc.As<CRenderContextDx12>();
+		auto& rcDx12 = rc.As<CRenderContextDx12>();
 
-		auto commandList = rcDx12->GetCommandList();
 		//ルートシグネチャを設定。
-		commandList->SetGraphicsRootSignature(m_rootSignature.Get());
-		commandList->SetPipelineState(m_pipelineState.Get());
+		rcDx12.SetRootSignature(m_rootSignature);
+		rcDx12.SetPipelineState(m_pipelineState);
+	
 #if 0 //todo これ考え方を間違えていたぽい。
 		//ディスクリプタテーブルを設定する。
 		int numDescriporHeap = 1;
@@ -147,16 +147,15 @@ namespace tkEngine {
 #endif	
 
 		//プリミティブトポロジーを設定。
-		commandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(m_primitive.GetPrimitiveTopology()));
+		rcDx12.IASetPrimitiveTopology(m_primitive.GetPrimitiveTopology());
 		//Dx12版の頂点バッファに型変換。
-		auto vbDx12 = m_primitive.GetVertexBuffer()->As<CVertexBufferDx12>();
-		auto ibDx12 = m_primitive.GetIndexBuffer()->As<CIndexBufferDx12>();
+		auto& ib = m_primitive.GetIndexBuffer();
 		//頂点バッファを設定。
-		commandList->IASetVertexBuffers(0, 1, &vbDx12->GetView());
+		rcDx12.IASetVertexBuffer(m_primitive.GetVertexBuffer());
 		//インデックスバッファを設定。
-		commandList->IASetIndexBuffer(&ibDx12->GetView());
+		rcDx12.IASetIndexBuffer(ib);
 		//どろー
-		commandList->DrawIndexedInstanced(ibDx12->GetCount(), 1, 0, 0, 0);
+		rcDx12.DrawIndexed(ib->GetCount());
 	}
 }
 
