@@ -74,6 +74,7 @@ namespace tkEngine {
 				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
+				hr = device->GetDeviceRemovedReason();
 				TK_ASSERT(SUCCEEDED(hr), "CMeshPartsDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
 				//ディスクリプタヒープに定数バッファとテクスチャを登録してく。
 				auto handle = heap->GetCPUDescriptorHandleForHeapStart();

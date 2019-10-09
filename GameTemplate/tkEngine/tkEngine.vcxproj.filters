@@ -15,9 +15,6 @@
     <Filter Include="Source Files\debug">
       <UniqueIdentifier>{7b55621c-b4f1-4692-8113-c24f50987cc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\graphics">
-      <UniqueIdentifier>{5a0d3e54-4e7b-4bcc-97db-a7a9f8eb8c14}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{544553ca-2056-499c-ab93-0d198bc933cb}</UniqueIdentifier>
     </Filter>
@@ -53,6 +50,9 @@
     </Filter>
     <Filter Include="Source Files\online">
       <UniqueIdentifier>{e22b0886-6e5a-474a-aa46-cbef8076bf69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\graphics">
+      <UniqueIdentifier>{5a0d3e54-4e7b-4bcc-97db-a7a9f8eb8c14}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\graphics\Dx12">
       <UniqueIdentifier>{940efd52-d60f-4417-b276-d9b9193965ca}</UniqueIdentifier>

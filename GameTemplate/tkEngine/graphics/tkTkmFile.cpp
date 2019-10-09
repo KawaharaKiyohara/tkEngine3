@@ -119,6 +119,9 @@ namespace tkEngine {
 					fread(ddsFileMemory.get(), fileSize, 1, texFileFp);
 					fclose(texFileFp);
 				}
+				else {
+					TK_WARNING_MESSAGE_BOX("テクスチャのロードに失敗しました。%s", texFilePath.c_str());
+				}
 			}
 		};
 		//テクスチャをロード。
