@@ -8,9 +8,9 @@ namespace tkEngine {
 		/// IRenderContextのインスタンスの型変換。
 		/// </summary>
 		template<class T>
-		T* As()
+		T& As()
 		{
-			return dynamic_cast<T*>(this);
+			return dynamic_cast<T&>(*this);
 		}
 	};
 	using UPIRenderContext = std::unique_ptr<IRenderContext>;

@@ -95,12 +95,11 @@ namespace tkEngine {
 		const CMatrix& mProj)
 	{
 		//レンダリングコンテキストをDx12版にダウンキャスト
-		auto rcDx12 = rc.As<CRenderContextDx12>();
-		//コマンドリストを取得。
-		auto commandList = rcDx12->GetCommandList();
+		auto& rcDx12 = rc.As<CRenderContextDx12>();
+		
 		//メッシュごとにドロー
 		//プリミティブのトポロジーはトライアングルリストのみ。
-		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		rcDx12.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		//定数バッファを更新する。
 		SConstantBuffer cb;
@@ -113,7 +112,7 @@ namespace tkEngine {
 		int heapNo = 0;
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
-			commandList->IASetVertexBuffers(0, 1, &mesh->m_vertexBuffer.GetView());
+			rcDx12.IASetVertexBuffer(mesh->m_vertexBuffer);
 			//マテリアルごとにドロー。
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 				//このマテリアルが貼られているメッシュの描画開始。
@@ -121,18 +120,17 @@ namespace tkEngine {
 
 				auto& descriptorHeap = m_descriptorHeaps[heapNo];
 				heapNo++;
-				ID3D12DescriptorHeap* ppHeap[] = { descriptorHeap.Get() };
-				commandList->SetDescriptorHeaps(1, ppHeap);
+				rcDx12.SetDescriptorHeap(descriptorHeap);
 				auto gpuHandle = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 				//ディスクリプタヒープをルートシグネチャに登録していく。
-				commandList->SetGraphicsRootDescriptorTable(
+				rcDx12.SetGraphicsRootDescriptorTable(
 					0,
 					gpuHandle
 				);
 				auto& albeoMap = mesh->m_materials[matNo]->GetAlbedoMap();
 				if (albeoMap.IsValid()) {
 					gpuHandle.ptr += m_cbrSrvDescriptorSize;
-					commandList->SetGraphicsRootDescriptorTable(
+					rcDx12.SetGraphicsRootDescriptorTable(
 						1,
 						gpuHandle
 					);
@@ -140,9 +138,11 @@ namespace tkEngine {
 
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];
-				commandList->IASetIndexBuffer(&ib->GetView());
-				//ドローコール。
-				commandList->DrawIndexedInstanced(ib->GetCount(), 1, 0, 0, 0);
+				rcDx12.IASetIndexBuffer(ib);
+				
+				//ドロー。
+				rcDx12.DrawIndexed(ib->GetCount());
+		
 				mesh->m_materials[matNo]->EndRender(rc);
 			}
 		}

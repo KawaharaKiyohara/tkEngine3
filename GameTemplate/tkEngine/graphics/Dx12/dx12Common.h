@@ -1,6 +1,12 @@
 #pragma once
 
 #include "d3dx12.h"
+
+namespace tkEngine {
+
+	class CIndexBufferDx12;
+	using UPCIndexBufferDx12 = std::unique_ptr<CIndexBufferDx12>;
+}
 #include "tkGraphicsInstanceFactoryDx12.h"
 #include "tkIndexBufferDx12.h"
 #include "tkVertexBufferDx12.h"
@@ -10,3 +16,4 @@
 #include "tkConstantBufferDx12.h"
 #include "tkRootSignatureDx12.h"
 #include "tkTextureDx12.h"
+
