@@ -19,11 +19,7 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
 		void BeginRender(IRenderContext& rc);
-		/// <summary>
-		/// レンダリングを開始するときに呼び出す関数。
-		/// </summary>
-		/// <param name="rc"></param>
-		void EndRender(IRenderContext& rc);
+
 		/// <summary>
 		/// アルベドマップを取得。
 		/// </summary>

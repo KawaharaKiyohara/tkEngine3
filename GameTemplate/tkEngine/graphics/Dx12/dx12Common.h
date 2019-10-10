@@ -16,4 +16,6 @@ namespace tkEngine {
 #include "tkConstantBufferDx12.h"
 #include "tkRootSignatureDx12.h"
 #include "tkTextureDx12.h"
+#include "tkRenderContextDx12_inline.h"
+
 

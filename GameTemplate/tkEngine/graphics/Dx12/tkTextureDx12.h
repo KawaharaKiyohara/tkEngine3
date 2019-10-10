@@ -39,7 +39,7 @@ namespace tkEngine {
 		/// <param name="device">D3Dデバイス</param>
 		void LoadTextureFromDDSFile(
 			const wchar_t* filePath, 
-			CGraphicsEngineDx12* ge12, 
+			CGraphicsEngineDx12& ge12, 
 			ComPtr<ID3D12Device> device
 		);
 		/// <summary>
@@ -52,7 +52,7 @@ namespace tkEngine {
 		void LoadTextureFromMemory(
 			const char* memory, 
 			unsigned int size,
-			CGraphicsEngineDx12* ge12,
+			CGraphicsEngineDx12& ge12,
 			ComPtr<ID3D12Device> device
 		);
 		

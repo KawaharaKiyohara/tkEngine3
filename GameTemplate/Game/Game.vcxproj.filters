@@ -32,9 +32,4 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ImageContentTask Include="Assets\sprite\title.jpeg">
-      <Filter>Resource Files</Filter>
-    </ImageContentTask>
-  </ItemGroup>
 </Project>

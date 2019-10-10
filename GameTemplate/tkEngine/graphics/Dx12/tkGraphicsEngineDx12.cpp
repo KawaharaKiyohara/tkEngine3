@@ -106,6 +106,9 @@ namespace tkEngine {
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		rcDx12.SetCommandList(m_commandList);
 
+		//CBR_SVRのディスクリプタのサイズを取得。
+		m_cbrSrvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
 		return true;
 	}
 	void CGraphicsEngineDx12::BeginRender()

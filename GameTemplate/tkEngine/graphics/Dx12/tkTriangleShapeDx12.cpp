@@ -13,8 +13,8 @@ namespace tkEngine {
 
 	CTriangleShapeDx12::CTriangleShapeDx12(const wchar_t* textureFilePath)
 	{
-		auto gfxEngineDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = gfxEngineDx12->GetD3DDevice();
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto d3dDevice = ge12.GetD3DDevice();
 		//ルートシグネチャを作成。
 		{
 			D3D12_STATIC_SAMPLER_DESC sampler = {};
@@ -147,13 +147,13 @@ namespace tkEngine {
 #endif	
 
 		//プリミティブトポロジーを設定。
-		rcDx12.IASetPrimitiveTopology(m_primitive.GetPrimitiveTopology());
+		rcDx12.SetPrimitiveTopology(m_primitive.GetPrimitiveTopology());
 		//Dx12版の頂点バッファに型変換。
 		auto& ib = m_primitive.GetIndexBuffer();
 		//頂点バッファを設定。
-		rcDx12.IASetVertexBuffer(m_primitive.GetVertexBuffer());
+		rcDx12.SetVertexBuffer(m_primitive.GetVertexBuffer());
 		//インデックスバッファを設定。
-		rcDx12.IASetIndexBuffer(ib);
+		rcDx12.SetIndexBuffer(ib);
 		//どろー
 		rcDx12.DrawIndexed(ib->GetCount());
 	}

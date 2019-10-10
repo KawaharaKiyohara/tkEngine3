@@ -39,8 +39,8 @@ namespace tkEngine {
 	}
 	void CMaterialDx12::InitRootSignature(const CTkmFile::SMaterial& tkmMat)
 	{
-		auto gfxEngineDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = gfxEngineDx12->GetD3DDevice();
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto d3dDevice = ge12.GetD3DDevice();
 
 		D3D12_STATIC_SAMPLER_DESC sampler = {};
 		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
@@ -81,8 +81,8 @@ namespace tkEngine {
 	}
 	void CMaterialDx12::InitPipelineState(const CTkmFile::SMaterial& tkmMat)
 	{
-		auto gfxEngineDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = gfxEngineDx12->GetD3DDevice();
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto d3dDevice = ge12.GetD3DDevice();
 
 		// 頂点レイアウトを定義する。
 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -122,10 +122,7 @@ namespace tkEngine {
 		rcDx12.SetRootSignature(m_rootSignature);
 		rcDx12.SetPipelineState(m_pipelineState);
 	}
-	
-	void CMaterialDx12::EndRender(IRenderContext& rc)
-	{
-	}
+
 }
 
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

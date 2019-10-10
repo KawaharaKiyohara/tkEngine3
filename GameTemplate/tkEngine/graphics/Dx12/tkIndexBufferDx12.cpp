@@ -8,8 +8,8 @@
 namespace tkEngine {
 	void CIndexBufferDx12::InitSub(int size, int stride)
 	{
-		auto gfxEngine12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = gfxEngine12->GetD3DDevice();
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto d3dDevice = ge12.GetD3DDevice();
 		auto hr = d3dDevice->CreateCommittedResource(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 			D3D12_HEAP_FLAG_NONE,

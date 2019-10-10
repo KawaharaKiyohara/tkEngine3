@@ -55,6 +55,22 @@ namespace tkEngine {
 		{
 			return m_commandQueue;
 		}
+		/// <summary>
+		/// バックバッファの番号を取得。
+		/// </summary>
+		/// <returns>バックバッファの番号。</returns>
+		UINT GetBackBufferIndex() const
+		{
+			return m_frameIndex;
+		}
+		/// <summary>
+		/// CBR_SRVのディスクリプタのサイズを取得。
+		/// </summary>
+		/// <returns></returns>
+		UINT GetCbrSrvDescriptorSize() const
+		{
+			return m_cbrSrvDescriptorSize;
+		}
 	private:
 		/// <summary>
 		/// 1フレーム描画開始時の処理。
@@ -138,6 +154,7 @@ namespace tkEngine {
 		UINT64 m_fenceValue;
 		UINT m_rtvDescriptorSize = 0;						//フレームバッファのディスクリプタのサイズ。
 		UINT m_dsvDescriptorSize = 0;						//深度ステンシルバッファのディスクリプタのサイズ。
+		UINT m_cbrSrvDescriptorSize = 0;					//CBR_SRVのディスクリプタのサイズ。
 		int m_currentBackBufferIndex = 0;					//現在のバックバッファの番号。
 		std::array< ComPtr<ID3D12Resource>, FRAME_COUNT> m_renderTargets;	//フレームバッファ用のレンダリングターゲット。
 		ComPtr<ID3D12Resource> m_depthStencilBuffer;	//深度ステンシルバッファ。

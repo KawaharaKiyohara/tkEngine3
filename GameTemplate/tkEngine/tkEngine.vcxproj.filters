@@ -233,6 +233,9 @@
     <ClInclude Include="graphics\Dx12\tkMaterialDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkRenderContextDx12_inline.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">

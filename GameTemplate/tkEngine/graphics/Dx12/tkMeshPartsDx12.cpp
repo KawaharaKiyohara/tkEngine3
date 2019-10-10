@@ -61,9 +61,8 @@ namespace tkEngine {
 	}
 	void CMeshPartsDx12::CreateDescriptorHeaps()
 	{
-		auto ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto device = ge12->GetD3DDevice();
-		m_cbrSrvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto device = ge12.GetD3DDevice();
 		ComPtr< ID3D12DescriptorHeap> heap;
 		//マテリアルごとにディスクリプタヒープを作成する。
 		for (auto& mesh : m_meshs) {
@@ -74,14 +73,7 @@ namespace tkEngine {
 				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
-				hr = device->GetDeviceRemovedReason();
 				TK_ASSERT(SUCCEEDED(hr), "CMeshPartsDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
-				//ディスクリプタヒープに定数バッファとテクスチャを登録してく。
-				auto handle = heap->GetCPUDescriptorHandleForHeapStart();
-				m_commonConstantBuffer.RegistConstantBufferView(handle);
-				handle.ptr += m_cbrSrvDescriptorSize;
-				auto& albedoMap = mat->GetAlbedoMap();
-				albedoMap.RegistShaderResourceView(handle);
 
 				m_descriptorHeaps.push_back(std::move(heap));
 				
@@ -94,12 +86,13 @@ namespace tkEngine {
 		const CMatrix& mView, 
 		const CMatrix& mProj)
 	{
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		//レンダリングコンテキストをDx12版にダウンキャスト
-		auto& rcDx12 = rc.As<CRenderContextDx12>();
+		auto& rc12 = rc.As<CRenderContextDx12>();
 		
 		//メッシュごとにドロー
 		//プリミティブのトポロジーはトライアングルリストのみ。
-		rcDx12.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		rc12.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		//定数バッファを更新する。
 		SConstantBuffer cb;
@@ -112,38 +105,22 @@ namespace tkEngine {
 		int heapNo = 0;
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
-			rcDx12.IASetVertexBuffer(mesh->m_vertexBuffer);
+			rc12.SetVertexBuffer(mesh->m_vertexBuffer);
 			//マテリアルごとにドロー。
-			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
+			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++, heapNo++) {
 				//このマテリアルが貼られているメッシュの描画開始。
 				mesh->m_materials[matNo]->BeginRender(rc);
 
 				auto& descriptorHeap = m_descriptorHeaps[heapNo];
-				heapNo++;
-				rcDx12.SetDescriptorHeap(descriptorHeap);
-				auto gpuHandle = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-				//ディスクリプタヒープをルートシグネチャに登録していく。
-				rcDx12.SetGraphicsRootDescriptorTable(
-					0,
-					gpuHandle
-				);
-				auto& albeoMap = mesh->m_materials[matNo]->GetAlbedoMap();
-				if (albeoMap.IsValid()) {
-					gpuHandle.ptr += m_cbrSrvDescriptorSize;
-					rcDx12.SetGraphicsRootDescriptorTable(
-						1,
-						gpuHandle
-					);
-				}
+				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
+				rc12.SetCBR_SRV_UAV(descriptorHeap.Get(), 1, &m_commonConstantBuffer, 1, &albedoMap);
 
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];
-				rcDx12.IASetIndexBuffer(ib);
-				
+				rc12.SetIndexBuffer(ib);
+			
 				//ドロー。
-				rcDx12.DrawIndexed(ib->GetCount());
-		
-				mesh->m_materials[matNo]->EndRender(rc);
+				rc12.DrawIndexed(ib->GetCount());
 			}
 		}
 	}

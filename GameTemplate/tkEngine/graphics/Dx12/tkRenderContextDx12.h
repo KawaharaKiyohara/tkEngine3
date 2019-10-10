@@ -5,6 +5,8 @@
 #include "tkEngine/graphics/tkRenderContext.h"
 
 namespace tkEngine {
+	class CConstantBufferDx12;
+	class CTextureDx12;
 	/// <summary>
 	/// レンダリングコンテキスト。
 	/// </summary>
@@ -34,22 +36,22 @@ namespace tkEngine {
 		/// ID3D12GraphicsCommandList::のIASetPrimitiveTopologyのラッパー関数。
 		/// 詳細はMicrosoftのヘルプを参照。
 		/// </remarks>
-		void IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
+		void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
 		{
 			m_commandList->IASetPrimitiveTopology(topology);
 		}
-		void IASetPrimitiveTopology(EnPrimitiveTopology topology)
+		void SetPrimitiveTopology(EnPrimitiveTopology topology)
 		{
 			m_commandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(topology));
 		}
 		/// <summary>
 		/// 頂点バッファを設定。
 		/// </summary>
-		void IASetVertexBuffer(CVertexBufferDx12& vb)
+		void SetVertexBuffer(CVertexBufferDx12& vb)
 		{
 			m_commandList->IASetVertexBuffers(0, 1, &vb.GetView());
 		}
-		void IASetVertexBuffer(UPIVertexBuffer& vb)
+		void SetVertexBuffer(UPIVertexBuffer& vb)
 		{
 			auto vbDx12 = vb->As<CVertexBufferDx12>();
 			m_commandList->IASetVertexBuffers(0, 1, &vbDx12->GetView());
@@ -58,19 +60,35 @@ namespace tkEngine {
 		/// インデックスバッファを設定。
 		/// </summary>
 		/// <param name="ib"></param>
-		void IASetIndexBuffer(CIndexBufferDx12& ib)
+		void SetIndexBuffer(CIndexBufferDx12& ib)
 		{
 			m_commandList->IASetIndexBuffer(&ib.GetView());
 		}
-		void IASetIndexBuffer(UPIIndexBuffer& ib)
+		void SetIndexBuffer(UPIIndexBuffer& ib)
 		{
 			auto ibDx12 = ib->As<CIndexBufferDx12>();
 			m_commandList->IASetIndexBuffer(&ibDx12->GetView());
 		}
-		void IASetIndexBuffer(UPCIndexBufferDx12& ib)
+		void SetIndexBuffer(UPCIndexBufferDx12& ib)
 		{
 			m_commandList->IASetIndexBuffer(&ib->GetView());
 		}
+	
+		/// <summary>
+		/// 定数バッファ、シェーダーリソース、UAV(UnorderResrouceView)をディスクリプタヒープに登録する。
+		/// </summary>
+		/// <param name="descriptorHeap">ディスクリプタヒープ</param>
+		/// <param name="numCBR">定数バッファの数</param>
+		/// <param name="constantBufferArray">定数バッファの配列</param>
+		/// <param name="numSRV">シェーダーリソースの数</param>
+		/// <param name="srvArray">シェーダーリソースの配列</param>
+		void SetCBR_SRV_UAV(
+			ID3D12DescriptorHeap* descriptorHeap,
+			int numConstantBuffer,
+			CConstantBufferDx12* constantBufferArray,
+			int numShaderResource,
+			CTextureDx12* shaderResourceArray);
+
 		/// <summary>
 		/// インデックスつきプリミティブを描画。
 		/// </summary>
@@ -98,8 +116,8 @@ namespace tkEngine {
 		/// </summary>
 		void SetDescriptorHeap(ComPtr< ID3D12DescriptorHeap>& descHeap)
 		{
-			ID3D12DescriptorHeap* ppHeap[] = { descHeap.Get() };
-			m_commandList->SetDescriptorHeaps(1, ppHeap);
+			m_descriptorHeaps[0] = descHeap.Get();	//カリカリカリ
+			m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
 		}
 		void SetGraphicsRootDescriptorTable(
 			UINT RootParameterIndex,
@@ -111,7 +129,9 @@ namespace tkEngine {
 			);
 		}
 	private:
+		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
 		ComPtr<ID3D12GraphicsCommandList> m_commandList;	//コマンドリスト。
+		ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];
 	};
 }
 
