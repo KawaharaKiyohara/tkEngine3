@@ -119,6 +119,7 @@ using Microsoft::WRL::ComPtr;
 
 #include "tkEngine/tkEngineConst.h"
 #include "tkEngine/policy/tkNoncopyable.h"
+#include "tkEngine/Resource/tkIResource.h"
 #include "tkEngine/policy/tkScopedResource.h"
 #include "tkEngine/debug/tkLog.h"
 #include "tkEngine/debug/tkAssert.h"
@@ -137,4 +138,9 @@ using Microsoft::WRL::ComPtr;
 #include "tkEngine/sound/tkSoundSource.h"
 #include "tkEngine/graphics/tkShape.h"
 #include "tkEngine/graphics/tkTexture.h"
+#include "tkEngine/graphics/tkSkeleton.h"
+#include "tkEngine/graphics/tkAnimationClip.h"
+#include "tkEngine/graphics/tkAnimationPlayController.h"
+#include "tkEngine/graphics/tkAnimation.h"
+
 

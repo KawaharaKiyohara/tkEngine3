@@ -316,8 +316,10 @@
     <ClInclude Include="graphics\tkModel.h" />
     <ClInclude Include="graphics\tkRenderContext.h" />
     <ClInclude Include="graphics\tkShape.h" />
+    <ClInclude Include="graphics\tkSkeleton.h" />
     <ClInclude Include="graphics\tkTexture.h" />
     <ClInclude Include="graphics\tkTkmFile.h" />
+    <ClInclude Include="graphics\tkTksFile.h" />
     <ClInclude Include="graphics\tkVertexBuffer.h" />
     <ClInclude Include="Input\tkPad.h" />
     <ClInclude Include="math\tkAabb.h" />
@@ -328,7 +330,9 @@
     <ClInclude Include="policy\tkAsable.h" />
     <ClInclude Include="policy\tkNoncopyable.h" />
     <ClInclude Include="policy\tkScopedResource.h" />
+    <ClInclude Include="prefab\tkModelRender.h" />
     <ClInclude Include="random\tkRandom.h" />
+    <ClInclude Include="resource\tkIResource.h" />
     <ClInclude Include="Sound\tkSoundEngine.h" />
     <ClInclude Include="Sound\tkSoundSource.h" />
     <ClInclude Include="Sound\tkWaveFile.h" />
@@ -366,7 +370,9 @@
     <ClCompile Include="graphics\tkPrimitive.cpp" />
     <ClCompile Include="graphics\tkModel.cpp" />
     <ClCompile Include="graphics\tkShape.cpp" />
+    <ClCompile Include="graphics\tkSkeleton.cpp" />
     <ClCompile Include="graphics\tkTkmFile.cpp" />
+    <ClCompile Include="graphics\tkTksFile.cpp" />
     <ClCompile Include="graphics\tkVertexBuffer.cpp" />
     <ClCompile Include="Input\tkPad.cpp" />
     <ClCompile Include="math\tkAabb.cpp" />
@@ -374,7 +380,9 @@
     <ClCompile Include="math\tkMath.cpp" />
     <ClCompile Include="math\tkMatrix.cpp" />
     <ClCompile Include="math\tkVector.cpp" />
+    <ClCompile Include="prefab\tkModelRender.cpp" />
     <ClCompile Include="random\tkRandom.cpp" />
+    <ClCompile Include="resource\tkIResource.cpp" />
     <ClCompile Include="Sound\tkSoundEngine.cpp" />
     <ClCompile Include="Sound\tkSoundSource.cpp" />
     <ClCompile Include="Sound\tkWaveFile.cpp" />

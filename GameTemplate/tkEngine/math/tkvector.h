@@ -709,17 +709,19 @@ namespace tkEngine{
 		return qRet;
 	}
 
-	const CVector3 cv3Zero	= CVector3::Zero;
-	const CVector3 cv3Right = CVector3::Right;
-	const CVector3 cv3Left  = CVector3::Left;
-	const CVector3 cv3Up    = CVector3::Up;
-	const CVector3 cv3Down  = CVector3::Down;
-	const CVector3 cv3Front = CVector3::Front;
-	const CVector3 cv3Back  = CVector3::Back;
-	const CVector3 cv3AxisX = CVector3::AxisX;
-	const CVector3 cv3AxisY = CVector3::AxisY;
-	const CVector3 cv3AxisZ = CVector3::AxisZ;
-	const CVector3 cv3One   = CVector3::One;
+	const CVector3 g_vec3Zero  = { 0.0f,  0.0f,  0.0f };
+	const CVector3 g_vec3Right = { 1.0f,  0.0f,  0.0f };
+	const CVector3 g_vec3Left  = { -1.0f,  0.0f,  0.0f };
+	const CVector3 g_vec3Up    = { 0.0f,  1.0f,  0.0f };
+	const CVector3 g_vec3Down  = { 0.0f, -1.0f,  0.0f };
+	const CVector3 g_vec3Front = { 0.0f,   0.0f,  1.0f };
+	const CVector3 g_vec3Back  = { 0.0f,   0.0f, -1.0f };
+	const CVector3 g_vec3AxisX = { 1.0f,  0.0f,  0.0f };
+	const CVector3 g_vec3AxisY = { 0.0f,  1.0f,  0.0f };
+	const CVector3 g_vec3AxisZ = { 0.0f,  0.0f,  1.0f };
+	const CVector3 g_vec3One   = { 1.0f, 1.0f, 1.0f };
+
+	const CQuaternion g_quatIdentity = { 0.0f,  0.0f, 0.0f, 1.0f };
 }
 
 

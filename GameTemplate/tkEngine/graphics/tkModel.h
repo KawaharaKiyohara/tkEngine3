@@ -2,6 +2,7 @@
 
 #include "tkEngine/graphics/tkTkmFile.h"
 #include "tkEngine/graphics/tkMeshParts.h"
+#include "tkEngine/graphics/tkSkeleton.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -10,13 +11,18 @@ namespace tkEngine {
 	class CModel : Noncopyable {
 	public:
 		/// <summary>
-		/// tkmファイルをロ―ド。
+		/// tkmファイルを非同期ロ―ド。
 		/// </summary>
 		/// <remarks>
 		/// IsInited関数を利用して、同期をとるようにしてください。
 		/// </remarks>
 		/// <param name="filePath">tkmファイルのファイルパス。</param>
 		void LoadTkmFileAsync(const char* filePath);
+		/// <summary>
+		/// tkmファイルをロード。
+		/// </summary>
+		/// <param name="filePath">tkmファイルのファイルパス。</param>
+		void LoadTkmFile(const char* filePath);
 		/// <summary>
 		/// メッシュパーツを作成する。
 		/// </summary>
@@ -31,15 +37,24 @@ namespace tkEngine {
 		/// <returns></returns>
 		bool IsInited() const;
 		/// <summary>
+		/// 更新。
+		/// 必ず毎フレーム実行してください。
+		/// </summary>
+		/// <param name="pos">座標</param>
+		/// <param name="rot">回転</param>
+		/// <param name="scale">拡大率</param>
+		void Update(CVector3 pos, CQuaternion rot, CVector3 scale);
+		/// <summary>
 		/// 描画
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
-		/// <param name="mWorld">ワールド行列</param>
 		/// <param name="mView">ビュー行列</param>
 		/// <param name="mProj">プロジェクション行列</param>
-		void Draw(IRenderContext& rc, const CMatrix& mWorld, const CMatrix& mView, const CMatrix& mProj);
+		void Draw(IRenderContext& rc, CMatrix mView, CMatrix mProj);
 	private:
+		CMatrix m_world;			//ワールド行列。
 		CTkmFile m_tkmFile;			//tkmファイル。
+		CSkeleton m_skeleton;		//スケルトン。
 		UPIMeshParts m_meshParts;	//メッシュパーツ。
 	};
 }

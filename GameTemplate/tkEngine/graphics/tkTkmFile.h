@@ -14,7 +14,7 @@ namespace tkEngine {
 	/// <summary>
 	/// tkmファイルクラス。
 	/// </summary>
-	class  CTkmFile : Noncopyable {
+	class  CTkmFile : public IResource {
 	public:
 		/// <summary>
 		/// マテリアル
@@ -61,32 +61,13 @@ namespace tkEngine {
 			std::vector<SIndexBuffer32> indexBuffer32Array;	//インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。
 			std::vector< SIndexbuffer16> indexBuffer16Array;
 		};
-		/// <summary>
-		/// デストラクタ。
-		/// </summary>
-		~CTkmFile();
-
-		/// <summary>
-		/// 3Dモデルを非同期ロード。
-		/// </summary>
-		/// <remarks>
-		/// 本関数を使用した場合はメイン関数でIsLoaded関数を利用してロード終了待ちを行う必要があります。
-		/// </remarks>
-		/// <param name="filePath">ファイルパス。</param>
-		void LoadAsync(const char* filePath);
+		
 		/// <summary>
 		/// 3Dモデルをロード。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
-		void Load(const char* filePath);
-		/// <summary>
-		/// 読み込みが終了しているか判定を行う。
-		/// </summary>
-		/// <returns>trueが返ってきたら読み込み終わり。</returns>
-		bool IsLoaded() const
-		{
-			return m_isLoaded;
-		}
+		void LoadImplement(const char* filePath) override final;
+		
 		/// <summary>
 		/// メッシュパーツに対してクエリを行う。
 		/// </summary>
@@ -121,10 +102,8 @@ namespace tkEngine {
 		/// マテリアルを構築。
 		/// </summary>
 		/// <param name="tkmMat"></param>
-		void BuildMaterial(SMaterial& tkmMat, FILE* fp);
+		void BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath);
 	private:
-		bool m_isLoaded = false;						//ロード済みフラグ。
-		std::string m_filePath;							//ファイルパス。
 		std::vector< SMesh	>		m_meshParts;		//メッシュパーツ。
 		std::unique_ptr< std::thread > m_loadThread;	//ロードスレッド。
 	};

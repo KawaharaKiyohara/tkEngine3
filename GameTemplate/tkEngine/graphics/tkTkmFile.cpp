@@ -43,25 +43,22 @@ namespace tkEngine {
 			std::int16_t indices[4];		//スキンインデックス。
 		};
 	};
-	CTkmFile::~CTkmFile()
-	{
-		if (m_loadThread) {
-			//読み込みスレッドが終わるまで待機。
-			m_loadThread->join();
-		}
-	}
+
 	std::string CTkmFile::LoadTextureFileName(FILE* fp)
 	{
 		std::string fileName;
 		std::uint32_t fileNameLen;
 		fread(&fileNameLen, sizeof(fileNameLen), 1, fp);
+		
 		if (fileNameLen > 0) {
 			//文字列を記録できる領域をスタックから確保。
-			char* localFileName = reinterpret_cast<char*>(alloca(fileNameLen + 1));
+			char* localFileName = reinterpret_cast<char*>(malloc(fileNameLen + 1));
 			//ヌル文字分も読み込むので＋１
 			fread(localFileName, fileNameLen + 1, 1, fp);
 			fileName = localFileName;
+			free(localFileName);
 		}
+		
 		return fileName;
 	}
 	template<class T>
@@ -76,7 +73,7 @@ namespace tkEngine {
 		}
 	}
 
-	void CTkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp)
+	void CTkmFile::BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath)
 	{
 		//アルベドのファイル名をロード。
 		tkmMat.albedoMapFileName = LoadTextureFileName(fp);
@@ -85,8 +82,9 @@ namespace tkEngine {
 		//スペキュラマップのファイル名をロード。
 		tkmMat.specularMapFileName = LoadTextureFileName(fp);
 
+		
 		//これプラットフォームに依存するな・・・。マルチプラットフォームめんどくさ・・・。
-		std::string texFilePath = m_filePath;
+		std::string texFilePath = filePath;
 		auto loadTexture = [&](
 			std::string& texFileName, 
 			std::unique_ptr<char[]>& ddsFileMemory, 
@@ -128,16 +126,10 @@ namespace tkEngine {
 		loadTexture( tkmMat.albedoMapFileName, tkmMat.albedoMap, tkmMat.albedoMapSize );
 		loadTexture( tkmMat.normalMapFileName, tkmMat.normalMap, tkmMat.normalMapSize );
 		loadTexture( tkmMat.specularMapFileName, tkmMat.specularMap, tkmMat.specularMapSize );
+	
 	}
-	void CTkmFile::LoadAsync(const char* filePath)
-	{
-		//ファイル読み込みは別スレッドで行う。
-		m_filePath = filePath;
-		m_loadThread = std::make_unique<std::thread>(
-			[&]() {	Load(m_filePath.c_str());  } );
-
-	}
-	void CTkmFile::Load(const char* filePath)
+	
+	void CTkmFile::LoadImplement(const char* filePath)
 	{
 		FILE* fp = fopen(filePath, "rb");
 		if (fp == nullptr) {
@@ -154,7 +146,9 @@ namespace tkEngine {
 		//メッシュ情報をロードしていく。
 		m_meshParts.resize(header.numMeshParts);
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
+			
 			auto& meshParts = m_meshParts[meshPartsNo];
+			
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			fread(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
 			//マテリアル情報を記録できる領域を確保。
@@ -162,8 +156,9 @@ namespace tkEngine {
 			//マテリアル情報を構築していく。
 			for (int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
 				auto& material = meshParts.materials[materialNo];
-				BuildMaterial(material, fp);
+				BuildMaterial(material, fp, filePath);
 			}
+			
 			//続いて頂点バッファ。
 			meshParts.vertexBuffer.resize(meshPartsHeader.numVertex);
 			for (int vertNo = 0; vertNo < meshPartsHeader.numVertex; vertNo++) {
@@ -179,6 +174,7 @@ namespace tkEngine {
 				vertex.indices[2] = vertexTmp.indices[2];
 				vertex.indices[3] = vertexTmp.indices[3];
 			}
+		
 			//続いてインデックスバッファ。
 			//インデックスバッファはマテリアルの数分だけ存在するんじゃよ。
 			if (meshPartsHeader.indexSize == 2) {
@@ -189,6 +185,7 @@ namespace tkEngine {
 				//32bitのインデックスバッファ。
 				meshParts.indexBuffer32Array.resize(meshPartsHeader.numMaterial);
 			}
+			
 			for (int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
 				//ポリゴン数をロード。
 				int numPolygon;
@@ -215,6 +212,6 @@ namespace tkEngine {
 
 		fclose(fp);
 		//読み込み終わりの印。
-		m_isLoaded = true;
+		SetLoadedMark();
 	}
 }

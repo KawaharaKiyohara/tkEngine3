@@ -66,6 +66,12 @@
     <Filter Include="Source Files\graphics\Dx9">
       <UniqueIdentifier>{0521ffe1-99f8-460c-a292-3024aa5ca75f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\prefab">
+      <UniqueIdentifier>{34d9b471-816b-4ae6-a4c0-e334308fee06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resource">
+      <UniqueIdentifier>{dd3077d4-108d-483f-97b4-40d44f474e19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObject\tkGameObjectManager.h">
@@ -236,6 +242,18 @@
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12_inline.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkSkeleton.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="prefab\tkModelRender.h">
+      <Filter>Source Files\prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkTksFile.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\tkIResource.h">
+      <Filter>Source Files\resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -348,6 +366,18 @@
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkSkeleton.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="prefab\tkModelRender.cpp">
+      <Filter>Source Files\prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkTksFile.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="resource\tkIResource.cpp">
+      <Filter>Source Files\resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
