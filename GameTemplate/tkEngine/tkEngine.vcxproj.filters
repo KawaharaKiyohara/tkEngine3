@@ -254,6 +254,12 @@
     <ClInclude Include="resource\tkIResource.h">
       <Filter>Source Files\resource</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkAnimationClip.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkTkaFile.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -378,6 +384,12 @@
     </ClCompile>
     <ClCompile Include="resource\tkIResource.cpp">
       <Filter>Source Files\resource</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkAnimationClip.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkTkaFile.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

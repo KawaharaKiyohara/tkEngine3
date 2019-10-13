@@ -15,10 +15,10 @@ namespace tkEngine {
 		/// </summary>
 		struct SBone {
 			std::unique_ptr<char[]> name;	//骨の名前。
-			std::int32_t parentId;			//親のID
+			int parentNo;					//親の番号。
 			float bindPose[4][3];			//バインドポーズ。
 			float invBindPose[4][3];		//バインドポーズの逆数。
-
+			int no;							//ボーンの番号。
 		};
 		/// <summary>
 		/// 読み込み処理。

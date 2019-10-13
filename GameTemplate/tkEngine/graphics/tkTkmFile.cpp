@@ -18,7 +18,6 @@ namespace tkEngine {
 		/// <summary>
 		/// ヘッダーファイル。
 		/// </summary>
-
 		struct SHeader {
 			std::uint16_t	version;		//バージョン。
 			std::uint16_t	numMeshParts;	//メッシュパーツの数。
@@ -51,7 +50,6 @@ namespace tkEngine {
 		fread(&fileNameLen, sizeof(fileNameLen), 1, fp);
 		
 		if (fileNameLen > 0) {
-			//文字列を記録できる領域をスタックから確保。
 			char* localFileName = reinterpret_cast<char*>(malloc(fileNameLen + 1));
 			//ヌル文字分も読み込むので＋１
 			fread(localFileName, fileNameLen + 1, 1, fp);

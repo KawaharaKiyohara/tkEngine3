@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include "tkEngine/graphics/tkTksFile.h"
 
 namespace tkEngine{
 	class CAnimation;
@@ -139,9 +140,10 @@ namespace tkEngine{
 		CQuaternion		m_rotation = CQuaternion::Identity;	//!<このボーンの回転。最後にCalcWorldTRSを実行したときの結果が格納されている。
 		std::list<CBone*>	m_children;		//!<子供。
 	};
-	/*!
-	 *@brief	スケルトン。
-	 */
+
+	/// <summary>
+	/// スケルトンクラス。
+	/// </summary>
 	class CSkeleton : Noncopyable {
 	public:
 		using OnPostProcessSkeletonUpdate = std::function<void()>;
@@ -149,11 +151,11 @@ namespace tkEngine{
 		CSkeleton();
 		~CSkeleton();
 		
-		/*!
-		 *@brief	ボーンのローカル行列を設定。
-		 *@param[in]	boneNo		ボーン番号
-		 *@param[in]	m			行列。
-		 */
+		/// <summary>
+		/// ボーンのローカル行列を設定。
+		/// </summary>
+		/// <param name="boneNo">ボーン番号</param>
+		/// <param name="m">行列</param>
 		void SetBoneLocalMatrix(int boneNo, const CMatrix& m)
 		{
 			if (boneNo > (int)m_bones.size() - 1) {
@@ -162,27 +164,48 @@ namespace tkEngine{
 			}
 			m_bones[boneNo]->SetLocalMatrix(m);
 		}
-		/*!
-		 *@brief	ボーンの数を取得。
-		 */
+
+		/// <summary>
+		/// ボーンの数を取得。
+		/// </summary>
+		/// <returns></returns>
 		int GetNumBones() const
 		{
 			return static_cast<int>(m_bones.size());
 		}
-		/*!
-		*@brief	ロード。
-		*@param[in]	filePath	ファイルパス。
-		*/
-		bool Load(const wchar_t* filePath);
+		/// <summary>
+		/// 同期ロード。
+		/// </summary>
+		/// <param name="filePath">ファイルパス</param>
+		/// <returns>trueが返ってきたらロード成功。</returns>
+		bool Load(const char* filePath);
 		/// <summary>
 		/// 非同期ロード。
-		/// 
+		/// IsLoaded関数を使用して、同期をとるようにしてください。
 		/// </summary>
 		/// <param name="filePath">ファイルパス。</param>
-		void LoadAsync(const wchar_t* filePath);
-		/*!
-		 *@brief	ボーンの名前からボーンIDを検索。
-		 */
+		void LoadAsync(const char* filePath)
+		{
+			m_tksFile.LoadAsync(filePath);
+		}
+		/// <summary>
+		/// tksファイルのロードが完了したか判定。
+		/// </summary>
+		/// <returns></returns>
+		bool IsLoaded() const 
+		{
+			return m_tksFile.IsLoaded();
+		}
+		/// <summary>
+		/// ボーン行列の構築。
+		/// 読み込みが完了した後で呼び出してください。
+		/// </summary>
+		void BuildBoneMatrices();
+		/// <summary>
+		/// ボーンの名前からボーン番号を検索。
+		/// </summary>
+		/// <param name="boneName">ボーンの名前</param>
+		/// <returns>ボーン番号。見つからなかった場合は-1が返ってきます。</returns>
 		int FindBoneID(const wchar_t* boneName) const
 		{
 			for (int i = 0; i < (int)m_bones.size(); i++) {
@@ -193,38 +216,39 @@ namespace tkEngine{
 			//見つからなかった。
 			return -1;
 		}
-		/*!
-		*@brief	ボーンを取得。
-		*/
+		/// <summary>
+		/// ボーン番号からボーンを取得。
+		/// </summary>
+		/// <param name="boneNo">ボーン番号</param>
+		/// <returns>ボーン</returns>
 		CBone* GetBone(int boneNo) const
 		{
 			return m_bones[boneNo].get();
 		}
 	public:
 		
-		/*!
-		 *@brief	更新。
-		 */
+
+		/// <summary>
+		/// 更新。
+		/// </summary>
+		/// <param name="mWorld"></param>
 		void Update(const CMatrix& mWorld);
 	
-		/*!
-		*@brief	ボーンのワールド行列の更新関数。
-		*@details
-		* 通常はユーザーがこの関数を呼び出す必要はありません。
-		*@param[in]	bone		更新するボーン。
-		*@param[in]	parentMatrix	親のボーンのワールド行列。
-		*/
+		/// <summary>
+		/// ボーンのワールド行列の更新関数。
+		/// </summary>
+		/// <remarks>
+		/// 通常はユーザーがこの関数を呼び出す必要はありません。
+		/// </remarks>
+		/// <param name="bone">更新するボーン。</param>
+		/// <param name="parentMatrix">親のボーンのワールド行列。</param>
 		static 	void UpdateBoneWorldMatrix(CBone& bone, const CMatrix& parentMatrix);
+
 	private:
-		/*!
-		*@brief	すべでのボーンの追加が完了したときに呼び出す必要がある処理。
-		*/
-		void OnCompleteAddedAllBones();
-	private:
-		CTksFile m_tksFile;								//!<TKSファイル。
-		static const int BONE_MAX = 512;				//!<ボーンの最大数。
-		typedef std::unique_ptr<CBone>	CBonePtr;
-		std::vector<CBonePtr>	m_bones;				//!<ボーンの配列。
-		std::unique_ptr<CMatrix[]>	m_boneMatrixs;		//!<ボーン行列。
+		CTksFile m_tksFile;								//TKSファイル。
+		static const int BONE_MAX = 512;				//ボーンの最大数。
+		using CBonePtr = std::unique_ptr<CBone>;
+		std::vector<CBonePtr>	m_bones;				//ボーンの配列。
+		std::unique_ptr<CMatrix[]>	m_boneMatrixs;		//ボーン行列。
 	};
 }

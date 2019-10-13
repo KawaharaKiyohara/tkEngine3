@@ -15,8 +15,23 @@ namespace tkEngine {
 			/// <summary>
 			/// 初期化。
 			/// </summary>
-			/// <param name="filePath"></param>
-			void Init(const char* filePath);
+			/// <remarks>
+			/// templateの黒魔術を使って、配列のサイズを調べられるようにしてます。
+			/// 危険、マネするな。
+			/// </remarks>
+			/// <param name="tkmFilePath">tkmファイルのパス</param>
+			/// <param name="tkaFilePaths">tkaファイルのパスの配列</param>
+			template<typename TKA_FILE_ARRAY, std::size_t NUM_TKA_FILE>
+			void Init(const char* tkmFilePath, TKA_FILE_ARRAY (&tkaFilePaths)[NUM_TKA_FILE])
+			{
+				m_tkmFilePath = tkmFilePath;
+				m_model.LoadTkmFileAsync(tkmFilePath);
+				for (auto i = 0; i < NUM_TKA_FILE; i++) {
+					m_tkaFilePaths.push_back(tkaFilePaths[i]);
+				}
+				//初期化ステータスをモデル初期化待ちにする。
+				m_initStatus = enInitStatus_WaitInitModel;
+			}
 			/// <summary>
 			/// 開始処理
 			/// </summary>
@@ -77,16 +92,22 @@ namespace tkEngine {
 			/// 初期化ステータス。
 			/// </summary>
 			enum EnInitStatus {
-				enInitStatus_NotCallInitFunc,	//初期化関数が呼ばれていない。
-				enInitStatus_WaitInitModel,		//モデル初期化待ち。
-				enInitStatus_Completed,			//初期化完了。
+				enInitStatus_NotCallInitFunc,			//初期化関数が呼ばれていない。
+				enInitStatus_WaitInitModel,				//モデル初期化待ち。
+				enInitStatus_WaitInitSkeleton,			//スケルトンの初期化待ち。
+				enInitStatus_WaitInitAnimationClips,	//アニメーションクリップの初期化待ち。
+				enInitStatus_Completed,					//初期化完了。
 			};
+			using CUPAnimationClip = unique_ptr<CAnimationClip>;
 			EnInitStatus m_initStatus = enInitStatus_NotCallInitFunc;	//初期化ステータス。
 			CModel m_model;		//モデル。
-			CVector3 m_position = CVector3::Zero;			//!<座標。
-			CQuaternion	m_rotation = CQuaternion::Identity;	//!<回転。
-			CVector3 m_scale = CVector3::One;				//!<拡大率。
-			CSkeleton m_skeleton;							//!<スケルトン。
+			CVector3 m_position = g_vec3Zero;			//座標。
+			CQuaternion	m_rotation = g_quatIdentity;	//回転。
+			CVector3 m_scale = g_vec3One;				//拡大率。
+			CSkeleton m_skeleton;						//スケルトン。
+			string m_tkmFilePath;						//tkmファイルのファイルパス。
+			vector< string > m_tkaFilePaths;			//tkaファイルのファイルパスのリスト。
+			vector< CUPAnimationClip> m_animationClips;	//アニメーションクリップの配列。
 		};
 	}
 }

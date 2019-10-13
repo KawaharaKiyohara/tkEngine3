@@ -19,11 +19,17 @@ namespace tkEngine {
 			bone.name = std::make_unique<char[]>(nameCount + 1);
 			fread(bone.name.get(), nameCount + 1, 1, fp);
 			//親のIDを取得。
-			fread(&bone.parentId, sizeof(bone.parentId), 1, fp);
+			fread(&bone.parentNo, sizeof(bone.parentNo), 1, fp);
 			//バインドポーズを取得。
 			fread(bone.bindPose, sizeof(bone.bindPose), 1, fp);
 			//バインドポーズの逆数を取得。
 			fread(bone.invBindPose, sizeof(bone.invBindPose), 1, fp);
+			//ボーンの番号。
+			bone.no = i;
 		}
+
+		fclose(fp);
+		//読み込み完了の印。
+		SetLoadedMark();
 	}
 }

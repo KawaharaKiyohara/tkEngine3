@@ -47,39 +47,25 @@ namespace tkEngine {
 			UpdateBoneWorldMatrix(*childBone, mBoneWorld);
 		}
 	}
-	bool CSkeleton::Load(const wchar_t* filePath)
+	bool CSkeleton::Load(const char* filePath)
 	{
-		
-		FILE* fp = _wfopen(filePath, L"rb");
-
-		if (fp == nullptr) {
+		m_tksFile.Load(filePath);
+		if (m_tksFile.IsLoaded() == false) {
+			//読み込みに失敗した。
 			return false;
 		}
-		//骨の数を取得。
-		int numBone = 0;
-		fread(&numBone, sizeof(numBone), 1, fp);
-		for (int i = 0; i < numBone; i++) {
-			int nameCount = 0;
-			//骨の名前を取得。
-			fread(&nameCount, 1, 1, fp);
-			std::unique_ptr<char[]> name = std::make_unique<char[]>(nameCount+1);
-			fread(name.get(), nameCount+1, 1, fp);
-			//親のIDを取得。
-			int parentId;
-			fread(&parentId, sizeof(parentId),  1, fp);
-			//バインドポーズを取得。
-			CVector3 bindPose[4];
-			fread(&bindPose, sizeof(bindPose), 1, fp);
-			//バインドポーズの逆数を取得。
-			CVector3 invBindPose[4];
-			fread(&invBindPose, sizeof(invBindPose), 1, fp);
-			
+		
+		return true;
+	}
+	void CSkeleton::BuildBoneMatrices()
+	{
+		m_tksFile.QueryBone([&](CTksFile::SBone & tksBone) {
 			//バインドポーズ。
 			CMatrix bindPoseMatrix;
-			memcpy(bindPoseMatrix.m[0], &bindPose[0], sizeof(bindPose[0]));
-			memcpy(bindPoseMatrix.m[1], &bindPose[1], sizeof(bindPose[1]));
-			memcpy(bindPoseMatrix.m[2], &bindPose[2], sizeof(bindPose[2]));
-			memcpy(bindPoseMatrix.m[3], &bindPose[3], sizeof(bindPose[3]));
+			memcpy(bindPoseMatrix.m[0], &tksBone.bindPose[0], sizeof(tksBone.bindPose[0]));
+			memcpy(bindPoseMatrix.m[1], &tksBone.bindPose[1], sizeof(tksBone.bindPose[1]));
+			memcpy(bindPoseMatrix.m[2], &tksBone.bindPose[2], sizeof(tksBone.bindPose[2]));
+			memcpy(bindPoseMatrix.m[3], &tksBone.bindPose[3], sizeof(tksBone.bindPose[3]));
 			bindPoseMatrix.m[0][3] = 0.0f;
 			bindPoseMatrix.m[1][3] = 0.0f;
 			bindPoseMatrix.m[2][3] = 0.0f;
@@ -87,29 +73,28 @@ namespace tkEngine {
 
 			//バインドポーズの逆行列。
 			CMatrix invBindPoseMatrix;
-			memcpy(invBindPoseMatrix.m[0], &invBindPose[0], sizeof(invBindPose[0]));
-			memcpy(invBindPoseMatrix.m[1], &invBindPose[1], sizeof(invBindPose[1]));
-			memcpy(invBindPoseMatrix.m[2], &invBindPose[2], sizeof(invBindPose[2]));
-			memcpy(invBindPoseMatrix.m[3], &invBindPose[3], sizeof(invBindPose[3]));
+			memcpy(invBindPoseMatrix.m[0], &tksBone.invBindPose[0], sizeof(tksBone.invBindPose[0]));
+			memcpy(invBindPoseMatrix.m[1], &tksBone.invBindPose[1], sizeof(tksBone.invBindPose[1]));
+			memcpy(invBindPoseMatrix.m[2], &tksBone.invBindPose[2], sizeof(tksBone.invBindPose[2]));
+			memcpy(invBindPoseMatrix.m[3], &tksBone.invBindPose[3], sizeof(tksBone.invBindPose[3]));
 			invBindPoseMatrix.m[0][3] = 0.0f;
 			invBindPoseMatrix.m[1][3] = 0.0f;
 			invBindPoseMatrix.m[2][3] = 0.0f;
 			invBindPoseMatrix.m[3][3] = 1.0f;
 
 			wchar_t boneName[256];
-			mbstowcs(boneName, name.get(), 256);
+			mbstowcs(boneName, tksBone.name.get(), 256);
 			CBonePtr bone = std::make_unique<CBone>(
 				boneName,
 				bindPoseMatrix,
 				invBindPoseMatrix,
-				parentId,
-				i
-			);
-
+				tksBone.parentNo,
+				tksBone.no
+				);
 #if BUILD_LEVEL != BUILD_LEVEL_MASTER
 			//ボーンのバリデーションチェック。
 			//maxScriptでやりたいところではあるが、とりあえずこっち。
-			auto it = std::find_if(m_bones.begin(), m_bones.end(), [&](auto& bone) {return wcscmp(boneName, bone->GetName()) == 0;  });
+			auto it = std::find_if(m_bones.begin(), m_bones.end(), [&](auto & bone) {return wcscmp(boneName, bone->GetName()) == 0;  });
 			if (it != m_bones.end()) {
 				//同名のボーンが見つかった。
 				_bstr_t b(boneName);
@@ -118,18 +103,7 @@ namespace tkEngine {
 			}
 #endif
 			m_bones.push_back(std::move(bone));
-
-
-		}
-		fclose(fp);
-
-		OnCompleteAddedAllBones();
-
-		return true;
-	}
-
-	void CSkeleton::OnCompleteAddedAllBones()
-	{
+			});
 		for (auto& bone : m_bones) {
 			if (bone->GetParentId() != -1) {
 				m_bones.at(bone->GetParentId())->AddChild(bone.get());
@@ -143,7 +117,7 @@ namespace tkEngine {
 				bone->SetLocalMatrix(bone->GetBindPoseMatrix());
 			}
 		}
-		
+
 
 		//ボーン行列を確保
 		m_boneMatrixs = std::make_unique<CMatrix[]>(m_bones.size());
@@ -161,6 +135,7 @@ namespace tkEngine {
 		m_boneMatrixSB.Create(NULL, desc);
 #endif
 	}
+
 	void CSkeleton::Update(const CMatrix& mWorld)
 	{
 		//ワールド行列を構築していく

@@ -107,6 +107,7 @@ namespace tkEngine {
 #include <wrl.h>
 
 using Microsoft::WRL::ComPtr;
+using namespace std;
 
 #include "btBulletDynamicsCommon.h"
 #include "BulletCollision\CollisionDispatch\btGhostObject.h"

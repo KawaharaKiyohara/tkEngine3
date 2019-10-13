@@ -19,9 +19,17 @@ bool Game::Start()
 	g_camera3D->SetPosition({ 0.0f, -200.0f, 0.0f });
 	g_camera3D->SetUp(g_vec3AxisZ);
 	g_camera3D->Update();
-	//読み込み開始ステップ。
+	//モデルレンダーを作成。。
 	m_modelRender = NewGO<prefab::CModelRender>(0);
-	m_modelRender->Init("modelData/test.tkm");
+	
+	const char* tkaFilePaths[] = {
+		"animData/unityChan/walk.tka",
+		"animData/unityChan/jump.tka",
+	};
+	m_modelRender->Init(
+		"modelData/test.tkm",
+		tkaFilePaths
+	);
 	
 	return true;
 }

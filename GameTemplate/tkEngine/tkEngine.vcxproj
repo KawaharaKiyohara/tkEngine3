@@ -305,6 +305,7 @@
     <ClInclude Include="graphics\Dx12\tkTextureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h" />
     <ClInclude Include="graphics\Dx12\tkVertexBufferDx12.h" />
+    <ClInclude Include="graphics\tkAnimationClip.h" />
     <ClInclude Include="graphics\tkCamera.h" />
     <ClInclude Include="graphics\tkGraphics.h" />
     <ClInclude Include="graphics\tkGraphicsEngine.h" />
@@ -318,6 +319,7 @@
     <ClInclude Include="graphics\tkShape.h" />
     <ClInclude Include="graphics\tkSkeleton.h" />
     <ClInclude Include="graphics\tkTexture.h" />
+    <ClInclude Include="graphics\tkTkaFile.h" />
     <ClInclude Include="graphics\tkTkmFile.h" />
     <ClInclude Include="graphics\tkTksFile.h" />
     <ClInclude Include="graphics\tkVertexBuffer.h" />
@@ -362,6 +364,7 @@
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkVertexBufferDx12.cpp" />
+    <ClCompile Include="graphics\tkAnimationClip.cpp" />
     <ClCompile Include="graphics\tkCamera.cpp" />
     <ClCompile Include="graphics\tkGraphicsEngine.cpp" />
     <ClCompile Include="graphics\tkGraphicsInstanceFactory.cpp" />
@@ -371,6 +374,7 @@
     <ClCompile Include="graphics\tkModel.cpp" />
     <ClCompile Include="graphics\tkShape.cpp" />
     <ClCompile Include="graphics\tkSkeleton.cpp" />
+    <ClCompile Include="graphics\tkTkaFile.cpp" />
     <ClCompile Include="graphics\tkTkmFile.cpp" />
     <ClCompile Include="graphics\tkTksFile.cpp" />
     <ClCompile Include="graphics\tkVertexBuffer.cpp" />
