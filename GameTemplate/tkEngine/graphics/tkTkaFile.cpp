@@ -1,6 +1,6 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/tkTkaFile.h"
-
+#include <errno.h>
 namespace tkEngine {
 	void CTkaFile::LoadImplement(const char* filePath)
 	{
@@ -39,7 +39,9 @@ namespace tkEngine {
 		}
 		//キーフレームの情報をごそっとロード。
 		m_keyFrames.resize(header.numKey);
-		fread(&m_keyFrames.front(), sizeof(Keyframe), header.numKey, fp);
+
+		fread(&m_keyFrames.front(), sizeof(KeyFrame)* header.numKey, 1, fp);
+	
 		fclose(fp);
 		//読み込み完了の印。
 		SetLoadedMark();

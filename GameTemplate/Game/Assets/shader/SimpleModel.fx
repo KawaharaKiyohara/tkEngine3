@@ -11,21 +11,50 @@ cbuffer CB : register(b0){
 struct SVSIn{
 	float4 pos : POSITION;
 	float2 uv : TEXCOORD0;
+	int4  Indices  : BLENDINDICES0;
+    float4 Weights  : BLENDWEIGHT0;
 };
 //ピクセルシェーダーへの入力。
 struct SPSIn{
 	float4 pos : SV_POSITION;
 	float2 uv : TEXCOORD0;
 };
-
-Texture2D<float4> g_texture : register(t0);
+//アルベドテクスチャ。
+Texture2D<float4> g_albedo : register(t0);
+//ボーン行列。
+StructuredBuffer<float4x4> boneMatrix : register(t1);
+//サンプラステート。
 sampler g_sampler : register(s0);
+
+//スキン行列を計算する。
+float4x4 CalcSkinMatrix(SVSIn In)
+{
+	float4x4 skinning = 0;	
+	float w = 0.0f;
+	[unroll]
+    for (int i = 0; i < 3; i++)
+    {
+        skinning += boneMatrix[In.Indices[i]] * In.Weights[i];
+        w += In.Weights[i];
+    }
+    
+    skinning += boneMatrix[In.Indices[3]] * (1.0f - w);
+    return skinning;
+}
 
  //テクスチャなしプリミティブ描画用の頂点シェーダー
 SPSIn VSMainNoTexture( SVSIn vsIn ) 
 {
 	SPSIn psIn;
-	psIn.pos = mul(mWorld, vsIn.pos);
+	float4x4 m;
+	if(vsIn.Indices[0] >= 0){
+		//スキンあり。
+		m = CalcSkinMatrix(vsIn);
+	}else{
+		//スキンなし。
+		m = mWorld;
+	}
+	psIn.pos = mul(m, vsIn.pos);
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
 	psIn.uv = vsIn.uv;
@@ -34,6 +63,6 @@ SPSIn VSMainNoTexture( SVSIn vsIn )
 //テクスチャなしプリミティブ描画用のピクセルシェーダー。
 float4 PSMainNoTexture( SPSIn psIn ) : SV_Target0
 {
-	float4 texColor = g_texture.Sample(g_sampler, psIn.uv);
+	float4 texColor = g_albedo.Sample(g_sampler, psIn.uv);
 	return float4( texColor.xyz, 1.0f);
 }

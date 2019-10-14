@@ -87,7 +87,8 @@ namespace tkEngine {
 			int numConstantBuffer,
 			CConstantBufferDx12* constantBufferArray,
 			int numShaderResource,
-			CTextureDx12* shaderResourceArray);
+			IShaderResourceDx12* shaderResourceArray[]
+		);
 
 		/// <summary>
 		/// インデックスつきプリミティブを描画。

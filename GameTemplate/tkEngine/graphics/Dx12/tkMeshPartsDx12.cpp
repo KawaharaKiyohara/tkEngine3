@@ -69,7 +69,7 @@ namespace tkEngine {
 			for (auto& mat : mesh->m_materials) {
 
 				D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-				srvHeapDesc.NumDescriptors = 2;
+				srvHeapDesc.NumDescriptors = 3;
 				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
@@ -79,6 +79,16 @@ namespace tkEngine {
 				
 			}
 		}
+	}
+	void CMeshPartsDx12::BindSkeleton(CSkeleton& skeleton)
+	{
+		m_skeleton = &skeleton;
+		//構造化バッファを作成する。
+		m_boneMatricesStructureBuffer.Init(
+			sizeof(CMatrix),
+			m_skeleton->GetNumBones(),
+			m_skeleton->GetBoneMatricesTopAddress()
+		);
 	}
 	void CMeshPartsDx12::Draw(
 		IRenderContext& rc, 
@@ -102,6 +112,10 @@ namespace tkEngine {
 
 		m_commonConstantBuffer.Update(&cb);
 
+		if (m_boneMatricesStructureBuffer.IsInited()) {
+			//ボーン行列を更新する。
+			m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
+		}
 		int heapNo = 0;
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
@@ -112,8 +126,12 @@ namespace tkEngine {
 				mesh->m_materials[matNo]->BeginRender(rc);
 
 				auto& descriptorHeap = m_descriptorHeaps[heapNo];
+				IShaderResourceDx12* srvTbl[] = {
+					&mesh->m_materials[matNo]->GetAlbedoMap(),
+					&m_boneMatricesStructureBuffer
+				};
 				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
-				rc12.SetCBR_SRV_UAV(descriptorHeap.Get(), 1, &m_commonConstantBuffer, 1, &albedoMap);
+				rc12.SetCBR_SRV_UAV(descriptorHeap.Get(), 1, &m_commonConstantBuffer, 2, srvTbl);
 
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];

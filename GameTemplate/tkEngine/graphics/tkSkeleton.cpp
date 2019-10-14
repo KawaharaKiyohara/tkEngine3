@@ -121,6 +121,7 @@ namespace tkEngine {
 
 		//ボーン行列を確保
 		m_boneMatrixs = std::make_unique<CMatrix[]>(m_bones.size());
+		m_isInited = true;
 #if 0
 		//StructuredBufferを作成。
 		D3D11_BUFFER_DESC desc;

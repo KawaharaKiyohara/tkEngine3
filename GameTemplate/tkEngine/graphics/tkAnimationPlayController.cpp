@@ -83,7 +83,7 @@ namespace tkEngine{
 				continue;
 			}
 			//現在再生中のキーフレームを取ってくる。
-			Keyframe* keyframe = keyFrameList.at(m_currentKeyFrameNo);
+			KeyFrame* keyframe = keyFrameList.at(m_currentKeyFrameNo);
 			m_boneMatrix[keyframe->boneIndex] = keyframe->transform;
 		}
 		//ボーンをフリーズさせる処理を行う。

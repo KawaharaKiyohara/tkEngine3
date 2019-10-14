@@ -46,7 +46,7 @@ namespace tkEngine {
 		//キーフレーム情報の構築。
 		m_keyframes.reserve(m_tkaFile.GetNumKeyFrame());
 		m_tkaFile.QueryKeyFrames([&](const CTkaFile::KeyFrame & tkaKeyFrame) {
-			auto keyframe = std::make_unique<Keyframe>();
+			auto keyframe = std::make_unique<KeyFrame>();
 			keyframe->boneIndex = tkaKeyFrame.boneIndex;
 			keyframe->transform = CMatrix::Identity;
 			keyframe->time = tkaKeyFrame.time;

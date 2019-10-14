@@ -302,10 +302,14 @@
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12_inline.h" />
     <ClInclude Include="graphics\Dx12\tkRootSignatureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkShaderDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkShaderResourceDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkStructuredBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTextureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h" />
     <ClInclude Include="graphics\Dx12\tkVertexBufferDx12.h" />
+    <ClInclude Include="graphics\tkAnimation.h" />
     <ClInclude Include="graphics\tkAnimationClip.h" />
+    <ClInclude Include="graphics\tkAnimationPlayController.h" />
     <ClInclude Include="graphics\tkCamera.h" />
     <ClInclude Include="graphics\tkGraphics.h" />
     <ClInclude Include="graphics\tkGraphicsEngine.h" />
@@ -361,10 +365,13 @@
     <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkStructuredBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkVertexBufferDx12.cpp" />
+    <ClCompile Include="graphics\tkAnimation.cpp" />
     <ClCompile Include="graphics\tkAnimationClip.cpp" />
+    <ClCompile Include="graphics\tkAnimationPlayController.cpp" />
     <ClCompile Include="graphics\tkCamera.cpp" />
     <ClCompile Include="graphics\tkGraphicsEngine.cpp" />
     <ClCompile Include="graphics\tkGraphicsInstanceFactory.cpp" />
@@ -400,13 +407,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\preset\vector.FBX">
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\Assets\modelData\preset\%(Filename).cmo</ContentOutput>
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\Assets\modelData\preset\%(Filename).cmo</ContentOutput>
-      <ContentOutput Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">$(SolutionDir)\Assets\modelData\preset\%(Filename).cmo</ContentOutput>
-    </MeshContentTask>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

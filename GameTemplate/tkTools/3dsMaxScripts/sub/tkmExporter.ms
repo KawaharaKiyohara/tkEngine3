@@ -69,11 +69,24 @@ private
 		--二つの頂点バッファを結合して一つにする。
 
 		--3DSMAX上での頂点バッファを構築する。
+		skinMod = c_node.modifiers[skin]
+		if skinMod != undefined then(
+			--スキンあり。
+			max modify mode
+			modPanel.setCurrentObject skinMod
+		)
 		maxVertexBuffer = #()
 		numVert = getNumVerts meshObj
 		for vertNo = 1 to numVert do(
 			--頂点座標
 			pos = getVert meshObj vertNo
+			if skinMod != undefined then(
+				--スキンがあるときは、骨で動かされているのでトランスフォームでの動きを除去する？
+				--ホンマか？要確認。
+				invTrans = inverse c_node.transform
+				pos = pos * invTrans
+			)
+			
 			--法線
 			normal = getNormal meshObj vertNo
 			--正規化されてないね。
@@ -84,11 +97,9 @@ private
 			--スキンウェイト
 			skinWeight = #(0.0, 0.0, 0.0, 0.0)
 			indices = #(-1, -1, -1, -1)
-			skinMod = c_node.modifiers[skin]
+			
 			if skinMod != undefined then(
 				--スキンあり。
-				max modify mode
-				modPanel.setCurrentObject skinMod
 				numWeight = skinOps.GetVertexWeightCount skinMod vertNo
 				if numWeight > 4 then (
 					--スキンウェイトの数が4を超えています。

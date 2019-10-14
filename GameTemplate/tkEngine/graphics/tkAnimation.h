@@ -13,53 +13,32 @@ namespace tkEngine{
 	}
 	class CSkeleton;
 	using AnimationEventListener = std::function<void(const wchar_t* clipName, const wchar_t* eventName)>;
-	class CModel;
 	/*!
 	 * @brief	アニメーションクラス。
 	 */
 	class CAnimation {
 	public:
-		CAnimation();
-		~CAnimation();
-		/*!
-		 *@brief	初期化。
-		 *@param[in]	model			アニメーションさせるモデル。
-		 *@param[in]	animeClipList	アニメーションクリップの配列。
-		 *@param[in]	numAnimClip		アニメーションクリップの数。
-		 */
-		void Init(CModel& Model, CAnimationClip animClipList[], int numAnimClip);
 
-		
-		/*!
-		 *@brief	アニメーションの再生。
-		 *@param[in]	clipName			アニメーションクリップの名前。
-		 *@param[in]	interpolateTime		補完時間(単位：秒)
-		 */
-		void Play(const wchar_t* clipName, float interpolateTime = 0.0f)
+		/// <summary>
+		/// 初期化済みか判定。
+		/// </summary>
+		/// <returns>trueが返ってきたら初期化済み。</returns>
+		bool IsInited() const
 		{
-			if (clipName == nullptr) {
-				TK_WARNING("clipName is NULL");
-				return;
-			}
-			auto it = std::find_if(
-				m_animationClips.begin(),
-				m_animationClips.end(),
-				[clipName](auto& clip) {
-				return wcscmp(clip->GetName(), clipName) == 0;
-			}
-			);
-			if (it == m_animationClips.end()) {
-				TK_WARNING("not found clip");
-				return;
-			}
-
-			PlayCommon(*it, interpolateTime);
+			return m_isInited;
 		}
-		/*!
-		*@brief	アニメーションの再生。
-		*@param[in]	clipNo	アニメーションクリップの番号。Init関数に渡したanimClipListの並びとなる。
-		*@param[in]	interpolateTime		補完時間(単位：秒)
-		*/
+
+		/// <summary>
+		/// 初期化。
+		/// </summary>
+		/// <param name="skeleton">アニメーションさせるスケルトン</param>
+		/// <param name="animClips">アニメーションクリップ。</param>
+		void Init(CSkeleton& skeleton, const vector<unique_ptr<CAnimationClip>>& animClips);
+		/// <summary>
+		/// アニメーションの再生。
+		/// </summary>
+		/// <param name="clipNo">アニメーションクリップの番号。Init関数に渡したanimClipListの並びとなる。</param>
+		/// <param name="interpolateTime">補完時間(単位：秒)</param>
 		void Play(int clipNo, float interpolateTime = 0.0f)
 		{
 			PlayCommon(m_animationClips[clipNo], interpolateTime);
@@ -160,13 +139,14 @@ namespace tkEngine{
 			m_interpolateTime = 0.0f;
 			m_interpolateTimeEnd = interpolateTime;
 		}
-		/*!
-		 * @brief	ローカルポーズの更新。
-		 */
+		/// <summary>
+		/// ローカルポーズの更新。
+		/// </summary>
+		/// <param name="deltaTime">アニメーションを進める時間。単位：秒。</param>
 		void UpdateLocalPose(float deltaTime);
-		/*!
-		 * @brief	グローバルポーズの更新。
-		 */
+		/// <summary>
+		/// グローバルポーズの更新。
+		/// </summary>
 		void UpdateGlobalPose();
 		
 	private:
@@ -189,7 +169,7 @@ namespace tkEngine{
 		}
 	private:
 		static const int ANIMATION_PLAY_CONTROLLER_NUM = 32;	//!<アニメーションコントローラの数。
-		std::vector<CAnimationClip*>	m_animationClips;	//!<アニメーションクリップの配列。
+		vector<CAnimationClip*>	m_animationClips;	//!<アニメーションクリップの配列。
 		CSkeleton* m_skeleton = nullptr;	//!<アニメーションを適用するスケルトン。
 		CAnimationPlayController	m_animationPlayController[ANIMATION_PLAY_CONTROLLER_NUM];	//!<アニメーションコントローラ。リングバッファ。
 		int m_numAnimationPlayController = 0;		//!<現在使用中のアニメーション再生コントローラの数。
@@ -197,7 +177,7 @@ namespace tkEngine{
 		float m_interpolateTime = 0.0f;
 		float m_interpolateTimeEnd = 0.0f;
 		bool m_isInterpolate = false;				//!<補間中？
-		std::vector<AnimationEventListener>	m_animationEventListeners;	//!<アニメーションイベントリスナーのリスト。
-
+		vector<AnimationEventListener>	m_animationEventListeners;	//!<アニメーションイベントリスナーのリスト。
+		bool m_isInited = false;
 	};
 }

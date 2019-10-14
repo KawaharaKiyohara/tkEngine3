@@ -9,7 +9,7 @@ namespace tkEngine {
 		int numConstantBuffer, 
 		CConstantBufferDx12* constantBufferArray, 
 		int numShaderResource, 
-		CTextureDx12* shaderResourceArray
+		IShaderResourceDx12* shaderResourceArray[]
 	)
 	{
 		m_commandList->SetDescriptorHeaps(1, &descriptorHeap);
@@ -25,7 +25,7 @@ namespace tkEngine {
 		}
 		//続いてテクスチャ
 		for (int i = 0; i < numShaderResource; i++) {
-			shaderResourceArray[i].RegistShaderResourceView(cpuHandle);
+			shaderResourceArray[i]->RegistShaderResourceView(cpuHandle);
 			//次に進める。
 			cpuHandle.ptr += ge12.GetCbrSrvDescriptorSize();
 		}

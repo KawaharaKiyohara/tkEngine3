@@ -41,6 +41,11 @@ namespace tkEngine {
 		/// <param name="mView">ビュー行列</param>
 		/// <param name="mProj">プロジェクション行列</param>
 		virtual void Draw(IRenderContext& rc, const CMatrix& mWorld, const CMatrix& mView, const CMatrix& mProj) override final;
+		/// <summary>
+		/// スケルトンを関連付ける。
+		/// </summary>
+		/// <param name="skeleton">スケルトン</param>
+		virtual void BindSkeleton(CSkeleton& skeleton) override final;
 	private:
 		/// <summary>
 		/// tkmメッシュからメッシュを作成。
@@ -68,9 +73,11 @@ namespace tkEngine {
 			CMatrix mView;		//ビュー行列。
 			CMatrix mProj;		//プロジェクション行列。
 		};
-		CConstantBufferDx12 m_commonConstantBuffer;		//メッシュ共通の定数バッファ。
-		std::vector< UPSMesh > m_meshs;					//メッシュ。
+		CConstantBufferDx12 m_commonConstantBuffer;				//メッシュ共通の定数バッファ。
+		CStructuredBufferDx12 m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
+		std::vector< UPSMesh > m_meshs;							//メッシュ。
 		std::vector<ComPtr< ID3D12DescriptorHeap>>	m_descriptorHeaps;
+		CSkeleton* m_skeleton = nullptr;	//スケルトン。
 	};
 }
 

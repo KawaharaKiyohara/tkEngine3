@@ -7,28 +7,20 @@
 
 namespace tkEngine{
 
-	CAnimation::CAnimation()
+
+	void CAnimation::Init(CSkeleton& skeleton, const vector<unique_ptr<CAnimationClip>>& animClips)	
 	{
-	}
-	CAnimation::~CAnimation()
-	{
-		if (m_skeleton != nullptr) {
-		}
-	}
-	
-	void CAnimation::Init(CModel& model, CAnimationClip animClipList[], int numAnimClip)
-	{
-		TK_ASSERT(animClipList != nullptr, "animClipListがNULLです。");
-		m_skeleton = &model.GetSkinModelData()->GetSkeleton();
-		model.SetAnimation(this);
-		for (int i = 0; i < numAnimClip; i++) {
-			m_animationClips.push_back(&animClipList[i]);
+		TK_ASSERT(animClips.empty() == false, "animClipListが空です。");
+		m_skeleton = &skeleton;
+		for (auto& animClip : animClips) {
+			m_animationClips.push_back(animClip.get());
 		}
 		for (auto& ctr : m_animationPlayController) {
 			ctr.Init(m_skeleton);
 		}
-		
+
 		Play(0);
+		m_isInited = true;
 	}
 	/*!
 	 * @brief	ローカルポーズの更新。

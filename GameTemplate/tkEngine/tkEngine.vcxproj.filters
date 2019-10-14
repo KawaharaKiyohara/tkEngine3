@@ -39,15 +39,6 @@
     <Filter Include="Source Files\random">
       <UniqueIdentifier>{d8a78ab4-52cd-40ff-ac95-f7b0cee31efa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets">
-      <UniqueIdentifier>{0cc819b7-fe0a-4497-8ee3-4611416999c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assets\modelData">
-      <UniqueIdentifier>{d966a1f0-cf34-4330-9f20-9d3339610be1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assets\modelData\preset">
-      <UniqueIdentifier>{0f454397-ac31-43de-b306-2a569946b724}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\online">
       <UniqueIdentifier>{e22b0886-6e5a-474a-aa46-cbef8076bf69}</UniqueIdentifier>
     </Filter>
@@ -260,6 +251,18 @@
     <ClInclude Include="graphics\tkTkaFile.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkAnimation.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkAnimationPlayController.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkShaderResourceDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkStructuredBufferDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -391,10 +394,14 @@
     <ClCompile Include="graphics\tkTkaFile.cpp">
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\modelData\preset\vector.FBX">
-      <Filter>Assets\modelData\preset</Filter>
-    </MeshContentTask>
+    <ClCompile Include="graphics\tkAnimation.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkAnimationPlayController.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkStructuredBufferDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

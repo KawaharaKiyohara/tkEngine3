@@ -11,7 +11,7 @@ namespace tkEngine{
 	/*!
 	 *@brief	キーフレーム。
 	 */
-	struct Keyframe {
+	struct KeyFrame {
 		uint32_t boneIndex;	//!<ボーンインデックス。
 		float time;					//!<時間。
 		CMatrix transform;			//!<トランスフォーム。
@@ -84,7 +84,7 @@ namespace tkEngine{
 			bool freezeY;	//!<Y方向の移動をフリーズさせる？
 			bool freezeZ;	//!<Z方向の移動をフリーズさせる？
 		};
-		using keyFramePtrList = vector<Keyframe*>;
+		using keyFramePtrList = vector<KeyFrame*>;
 		/*!
 		* @brief	コンストラクタ
 		*/
@@ -198,7 +198,7 @@ namespace tkEngine{
 			return m_tkaFile.GetNumAnimationEvent();
 		}
 	private:
-		using KeyframePtr = unique_ptr<Keyframe>;
+		using KeyframePtr = unique_ptr<KeyFrame>;
 		std::wstring m_clipName;	//!<アニメーションクリップの名前。
 		bool m_isLoop = false;	//!<ループフラグ。
 		vector<KeyframePtr>					m_keyframes;				//キーフレーム。

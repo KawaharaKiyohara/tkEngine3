@@ -197,6 +197,14 @@ namespace tkEngine{
 			return m_tksFile.IsLoaded();
 		}
 		/// <summary>
+		/// 初期化済みか判定。
+		/// </summary>
+		/// <returns></returns>
+		bool IsInited() const
+		{
+			return m_isInited;
+		}
+		/// <summary>
 		/// ボーン行列の構築。
 		/// 読み込みが完了した後で呼び出してください。
 		/// </summary>
@@ -225,6 +233,14 @@ namespace tkEngine{
 		{
 			return m_bones[boneNo].get();
 		}
+		/// <summary>
+		/// ボーン行列の先頭アドレスを取得。
+		/// </summary>
+		/// <returns></returns>
+		CMatrix* GetBoneMatricesTopAddress() const
+		{
+			return m_boneMatrixs.get();
+		}
 	public:
 		
 
@@ -250,5 +266,6 @@ namespace tkEngine{
 		using CBonePtr = std::unique_ptr<CBone>;
 		std::vector<CBonePtr>	m_bones;				//ボーンの配列。
 		std::unique_ptr<CMatrix[]>	m_boneMatrixs;		//ボーン行列。
+		bool m_isInited = false;						//初期化済み？
 	};
 }

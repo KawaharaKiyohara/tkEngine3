@@ -4,6 +4,7 @@
 #pragma once
 
 #include "tkEngine/graphics/tkModel.h"
+#include "tkEngine/graphics/tkAnimation.h"
 
 namespace tkEngine {
 	namespace prefab {
@@ -87,6 +88,15 @@ namespace tkEngine {
 			{
 				m_scale = scale;
 			}
+
+			void SetAnimationLoopFlag(int animNo, bool flag)
+			{
+				m_animationClips.at(animNo)->SetLoopFlag(flag);
+			}
+			void PlayAnimation(int animNo, float interpolateTime)
+			{
+				m_animation.Play(animNo, interpolateTime);
+			}
 		private:
 			/// <summary>
 			/// 初期化ステータス。
@@ -108,6 +118,7 @@ namespace tkEngine {
 			string m_tkmFilePath;						//tkmファイルのファイルパス。
 			vector< string > m_tkaFilePaths;			//tkaファイルのファイルパスのリスト。
 			vector< CUPAnimationClip> m_animationClips;	//アニメーションクリップの配列。
+			CAnimation m_animation;
 		};
 	}
 }

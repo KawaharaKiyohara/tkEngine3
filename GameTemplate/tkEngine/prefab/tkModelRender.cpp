@@ -40,6 +40,8 @@ namespace tkEngine {
 			case enInitStatus_WaitInitSkeleton:
 				if (m_skeleton.IsLoaded() ){
 					m_skeleton.BuildBoneMatrices();
+					//スケルトンとモデルを関連付ける。
+					m_model.BindSkeleton(m_skeleton);
 					//続いてアニメーションクリップ
 					if (m_tkaFilePaths.empty() == false) {
 						for (auto& tkaFilePath : m_tkaFilePaths) {
@@ -66,8 +68,12 @@ namespace tkEngine {
 					//全部のアニメーションクリップのロードが完了した。
 					//ロードが完了したので、キーフレームとアニメーションイベントの構築を行う。
 					for (auto& animClip : m_animationClips) {
+						//@todo カリカリ。
+						animClip->SetLoopFlag(true);
 						animClip->BuildKeyFramesAndAnimationEvents();
 					}
+					//アニメーションを初期化。
+					m_animation.Init(m_skeleton, m_animationClips);
 					m_initStatus = enInitStatus_Completed;
 				}
 			}break;
@@ -80,7 +86,16 @@ namespace tkEngine {
 		}
 		void CModelRender::Update()
 		{
+			//モデルを更新。
 			m_model.Update(m_position, m_rotation, m_scale);
+			if (m_animation.IsInited()) {
+				//アニメーションを再生。
+				m_animation.Update(g_gameTime->GetFrameDeltaTime());
+			}
+			if (m_skeleton.IsInited()) {
+				//スケルトンを更新。
+				m_skeleton.Update(m_model.GetWorldMatrix());
+			}
 		}
 		void CModelRender::ForwardRender(IRenderContext& renderContext)
 		{

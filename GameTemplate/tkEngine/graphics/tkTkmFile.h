@@ -37,8 +37,8 @@ namespace tkEngine {
 			CVector3 pos;			//座標。
 			CVector3 normal;		//法線。
 			CVector2 uv;			//UV座標。
+			int indices[4];		//スキンインデックス。
 			CVector4 skinWeights;	//スキンウェイト。
-			short indices[4];		//スキンインデックス。
 		};
 		/// <summary>
 		/// 32ビットのインデックスバッファ。

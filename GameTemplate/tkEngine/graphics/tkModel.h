@@ -45,12 +45,28 @@ namespace tkEngine {
 		/// <param name="scale">拡大率</param>
 		void Update(CVector3 pos, CQuaternion rot, CVector3 scale);
 		/// <summary>
+		/// スケルトンを関連付ける。
+		/// </summary>
+		/// <param name="skeleton">スケルトン</param>
+		void BindSkeleton(CSkeleton& skeleton)
+		{
+			m_meshParts->BindSkeleton(skeleton);
+		}
+		/// <summary>
 		/// 描画
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
 		/// <param name="mView">ビュー行列</param>
 		/// <param name="mProj">プロジェクション行列</param>
 		void Draw(IRenderContext& rc, CMatrix mView, CMatrix mProj);
+		/// <summary>
+		/// ワールド行列を取得。
+		/// </summary>
+		/// <returns></returns>
+		const CMatrix& GetWorldMatrix() const
+		{
+			return m_world;
+		}
 	private:
 		CMatrix m_world;			//ワールド行列。
 		CTkmFile m_tkmFile;			//tkmファイル。

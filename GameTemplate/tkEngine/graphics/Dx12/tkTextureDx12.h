@@ -1,8 +1,9 @@
 #pragma once
 
+
 namespace tkEngine {
 	class CGraphicsEngineDx12;
-	class CTextureDx12 : public ITexture{
+	class CTextureDx12 : public IShaderResourceDx12, public ITexture {
 	public:
 		/// <summary>
 		/// コンストラクタ。
@@ -29,7 +30,7 @@ namespace tkEngine {
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
-		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle);
+		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle) override final;
 	private:
 		/// <summary>
 		/// DDSファイルからテクスチャをロード。
