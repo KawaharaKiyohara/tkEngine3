@@ -19,7 +19,8 @@ namespace tkEngine {
 	struct SMesh {
 		CVertexBufferDx12 m_vertexBuffer;						//頂点バッファ。
 		std::vector< UPCIndexBufferDx12 > m_indexBufferArray;	//インデックスバッファ。
-		std::vector< UPCMaterialDx12 >	m_materials;				//マテリアル。
+		std::vector< UPCMaterialDx12 >	m_materials;			//マテリアル。
+		std::vector<int>				skinFlags;				//スキンを持っているかどうかのフラグ。
 	};
 	using UPSMesh = std::unique_ptr<SMesh>;
 	/// <summary>

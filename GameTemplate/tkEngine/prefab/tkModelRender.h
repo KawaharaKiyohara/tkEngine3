@@ -33,6 +33,13 @@ namespace tkEngine {
 				//初期化ステータスをモデル初期化待ちにする。
 				m_initStatus = enInitStatus_WaitInitModel;
 			}
+			void Init(const char* tkmFilePath)
+			{
+				m_tkmFilePath = tkmFilePath;
+				m_model.LoadTkmFileAsync(tkmFilePath);
+				//初期化ステータスをモデル初期化待ちにする。
+				m_initStatus = enInitStatus_WaitInitModel;
+			}
 			/// <summary>
 			/// 開始処理
 			/// </summary>

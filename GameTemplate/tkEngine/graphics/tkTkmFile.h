@@ -104,6 +104,6 @@ namespace tkEngine {
 		/// <param name="tkmMat"></param>
 		void BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath);
 	private:
-		vector< SMesh	>	m_meshParts;		//メッシュパーツ。
+		vector< SMesh>	m_meshParts;		//メッシュパーツ。
 	};
 }

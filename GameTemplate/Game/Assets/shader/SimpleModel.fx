@@ -42,26 +42,29 @@ float4x4 CalcSkinMatrix(SVSIn In)
     return skinning;
 }
 
- //テクスチャなしプリミティブ描画用の頂点シェーダー
-SPSIn VSMainNoTexture( SVSIn vsIn ) 
+//頂点シェーダーのコア関数。
+SPSIn VSMainCore(SVSIn vsIn, float4x4 m)
 {
 	SPSIn psIn;
-	float4x4 m;
-	if(vsIn.Indices[0] >= 0){
-		//スキンあり。
-		m = CalcSkinMatrix(vsIn);
-	}else{
-		//スキンなし。
-		m = mWorld;
-	}
 	psIn.pos = mul(m, vsIn.pos);
 	psIn.pos = mul(mView, psIn.pos);
 	psIn.pos = mul(mProj, psIn.pos);
 	psIn.uv = vsIn.uv;
 	return psIn;
 }
+//スキンなしメッシュの頂点シェーダー。
+SPSIn VSMainNonSkin(SVSIn vsIn)
+{
+	return VSMainCore(vsIn, mWorld);
+}
+ //テクスチャなしプリミティブ描画用の頂点シェーダー
+SPSIn VSMain( SVSIn vsIn ) 
+{
+	float4x4 skinning = CalcSkinMatrix(vsIn);
+	return VSMainCore(vsIn, skinning);
+}
 //テクスチャなしプリミティブ描画用のピクセルシェーダー。
-float4 PSMainNoTexture( SPSIn psIn ) : SV_Target0
+float4 PSMain( SPSIn psIn ) : SV_Target0
 {
 	float4 texColor = g_albedo.Sample(g_sampler, psIn.uv);
 	return float4( texColor.xyz, 1.0f);

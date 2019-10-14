@@ -27,8 +27,9 @@ namespace tkEngine {
 	void CMaterialDx12::InitFromTkmMaterila(const CTkmFile::SMaterial& tkmMat)
 	{
 		//todo シェーダーは仮。
-		m_vs.Load(L"shader/SimpleModel.fx", "VSMainNoTexture", "vs_5_0");
-		m_ps.Load(L"shader/SimpleModel.fx", "PSMainNoTexture", "ps_5_0");
+		m_vs.Load(L"shader/SimpleModel.fx", "VSMain", "vs_5_0");
+		m_vsNonSkin.Load(L"shader/SimpleModel.fx", "VSMainNonSkin", "vs_5_0");
+		m_ps.Load(L"shader/SimpleModel.fx", "PSMain", "ps_5_0");
 
 		//テクスチャをロード。
 		InitTexture(tkmMat);
@@ -113,14 +114,23 @@ namespace tkEngine {
 		psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 		psoDesc.SampleDesc.Count = 1;
 		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
+		//続いてスキンなしモデル用を作成。
+		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkin.GetCompiledBlob().Get());
+		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineStateNonSkin));
 	}
 	
-	void CMaterialDx12::BeginRender(IRenderContext& rc)
+	void CMaterialDx12::BeginRender(IRenderContext& rc, int hasSkin)
 	{
 		//ルートシグネチャとパイプラインステートを設定。
 		auto& rcDx12 = rc.As<CRenderContextDx12>();
+		
 		rcDx12.SetRootSignature(m_rootSignature);
-		rcDx12.SetPipelineState(m_pipelineState);
+		if (hasSkin) {
+			rcDx12.SetPipelineState(m_pipelineState);
+		}
+		else {
+			rcDx12.SetPipelineState(m_pipelineStateNonSkin);
+		}
 	}
 
 }

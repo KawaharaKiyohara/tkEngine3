@@ -25,9 +25,20 @@ namespace tkEngine {
 		int numVertex = (int)tkmMesh.vertexBuffer.size();
 		int vertexStride = sizeof(CTkmFile::SVertex);
 		auto& mesh = std::make_unique<SMesh>();
-
+		mesh->skinFlags.reserve(tkmMesh.materials.size());
 		mesh->m_vertexBuffer.Init(vertexStride * numVertex, vertexStride);
 		mesh->m_vertexBuffer.Copy((void*)&tkmMesh.vertexBuffer[0]);
+
+		auto SetSkinFlag = [&](int index) {
+			if (tkmMesh.vertexBuffer[index].skinWeights.x > 0.0f) {
+				//スキンがある。
+				mesh->skinFlags.push_back(1);
+			}
+			else {
+				//スキンなし。
+				mesh->skinFlags.push_back(0);
+			}
+		};
 		//インデックスバッファを作成。
 		if (!tkmMesh.indexBuffer16Array.empty()) {
 			//インデックスのサイズが2byte
@@ -36,6 +47,10 @@ namespace tkEngine {
 				auto ib = std::make_unique< CIndexBufferDx12>();
 				ib->Init(tkIb.indices.size() * 2, 2);
 				ib->Copy((void*)&tkIb.indices.at(0));
+				
+				//スキンがあるかどうかを設定する。
+				SetSkinFlag(tkIb.indices[0]);
+				
 				mesh->m_indexBufferArray.push_back(std::move(ib));
 			}
 		}
@@ -46,6 +61,10 @@ namespace tkEngine {
 				auto ib = std::make_unique< CIndexBufferDx12>();
 				ib->Init(tkIb.indices.size() * 4, 4);
 				ib->Copy((void*)&tkIb.indices.at(0));
+
+				//スキンがあるかどうかを設定する。
+				SetSkinFlag(tkIb.indices[0]);
+			
 				mesh->m_indexBufferArray.push_back(std::move(ib));
 			}
 		}
@@ -123,7 +142,7 @@ namespace tkEngine {
 			//マテリアルごとにドロー。
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++, heapNo++) {
 				//このマテリアルが貼られているメッシュの描画開始。
-				mesh->m_materials[matNo]->BeginRender(rc);
+				mesh->m_materials[matNo]->BeginRender(rc, mesh->skinFlags[matNo]);
 
 				auto& descriptorHeap = m_descriptorHeaps[heapNo];
 				IShaderResourceDx12* srvTbl[] = {

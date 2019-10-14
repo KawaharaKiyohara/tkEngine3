@@ -50,6 +50,9 @@ namespace tkEngine {
 	}
 	void CStructuredBufferDx12::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle)
 	{
+		if (!m_isInited) {
+			return;
+		}
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto device = ge12.GetD3DDevice();
 	

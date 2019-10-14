@@ -18,7 +18,8 @@ namespace tkEngine {
 		/// レンダリングを開始するときに呼び出す関数。
 		/// </summary>
 		/// <param name="rc">レンダリングコンテキスト</param>
-		void BeginRender(IRenderContext& rc);
+		/// <param name="hasSkin">スキンがあるかどうかのフラグ</param>
+		void BeginRender(IRenderContext& rc, int hasSkin);
 
 		/// <summary>
 		/// アルベドマップを取得。
@@ -45,13 +46,15 @@ namespace tkEngine {
 		/// <param name="tkmMat"></param>
 		void InitTexture(const CTkmFile::SMaterial& tkmMat);
 	private:
+		CShaderDx12		m_vsNonSkin;	//スキンなしモデルの頂点シェーダー。
 		CShaderDx12		m_vs;			//頂点シェーダー。
 		CShaderDx12		m_ps;			//ピクセルシェーダー。
 		CTextureDx12	m_albedoMap;	//アルベドマップ。
 		CTextureDx12	m_normalMap;	//法線マップ。
 		CTextureDx12	m_specularMap;	//スペキュラマップ。
-		ComPtr<ID3D12RootSignature> m_rootSignature;	//ルートシグネチャ。
-		ComPtr<ID3D12PipelineState> m_pipelineState;	//パイプラインステート。
+		ComPtr<ID3D12RootSignature> m_rootSignature;		//ルートシグネチャ。
+		ComPtr<ID3D12PipelineState> m_pipelineState;			//パイプラインステート。
+		ComPtr<ID3D12PipelineState> m_pipelineStateNonSkin;		//スキンなしモデルを描画する時のパイプラインステート。
 	};
 
 	using UPCMaterialDx12 = std::unique_ptr< CMaterialDx12>;
