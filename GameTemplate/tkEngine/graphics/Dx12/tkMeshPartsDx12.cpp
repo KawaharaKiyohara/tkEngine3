@@ -89,7 +89,7 @@ namespace tkEngine {
 			for (auto& mat : mesh->m_materials) {
 
 				D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-				srvHeapDesc.NumDescriptors = 5;
+				srvHeapDesc.NumDescriptors = 8;
 				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
@@ -149,12 +149,15 @@ namespace tkEngine {
 				auto& descriptorHeap = m_descriptorHeaps[heapNo];
 				IShaderResourceDx12* srvTbl[] = {
 					&mesh->m_materials[matNo]->GetAlbedoMap(),
+					&mesh->m_materials[matNo]->GetNormalMap(),
+					&mesh->m_materials[matNo]->GetSpecularMap(),
 					&m_boneMatricesStructureBuffer,
 					&lightMgr.GetDirectionLightStructuredBuffer()
 				};
 				CConstantBufferDx12* cbrTbl[] = {
 					&m_commonConstantBuffer,
-					&lightMgr.GetLightParamConstantBuffer()
+					&lightMgr.GetLightParamConstantBuffer(),
+					&mesh->m_materials[matNo]->GetConstantBuffer(),
 				};
 				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
 				rc12.SetCBR_SRV_UAV(

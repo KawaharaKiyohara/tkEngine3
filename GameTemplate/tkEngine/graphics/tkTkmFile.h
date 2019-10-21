@@ -36,8 +36,10 @@ namespace tkEngine {
 		struct SVertex {
 			CVector3 pos;			//座標。
 			CVector3 normal;		//法線。
+			CVector3 tangent;		//接ベクトル。
+			CVector3 binormal;		//従ベクトル。
 			CVector2 uv;			//UV座標。
-			int indices[4];		//スキンインデックス。
+			int indices[4];			//スキンインデックス。
 			CVector4 skinWeights;	//スキンウェイト。
 		};
 		/// <summary>
@@ -103,6 +105,13 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="tkmMat"></param>
 		void BuildMaterial(SMaterial& tkmMat, FILE* fp, const char* filePath);
+		/// <summary>
+		/// 接ベクトルと従ベクトルを計算する。
+		/// </summary>
+		/// <remarks>
+		/// 3dsMaxScriptでやるべきなんだろうけど、デバッグしたいので今はこちらでやる。
+		/// </remarks>
+		void BuildTangentAndBiNormal();
 	private:
 		vector< SMesh>	m_meshParts;		//メッシュパーツ。
 	};

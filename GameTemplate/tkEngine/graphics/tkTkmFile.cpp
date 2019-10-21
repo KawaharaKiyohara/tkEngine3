@@ -42,7 +42,71 @@ namespace tkEngine {
 			std::int16_t indices[4];		//スキンインデックス。
 		};
 	};
+	template< class IndexBuffer>
+	void BuildTangentAndBiNormalImp(CTkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
+	{
+		//頂点スムースは気にしない。
+		auto numPolygon = indexBuffer.indices.size()/3;
+		for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
+			auto no = polyNo * 3;
+			auto vertNo_0 = indexBuffer.indices[no];
+			auto vertNo_1 = indexBuffer.indices[no+1];
+			auto vertNo_2 = indexBuffer.indices[no+2];
 
+			auto& vert_0 = mesh.vertexBuffer[vertNo_0];
+			auto& vert_1 = mesh.vertexBuffer[vertNo_1];
+			auto& vert_2 = mesh.vertexBuffer[vertNo_2];
+
+			CVector3 cp0[] = {
+				{ vert_0.pos.x, vert_0.uv.x, vert_0.uv.y},
+				{ vert_0.pos.y, vert_0.uv.x, vert_0.uv.y},
+				{ vert_0.pos.z, vert_0.uv.x, vert_0.uv.y}
+			};
+
+			CVector3 cp1[] = {
+				{ vert_1.pos.x, vert_1.uv.x, vert_1.uv.y},
+				{ vert_1.pos.y, vert_1.uv.x, vert_1.uv.y},
+				{ vert_1.pos.z, vert_1.uv.x, vert_1.uv.y}
+			};
+
+			CVector3 cp2[] = {
+				{ vert_2.pos.x, vert_2.uv.x, vert_2.uv.y},
+				{ vert_2.pos.y, vert_2.uv.x, vert_2.uv.y},
+				{ vert_2.pos.z, vert_2.uv.x, vert_2.uv.y}
+			};
+
+			// 平面パラメータからUV軸座標算出
+			CVector3 tangent, binormal;
+			for (int i = 0; i < 3; ++i) {
+				auto V1 = cp1[i] - cp0[i];
+				auto V2 = cp2[i] - cp1[i];
+				auto ABC = Cross(V1, V2);
+	
+				if (ABC.x == 0.0f) {
+					// やばいす！
+					// ポリゴンかUV上のポリゴンが縮退してます！
+					tangent.v[i] = 0.0f;
+					binormal.v[i] = 0.0f;
+				}
+				else {
+					tangent.v[i] = -ABC.y / ABC.x;
+					binormal.v[i] = -ABC.z / ABC.x;
+				}
+			}
+
+			tangent.Normalize();
+			binormal.Normalize();
+
+			vert_0.tangent = tangent;
+			vert_1.tangent = tangent;
+			vert_2.tangent = tangent;
+
+			vert_0.binormal = binormal;
+			vert_1.binormal = binormal;
+			vert_2.binormal = binormal;
+
+		}
+	}
 	std::string CTkmFile::LoadTextureFileName(FILE* fp)
 	{
 		std::string fileName;
@@ -126,7 +190,17 @@ namespace tkEngine {
 		loadTexture( tkmMat.specularMapFileName, tkmMat.specularMap, tkmMat.specularMapSize );
 	
 	}
-	
+	void CTkmFile::BuildTangentAndBiNormal() 
+	{
+		for (auto& mesh : m_meshParts) {
+			for (auto& indexBuffer : mesh.indexBuffer16Array) {
+				BuildTangentAndBiNormalImp(mesh, indexBuffer);
+			}
+			for (auto& indexBuffer : mesh.indexBuffer32Array) {
+				BuildTangentAndBiNormalImp(mesh, indexBuffer);
+			}
+		}
+	}
 	void CTkmFile::LoadImplement(const char* filePath)
 	{
 		FILE* fp = fopen(filePath, "rb");
@@ -165,6 +239,9 @@ namespace tkEngine {
 				auto& vertex = meshParts.vertexBuffer[vertNo];
 				vertex.pos.Set(vertexTmp.pos[0], vertexTmp.pos[1], vertexTmp.pos[2]);
 				vertex.normal.Set(vertexTmp.normal[0], vertexTmp.normal[1], vertexTmp.normal[2]);
+				//todo カリカリ。
+				vertex.tangent = vertex.normal;
+				vertex.binormal = vertex.binormal;
 				vertex.uv.Set(vertexTmp.uv[0], vertexTmp.uv[1]);
 				vertex.skinWeights.Set(vertexTmp.weights[0], vertexTmp.weights[1], vertexTmp.weights[2], vertexTmp.weights[3]);
 				vertex.indices[0] = vertexTmp.indices[0] != -1 ? vertexTmp.indices[0] : 0;
@@ -207,6 +284,8 @@ namespace tkEngine {
 
 			}
 		}
+		//接ベクトルと従ベクトルを構築する。
+		BuildTangentAndBiNormal();
 
 		fclose(fp);
 		//読み込み終わりの印。

@@ -87,7 +87,7 @@ private
 				invTrans = inverse c_node.transform
 				pos = pos * invTrans
 				invRot = c_node.rotation as Matrix3
-				invRot = inverse invRot
+			--	invRot = inverse invRot
 				normal = normal * invRot
 			)
 			
@@ -163,9 +163,19 @@ private
 			if numSubMaterial == 0 then(
 				--サブマテリアルはない。
 				diffMap = c_node.material.diffuseMap
+				normalMap = c_node.material.bumpMap 
+				specMap = c_node.material.specularMap
 				albedoFileName = diffMap.fileName
+				normalMapFileName = "" 
+				if normalMap != undefined then(
+					normalMapFileName = normalMap.fileName
+				)
+				specMapFileName = "" 
+				if specMap != undefined then(
+					specMapFileName = specMap.fileName
+				)
 				--法線マップとスペキュラマップはまだ未対応。
-				newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:-1
+				newMat = tkMaterial albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:-1
 				append ms.materials newMat
 			)else(
 				--マルチマテリアル。
@@ -187,9 +197,20 @@ private
 							--未登録のマテリアルなので、追加する。
 							mat = getSubMtl c_node.material matId
 							diffMap = mat.diffuseMap
+							normalMap = mat.bumpMap 
+							specMap = mat.specularMap
+
 							albedoFileName = diffMap.fileName
+							normalMapFileName = "" 
+							if normalMap != undefined then(
+								normalMapFileName = normalMap.fileName
+							)
+							specMapFileName = "" 
+							if specMap != undefined then(
+								specMapFileName = specMap.fileName
+							)
 							--法線マップとスペキュラマップはまだ未対応。
-							newMat = tkMaterial albedoMap:albedoFileName normalMap:"" specMap:"" id:matId
+							newMat = tkMaterial albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:matId
 							append ms.materials newMat
 						)
 					)

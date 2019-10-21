@@ -37,6 +37,12 @@ namespace tkEngine {
 		InitRootSignature(tkmMat);
 		//パイプラインステートを作成。
 		InitPipelineState(tkmMat);
+		//定数バッファを作成。
+		
+		SMaterialParam matParam;
+		matParam.hasNormalMap = m_normalMap.IsValid() ? 1 : 0;
+		matParam.hasSpecMap = m_specularMap.IsValid() ? 1 : 0;
+		m_constantBuffer.Init(sizeof(SMaterialParam), &matParam);
 	}
 	void CMaterialDx12::InitRootSignature(const CTkmFile::SMaterial& tkmMat)
 	{
@@ -84,7 +90,19 @@ namespace tkEngine {
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = ge12.GetD3DDevice();
-
+#if 1
+		// 頂点レイアウトを定義する。
+		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 72, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		};
+#else
 		// 頂点レイアウトを定義する。
 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 		{
@@ -94,6 +112,7 @@ namespace tkEngine {
 			{ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 			{ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
+#endif
 
 		//パイプラインステートを作成。
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {0};

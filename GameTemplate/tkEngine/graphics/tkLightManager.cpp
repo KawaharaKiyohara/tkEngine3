@@ -104,6 +104,7 @@ namespace tkEngine{
 
 		m_lightParam.numDirectionLight = static_cast<int>(numDirLig);
 		m_lightParam.numPointLight = static_cast<int>(numPointLig);
+		m_lightParam.eyePos = g_camera3D->GetPosition();
 		m_lightParam.screenParam.x = 0.0f;
 		m_lightParam.screenParam.y = 0.0f;
 		m_lightParam.screenParam.z = static_cast<float>(g_graphicsEngine->GetFrameBufferWidth());
