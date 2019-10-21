@@ -62,5 +62,10 @@ namespace tkEngine {
 		/// <param name="tkmFile">tkmファイル</param>
 		/// <returns>作成されたメッシュパーツ。</returns>
 		virtual UPIMeshParts CreateMeshPartsFromTkmFile(const CTkmFile& tkmFile) = 0;
+		/// <summary>
+		/// ライトマネージャーを作成。
+		/// </summary>
+		/// <returns>作成されたライトマネージャ。</returns>
+		virtual UPILightManager CreateLightManager() = 0;
 	};
 }

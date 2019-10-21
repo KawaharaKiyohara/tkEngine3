@@ -7,7 +7,7 @@ namespace tkEngine {
 	inline void CRenderContextDx12::SetCBR_SRV_UAV(
 		ID3D12DescriptorHeap* descriptorHeap,
 		int numConstantBuffer, 
-		CConstantBufferDx12* constantBufferArray, 
+		CConstantBufferDx12* constantBufferArray[], 
 		int numShaderResource, 
 		IShaderResourceDx12* shaderResourceArray[]
 	)
@@ -19,7 +19,7 @@ namespace tkEngine {
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		//定数バッファを登録していく。
 		for (int i = 0; i < numConstantBuffer; i++) {
-			constantBufferArray[i].RegistConstantBufferView(cpuHandle);
+			constantBufferArray[i]->RegistConstantBufferView(cpuHandle);
 			//次に進める。
 			cpuHandle.ptr += ge12.GetCbrSrvDescriptorSize();
 		}

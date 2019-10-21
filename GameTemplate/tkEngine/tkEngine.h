@@ -150,6 +150,7 @@ namespace tkEngine{
 	extern IGraphicsEngine* g_graphicsEngine;
 	extern CCamera* g_camera3D;
 	extern CGameTime* g_gameTime;
+	extern ILightManager* g_lightManager;
 	extern std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;
 	/*!
 	* @brief	Engineのインスタンスを取得。

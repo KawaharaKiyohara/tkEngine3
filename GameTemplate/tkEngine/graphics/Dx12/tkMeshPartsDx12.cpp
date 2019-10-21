@@ -3,6 +3,7 @@
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 #include "dx12Common.h"
 #include "tkMeshPartsDx12.h"
+#include "tkLightManagerDx12.h"
 
 namespace tkEngine {
 	void CMeshPartsDx12::InitFromTkmFile(const CTkmFile& tkmFile)
@@ -88,7 +89,7 @@ namespace tkEngine {
 			for (auto& mat : mesh->m_materials) {
 
 				D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-				srvHeapDesc.NumDescriptors = 3;
+				srvHeapDesc.NumDescriptors = 5;
 				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
@@ -118,7 +119,8 @@ namespace tkEngine {
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		//レンダリングコンテキストをDx12版にダウンキャスト
 		auto& rc12 = rc.As<CRenderContextDx12>();
-		
+		auto& lightMgr = ge12.GetLightManager()->As<CLightManagerDx12>();
+
 		//メッシュごとにドロー
 		//プリミティブのトポロジーはトライアングルリストのみ。
 		rc12.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -147,10 +149,20 @@ namespace tkEngine {
 				auto& descriptorHeap = m_descriptorHeaps[heapNo];
 				IShaderResourceDx12* srvTbl[] = {
 					&mesh->m_materials[matNo]->GetAlbedoMap(),
-					&m_boneMatricesStructureBuffer
+					&m_boneMatricesStructureBuffer,
+					&lightMgr.GetDirectionLightStructuredBuffer()
+				};
+				CConstantBufferDx12* cbrTbl[] = {
+					&m_commonConstantBuffer,
+					&lightMgr.GetLightParamConstantBuffer()
 				};
 				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
-				rc12.SetCBR_SRV_UAV(descriptorHeap.Get(), 1, &m_commonConstantBuffer, 2, srvTbl);
+				rc12.SetCBR_SRV_UAV(
+					descriptorHeap.Get(), 
+					ARRAYSIZE(cbrTbl), 
+					cbrTbl, 
+					ARRAYSIZE(srvTbl),
+					srvTbl);
 
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];

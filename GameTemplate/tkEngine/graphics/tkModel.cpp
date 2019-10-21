@@ -1,6 +1,6 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/tkModel.h"
-
+#include "tkEngine/graphics/tkLightManager.h"
 
 
 namespace tkEngine {
@@ -29,11 +29,16 @@ namespace tkEngine {
 	}
 	void CModel::Update(CVector3 pos, CQuaternion rot, CVector3 scale)
 	{
+		CMatrix mBias = CMatrix::Identity;
+	//todo	if (enUpdateAxis == enFbxUpAxisZ) {
+			//Z-up
+			mBias.MakeRotationX(CMath::PI * 0.5f);
+	//	}
 		CMatrix mTrans, mRot, mScale;
 		mTrans.MakeTranslation(pos);
 		mRot.MakeRotationFromQuaternion(rot);
 		mScale.MakeScaling(scale);
-		m_world = mScale * mRot * mTrans;
+		m_world = mBias * mScale * mRot * mTrans;
 	}
 	void CModel::Draw(
 		IRenderContext& rc, 

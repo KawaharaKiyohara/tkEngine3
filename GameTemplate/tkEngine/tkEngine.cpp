@@ -7,10 +7,13 @@
 #include "tkEngine/timer/tkStopwatch.h"
 #include <thread>
 
+
 namespace tkEngine {
 	IGraphicsEngine* g_graphicsEngine = nullptr;
 	CCamera* g_camera3D = nullptr;
 	CGameTime* g_gameTime = nullptr;
+	ILightManager* g_lightManager = nullptr;
+
 	std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;
 
 	CEngine::CEngine()
@@ -43,6 +46,7 @@ namespace tkEngine {
 		if (!m_graphicsEngine->Init(m_hWnd, initParam)) {
 			return false;
 		}
+		g_lightManager = m_graphicsEngine->GetLightManager().get();
 		//SoundEngineの初期化
 		m_soundEngine.Init();
 ;
@@ -133,6 +137,8 @@ namespace tkEngine {
 		}
 		//サウンドエンジンの更新。
 		m_soundEngine.Update();
+		//グラフィックスエンジンの更新。
+		m_graphicsEngine->Update();
 		//GameObjectManager更新
 		GameObjectManager().ExecuteFromGameThread();
 	}

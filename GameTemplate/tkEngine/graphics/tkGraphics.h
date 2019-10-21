@@ -32,6 +32,7 @@ namespace tkEngine {
 	class ITexture;
 	class IMeshParts;
 	class IRenderContext;
+	class ILightManager;
 
 	using UPIGraphicsEngine = std::unique_ptr< IGraphicsEngine>;
 	using UPIVertexBuffer = std::unique_ptr < IVertexBuffer >;
@@ -41,5 +42,6 @@ namespace tkEngine {
 	using UPIShape = std::unique_ptr<IShape>;
 	using UPITexture = std::unique_ptr<ITexture>;
 	using UPIMeshParts = std::unique_ptr<IMeshParts>;
+	using UPILightManager = std::unique_ptr< ILightManager >;
 }
 

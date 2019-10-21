@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "tkEngine/graphics/tkTkmFile.h"
+#include "tkEngine/prefab/light/tkDirectionLight.h"
 
 Game::Game()
 {
@@ -21,17 +22,22 @@ bool Game::Start()
 	g_camera3D->Update();
 	//モデルレンダーを作成。。
 	m_modelRender = NewGO<prefab::CModelRender>(0);
-	
+	g_lightManager->SetAmbientLight({ 0.0f, 0.0f, 0.0f });
+	auto lig = NewGO<prefab::CDirectionLight>(0);
+	lig->SetDirection({ 1.0f, 0.0f, 0.0f });
+	lig->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
+#if 0
+#else
 	const char* tkaFilePaths[] = {
-		"animData/unityChan/idle.tka",
-		"animData/unityChan/walk.tka",
-		"animData/unityChan/run.tka",
+		"animData/thief/idle.tka",
+		"animData/thief/run.tka",
+		"animData/thief/walk.tka",
 	};
 	m_modelRender->Init(
-		"modelData/test.tkm",
+		"modelData/Thethief_H.tkm",
 		tkaFilePaths
 	);
-	
+#endif
 	return true;
 }
 
@@ -52,6 +58,7 @@ void Game::Update()
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 		m_modelRender->PlayAnimation(2, 0.3f);
 	}
+	m_modelRender->SetScale({2.0f, 2.0f, 2.0f});
 	m_modelRender->Move(move);
 	m_modelRender->Rotate(qRot);
 }

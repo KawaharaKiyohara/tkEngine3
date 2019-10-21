@@ -61,8 +61,8 @@ namespace tkEngine {
 		CD3DX12_DESCRIPTOR_RANGE1 ranges[enNumDescriptorHeap];
 		CD3DX12_ROOT_PARAMETER1 rootParameters[enNumDescriptorHeap];
 
-		ranges[enDescriptorHeap_CB].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
-		rootParameters[enDescriptorHeap_CB].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_VERTEX);
+		ranges[enDescriptorHeap_CB].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 8, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+		rootParameters[enDescriptorHeap_CB].InitAsDescriptorTable(1, &ranges[0]);
 		ranges[enDescriptorHeap_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 32, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
 		rootParameters[enDescriptorHeap_SRV].InitAsDescriptorTable(1, &ranges[1]);
 

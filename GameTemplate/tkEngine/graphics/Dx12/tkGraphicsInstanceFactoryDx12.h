@@ -60,6 +60,11 @@ namespace tkEngine {
 		/// <param name="tkmFile">tkmファイル</param>
 		/// <returns>作成されたメッシュパーツ。</returns>
 		UPIMeshParts CreateMeshPartsFromTkmFile(const CTkmFile& tkmFile) override final;
+		/// <summary>
+		/// ライトマネージャーを作成。
+		/// </summary>
+		/// <returns>作成されたライトマネージャ。</returns>
+		UPILightManager CreateLightManager() override final;
 	};
 }
 

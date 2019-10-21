@@ -18,9 +18,9 @@ namespace tkEngine {
 	/// </summary>
 	struct SMesh {
 		CVertexBufferDx12 m_vertexBuffer;						//頂点バッファ。
-		std::vector< UPCIndexBufferDx12 > m_indexBufferArray;	//インデックスバッファ。
-		std::vector< UPCMaterialDx12 >	m_materials;			//マテリアル。
-		std::vector<int>				skinFlags;				//スキンを持っているかどうかのフラグ。
+		vector< UPCIndexBufferDx12 > m_indexBufferArray;	//インデックスバッファ。
+		vector< UPCMaterialDx12 >	m_materials;			//マテリアル。
+		vector<int>					skinFlags;				//スキンを持っているかどうかのフラグ。
 	};
 	using UPSMesh = std::unique_ptr<SMesh>;
 	/// <summary>
@@ -76,8 +76,8 @@ namespace tkEngine {
 		};
 		CConstantBufferDx12 m_commonConstantBuffer;				//メッシュ共通の定数バッファ。
 		CStructuredBufferDx12 m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
-		std::vector< UPSMesh > m_meshs;							//メッシュ。
-		std::vector<ComPtr< ID3D12DescriptorHeap>>	m_descriptorHeaps;
+		vector< UPSMesh > m_meshs;							//メッシュ。
+		vector<ComPtr< ID3D12DescriptorHeap>>	m_descriptorHeaps;
 		CSkeleton* m_skeleton = nullptr;	//スケルトン。
 	};
 }

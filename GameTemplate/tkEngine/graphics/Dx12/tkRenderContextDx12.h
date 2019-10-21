@@ -85,7 +85,7 @@ namespace tkEngine {
 		void SetCBR_SRV_UAV(
 			ID3D12DescriptorHeap* descriptorHeap,
 			int numConstantBuffer,
-			CConstantBufferDx12* constantBufferArray,
+			CConstantBufferDx12* constantBufferArray[],
 			int numShaderResource,
 			IShaderResourceDx12* shaderResourceArray[]
 		);

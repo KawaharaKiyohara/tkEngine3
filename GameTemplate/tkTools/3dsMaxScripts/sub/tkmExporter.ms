@@ -51,11 +51,7 @@ private
 			nameLen = tokens[tokens.count].count
 			WriteLong file nameLen --ファイル名の長さを出力。
 			WriteString file tokens[tokens.count]
-			--パディングを出力する。
-			amari = mod nameLen 4
-			for i = 0 to amari where( i < amari ) do (
-				WriteByte file 255
-			)
+			
 		)else(
 			WriteLong file 0 --ファイル名の長さを出力。
 		)
@@ -80,17 +76,22 @@ private
 		for vertNo = 1 to numVert do(
 			--頂点座標
 			pos = getVert meshObj vertNo
+			--法線
+			normal = getNormal meshObj vertNo
+			--正規化されてないね。
+			normal = normalize normal
+			
 			if skinMod != undefined then(
 				--スキンがあるときは、骨で動かされているのでトランスフォームでの動きを除去する？
 				--ホンマか？要確認。
 				invTrans = inverse c_node.transform
 				pos = pos * invTrans
+				invRot = c_node.rotation as Matrix3
+				invRot = inverse invRot
+				normal = normal * invRot
 			)
 			
-			--法線
-			normal = getNormal meshObj vertNo
-			--正規化されてないね。
-			normal = normalize normal
+		
 			--UV座標
 		--	uvw = gettvert meshObj vertNo
 		--	uv = Point2 uvw.x uvw.y

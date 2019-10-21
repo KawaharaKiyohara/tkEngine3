@@ -143,5 +143,5 @@ using namespace std;
 #include "tkEngine/graphics/tkAnimationClip.h"
 #include "tkEngine/graphics/tkAnimationPlayController.h"
 #include "tkEngine/graphics/tkAnimation.h"
-
+#include "tkEngine/graphics/tkLightManager.h"
 

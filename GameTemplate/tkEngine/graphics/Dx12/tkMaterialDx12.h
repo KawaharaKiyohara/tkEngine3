@@ -57,7 +57,7 @@ namespace tkEngine {
 		ComPtr<ID3D12PipelineState> m_pipelineStateNonSkin;		//スキンなしモデルを描画する時のパイプラインステート。
 	};
 
-	using UPCMaterialDx12 = std::unique_ptr< CMaterialDx12>;
+	using UPCMaterialDx12 = unique_ptr< CMaterialDx12>;
 }
 
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

@@ -33,7 +33,7 @@ namespace tkEngine {
 		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
 		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
 
-		void Render(
+		void OnRender(
 			std::function<void(IRenderContext& rc)> onRender,
 			std::function<void(IRenderContext& rc)> onPreForwardRender,
 			std::function<void(IRenderContext& rc)> onForwardRender,

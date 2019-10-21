@@ -54,14 +54,14 @@
     <Filter Include="Source Files\graphics\OpenGL">
       <UniqueIdentifier>{d51b64dd-f270-49c5-9097-603f01ea5cd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\graphics\Dx9">
-      <UniqueIdentifier>{0521ffe1-99f8-460c-a292-3024aa5ca75f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\prefab">
       <UniqueIdentifier>{34d9b471-816b-4ae6-a4c0-e334308fee06}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\resource">
       <UniqueIdentifier>{dd3077d4-108d-483f-97b4-40d44f474e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\prefab\light">
+      <UniqueIdentifier>{12258cd6-fe6d-422d-9bde-b8b4c27cfc7f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +263,27 @@
     <ClInclude Include="graphics\Dx12\tkStructuredBufferDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="prefab\light\tkPointLight.h">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClInclude>
+    <ClInclude Include="prefab\light\tkSpotLight.h">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClInclude>
+    <ClInclude Include="prefab\light\tkDirectionLight.h">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClInclude>
+    <ClInclude Include="prefab\light\tkLightBase.h">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkLight.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkLightManager.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkLightManagerDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -401,6 +422,24 @@
       <Filter>Source Files\graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkStructuredBufferDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="prefab\light\tkSpotLight.cpp">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClCompile>
+    <ClCompile Include="prefab\light\tkDirectionLight.cpp">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClCompile>
+    <ClCompile Include="prefab\light\tkLightBase.cpp">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClCompile>
+    <ClCompile Include="prefab\light\tkPointLight.cpp">
+      <Filter>Source Files\prefab\light</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkLightManager.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkLightManagerDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>

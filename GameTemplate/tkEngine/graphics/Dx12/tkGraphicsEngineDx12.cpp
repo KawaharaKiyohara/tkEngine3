@@ -159,7 +159,7 @@ namespace tkEngine {
 		WaitDraw();
 		
 	}
-	void CGraphicsEngineDx12::Render(
+	void CGraphicsEngineDx12::OnRender(
 		std::function<void(IRenderContext& rc)> onRender,
 		std::function<void(IRenderContext& rc)> onPreForwardRender,
 		std::function<void(IRenderContext& rc)> onForwardRender,
