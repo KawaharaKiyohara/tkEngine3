@@ -42,7 +42,9 @@ private
 	md = ModelData,		--メッシュデータ。
 	ms = Meshparts,		--メッシュパーツ。
 	newVertNosInFace = #(),	--
+	textureFilePaths = #(),	--テクスチャのファイルパスのリスト。
 	cloneMeshObj,		--クローンされたメッシュ
+	m_isFlatShading,	--フラットシェーディングを行う？
 	--ファイルパスからファイル名を抽出して、ファイルに出力する。
 	fn WriteFileToFileNameFromFilePath file filePath = 
 	(
@@ -134,6 +136,7 @@ private
 		)
 		--tkEngineで利用する頂点バッファを構築する。
 		newVertNo = numVert + 1
+		
 		for faceNo = 1 to numFace do (
 			tvertNos = getTVFace meshObj faceNo
 			vertNos = getFace meshObj faceNo
@@ -147,6 +150,11 @@ private
 				if ms.vertexBuffer[vertNos[i]] == undefined then(
 					--未登録の頂点
 					ms.vertexBuffer[vertNos[i]] = v
+				)else if m_isFlatShading == true then(
+					--フラットシェーディングの場合は重複頂点は許さないので、頂点を増やす。
+					ms.vertexBuffer[newVertNo] = v
+					vertNoInFace = newVertNo
+					newVertNo = newVertNo + 1
 				)else if ms.vertexBuffer[vertNos[i]].texVertNo != tvertNos[i] then(
 					--登録済みだけど、テクスチャ番号が異なっているので頂点を増やす。
 					ms.vertexBuffer[newVertNo] = v
@@ -294,7 +302,12 @@ private
 		file = fopen filePath "wb"
 		--try(
 			--ヘッダーを出力
-			WriteShort file TKM_VERSION 
+			WriteByte file TKM_VERSION
+			if m_isFlatShading == true then(
+				WriteByte file 1 
+			)else(
+				WriteByte file 0
+			)
 			--メッシュパーツの数を出力
 			WriteShort file md.meshParts.count
 			--メッシュパーツを出力していく。
@@ -331,10 +344,10 @@ private
 					WriteFileToFileNameFromFilePath file tkMat.normalMap
 					--スペキュラマップ。
 					WriteFileToFileNameFromFilePath file tkMat.specMap
-					--テクスチャをddsファイルにコンバート
-					ConvertTextureToDDS tkMat.albedoMap
-					ConvertTextureToDDS tkMat.normalMap
-					ConvertTextureToDDS tkMat.specMap
+					--テクスチャをコンバートリストに積んでいく
+					appendIfUnique textureFilePaths tkMat.albedoMap
+					appendIfUnique textureFilePaths tkMat.normalMap
+					appendIfUnique textureFilePaths tkMat.specMap
 				)
 
 				--頂点バッファを出力
@@ -385,10 +398,15 @@ private
 			messageBox "tkmファイルの保存に失敗しました。"
 		)*/
 		fclose file
+		--テクスチャのコンバード
+		for texFilePath in textureFilePaths do(
+			ConvertTextureToDDS texFilePath
+		)
 	),
 public
-	fn SaveTkm nodes filePath=
+	fn SaveTkm nodes filePath isFlatShading=
 	(
+		m_isFlatShading = isFlatShading
 		--選択しているノードを退避させる。
 		nodesTmp = #()
 		for p in nodes do (

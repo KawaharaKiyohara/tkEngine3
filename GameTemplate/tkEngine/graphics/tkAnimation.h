@@ -41,7 +41,9 @@ namespace tkEngine{
 		/// <param name="interpolateTime">補完時間(単位：秒)</param>
 		void Play(int clipNo, float interpolateTime = 0.0f)
 		{
-			PlayCommon(m_animationClips[clipNo], interpolateTime);
+			if (clipNo < m_animationClips.size()) {
+				PlayCommon(m_animationClips[clipNo], interpolateTime);
+			}
 		}
 		/*!
 		*@brief	アニメーションクリップのループフラグを設定します。

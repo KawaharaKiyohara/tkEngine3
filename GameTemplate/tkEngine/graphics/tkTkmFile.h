@@ -58,6 +58,7 @@ namespace tkEngine {
 		/// メッシュパーツ。
 		/// </summary>
 		struct SMesh {
+			bool isFlatShading;							//フラットシェーディング？
 			vector< SMaterial > materials;				//マテリアルの配列。
 			vector< SVertex >	vertexBuffer;			//頂点バッファ。
 			vector<SIndexBuffer32> indexBuffer32Array;	//インデックスバッファの配列。マテリアルの数分だけインデックスバッファはあるよ。

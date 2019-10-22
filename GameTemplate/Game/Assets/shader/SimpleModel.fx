@@ -132,7 +132,6 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
 	}else{
 		normal = psIn.Normal;
 	}
-	
 	//ランバート拡散反射
 	float3 lig = 0;
 	for( int ligNo = 0; ligNo < numDirectionLight; ligNo++ ){
@@ -142,13 +141,13 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
 	}
 	if(hasSpecularMap){
 		//スペキュラマップがある。
-		float specMap = g_specMap.Sample( g_sampler, psIn.uv).x;
+		float specMap = g_specMap.Sample( g_sampler, psIn.uv).a;
 		
 		float3 toEye = normalize(eyePos - psIn.worldPos);
 		for( int ligNo = 0; ligNo < numDirectionLight; ligNo++ ){
 			float3 rv = reflect(directionLight[ligNo].direction, normal);
 			float t = max(0.0f, dot(rv, toEye) );
-			t = pow( t, 3.0f) * specMap ; //これはどうするべ。
+			t = pow( t, 3.0f) * specMap * 20; //これはどうするべ。
 			lig += directionLight[ligNo].color * t;
 		}
 	}

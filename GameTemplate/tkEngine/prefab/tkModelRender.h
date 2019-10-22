@@ -23,7 +23,7 @@ namespace tkEngine {
 			/// <param name="tkmFilePath">tkmファイルのパス</param>
 			/// <param name="tkaFilePaths">tkaファイルのパスの配列</param>
 			template<typename TKA_FILE_ARRAY, std::size_t NUM_TKA_FILE>
-			void Init(const char* tkmFilePath, TKA_FILE_ARRAY (&tkaFilePaths)[NUM_TKA_FILE])
+			void Init(const char* tkmFilePath, TKA_FILE_ARRAY(&tkaFilePaths)[NUM_TKA_FILE])
 			{
 				m_tkmFilePath = tkmFilePath;
 				m_model.LoadTkmFileAsync(tkmFilePath);
@@ -79,6 +79,10 @@ namespace tkEngine {
 			{
 				m_position = pos;
 			}
+			void SetPosition(float x, float y, float z)
+			{
+				m_position.Set(x, y, z);
+			}
 			/// <summary>
 			/// 回転を直接設定。
 			/// </summary>
@@ -95,7 +99,10 @@ namespace tkEngine {
 			{
 				m_scale = scale;
 			}
-
+			void SetScale(float xScale, float yScale, float zScale)
+			{
+				m_scale.Set(xScale, yScale, zScale);
+			}
 			void SetAnimationLoopFlag(int animNo, bool flag)
 			{
 				m_animationClips.at(animNo)->SetLoopFlag(flag);

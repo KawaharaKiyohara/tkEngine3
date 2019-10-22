@@ -6,22 +6,24 @@ namespace tkEngine {
 	//法線スムージング。
 	class NormalSmoothing {
 	private:
-		enum EnSmoothStatus {
-			enNotSmooth,	//スムージングしていない。
-			enReqSmooth,	//スムージングのリクエストを受けている。
-			enSmoothed		//スムージング済み。
-		};
 		struct SSmoothVertex {
-			EnSmoothStatus smoothStatus = enNotSmooth;	//スムージングステータス。
+			CVector3 newNormal = g_vec3Zero;
 			CTkmFile::SVertex* vertex = nullptr;
+		};
+		struct SFace {
+			CVector3 normal;
+			vector<int> vertexNos;
 		};
 	public:
 		template <class IndexBuffer>
 		void Execute(CTkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
 		{
-			//ステップ１面法線を計算して、重複頂点の法線を平均化していく。
+			//ステップ１面法線を計算していく。
+			auto numPolygon = indexBuffer.indices.size() / 3;
+			vector< SFace> faces;
+			faces.reserve(numPolygon);
 			{
-				auto numPolygon = indexBuffer.indices.size() / 3;
+				
 				for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
 					auto no = polyNo * 3;
 					auto vertNo_0 = indexBuffer.indices[no];
@@ -37,54 +39,52 @@ namespace tkEngine {
 					CVector3 v0tov2 = vert_2.pos - vert_0.pos;
 					CVector3 normal = Cross(v0tov1, v0tov2);
 					normal.Normalize();
-					vert_0.normal += normal;
-					vert_1.normal += normal;
-					vert_2.normal += normal;
-				}
-				//法線を平均化する。
-				for (auto& vert : mesh.vertexBuffer) {
-					vert.normal.Normalize();
+					SFace face;
+					face.normal = normal;
+					face.vertexNos.push_back(vertNo_0);
+					face.vertexNos.push_back(vertNo_1);
+					face.vertexNos.push_back(vertNo_2);
+					faces.push_back(face);
 				}
 			}
+			//ステップ２　法線の平均化
+			for (auto& face : faces) {
+				for (auto vertNo : face.vertexNos) {
+					auto& vert = mesh.vertexBuffer[vertNo];
+					vert.normal += face.normal;
+				}
+			}
+			for (auto& vert : mesh.vertexBuffer) {
+				vert.normal.Normalize();
+			}
 			//ステップ２　座標と向きが同じ頂点の法線を平均化していく。
+			if(mesh.isFlatShading == 0)
 			{
 				//重複している頂点の法線を平均化
 				vector<SSmoothVertex> smoothVertex;
 				smoothVertex.reserve(mesh.vertexBuffer.size());
 				for (auto& v : mesh.vertexBuffer) {
-					smoothVertex.push_back({ enNotSmooth, &v });
+					smoothVertex.push_back({ v.normal, &v });
 				}
-				for (auto& va : smoothVertex) {
-					if (va.smoothStatus == enNotSmooth) { //まだスムースされていない。
-						for (auto& vb : smoothVertex) {
-							if (va.vertex != vb.vertex) {
-								if (va.smoothStatus == enNotSmooth
-									&& va.vertex->pos.x == vb.vertex->pos.x
-									&& va.vertex->pos.y == vb.vertex->pos.y
-									&& va.vertex->pos.z == vb.vertex->pos.z
-									) {
-									//同じ座標。
-									if (va.vertex->normal.Dot(vb.vertex->normal) > 0.0f) {
-										//同じ向き。
-										va.vertex->normal += vb.vertex->normal;
-										vb.smoothStatus = enReqSmooth;	//スムースをリクエストをつける。
-										va.smoothStatus = enReqSmooth;	//スムースをリクエストをつける。
-									}
-								}
-
-							}
-						}
-						//スムース済みにする。
-						va.vertex->normal.Normalize();
-						va.smoothStatus = enSmoothed;
-						//今回の調査で重複頂点だった奴の法線を全部平均化して、かつ調査済みにする。
-						for (auto& vb : smoothVertex) {
-							if (vb.smoothStatus == enReqSmooth) {
-								vb.vertex->normal = va.vertex->normal;
-								vb.smoothStatus = enSmoothed; //スムース済みにする。
+				for (auto& va : smoothVertex) {	
+					for (auto& vb : smoothVertex) {
+					
+						if (va.vertex != vb.vertex
+							&& va.vertex->pos.x == vb.vertex->pos.x
+							&& va.vertex->pos.y == vb.vertex->pos.y
+							&& va.vertex->pos.z == vb.vertex->pos.z
+							) {
+							//同じ座標。
+							if (va.vertex->normal.Dot(vb.vertex->normal) > 0.0f) {
+								//同じ向き。
+								va.newNormal += vb.vertex->normal;
 							}
 						}
 					}
+					va.newNormal.Normalize();
+				}
+				for (auto& va : smoothVertex) {
+					va.vertex->normal = va.newNormal;
 				}
 			}
 		}
@@ -105,7 +105,8 @@ namespace tkEngine {
 		/// ヘッダーファイル。
 		/// </summary>
 		struct SHeader {
-			std::uint16_t	version;		//バージョン。
+			std::uint8_t	version;		//バージョン。
+			std::uint8_t	isFlatShading;	//フラットシェーディング？
 			std::uint16_t	numMeshParts;	//メッシュパーツの数。
 		};
 		/// <summary>
@@ -314,7 +315,7 @@ namespace tkEngine {
 		for (int meshPartsNo = 0; meshPartsNo < header.numMeshParts; meshPartsNo++) {
 			
 			auto& meshParts = m_meshParts[meshPartsNo];
-			
+			meshParts.isFlatShading = header.isFlatShading;
 			tkmFileFormat::SMeshePartsHeader meshPartsHeader;
 			fread(&meshPartsHeader, sizeof(meshPartsHeader), 1, fp);
 			//マテリアル情報を記録できる領域を確保。
@@ -332,8 +333,8 @@ namespace tkEngine {
 				fread(&vertexTmp, sizeof(vertexTmp), 1, fp);
 				auto& vertex = meshParts.vertexBuffer[vertNo];
 				vertex.pos.Set(vertexTmp.pos[0], vertexTmp.pos[1], vertexTmp.pos[2]);
-				vertex.normal.Set(vertexTmp.normal[0], vertexTmp.normal[1], vertexTmp.normal[2]);
-			//	vertex.normal = g_vec3Zero;
+			//	vertex.normal.Set(vertexTmp.normal[0], vertexTmp.normal[1], vertexTmp.normal[2]);
+				vertex.normal = g_vec3Zero;
 				vertex.tangent = g_vec3Zero;
 				vertex.binormal = g_vec3Zero;
 				vertex.uv.Set(vertexTmp.uv[0], vertexTmp.uv[1]);

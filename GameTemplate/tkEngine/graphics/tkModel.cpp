@@ -32,7 +32,7 @@ namespace tkEngine {
 		CMatrix mBias = CMatrix::Identity;
 	//todo	if (enUpdateAxis == enFbxUpAxisZ) {
 			//Z-up
-			mBias.MakeRotationX(CMath::PI * 0.5f);
+			mBias.MakeRotationX(CMath::PI * -0.5f);
 	//	}
 		CMatrix mTrans, mRot, mScale;
 		mTrans.MakeTranslation(pos);
