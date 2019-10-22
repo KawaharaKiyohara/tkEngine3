@@ -38,9 +38,11 @@ struct ModelData(
 
 struct TkmExporter(
 private
+	outputFolder,		--出力先のフォルダ。
 	md = ModelData,		--メッシュデータ。
 	ms = Meshparts,		--メッシュパーツ。
 	newVertNosInFace = #(),	--
+	cloneMeshObj,		--クローンされたメッシュ
 	--ファイルパスからファイル名を抽出して、ファイルに出力する。
 	fn WriteFileToFileNameFromFilePath file filePath = 
 	(
@@ -165,7 +167,10 @@ private
 				diffMap = c_node.material.diffuseMap
 				normalMap = c_node.material.bumpMap 
 				specMap = c_node.material.specularMap
-				albedoFileName = diffMap.fileName
+				albedoFileName = ""
+				if diffMap != undefined then(
+					albedoFileName = diffMap.fileName
+				)
 				normalMapFileName = "" 
 				if normalMap != undefined then(
 					normalMapFileName = normalMap.fileName
@@ -174,7 +179,6 @@ private
 				if specMap != undefined then(
 					specMapFileName = specMap.fileName
 				)
-				--法線マップとスペキュラマップはまだ未対応。
 				newMat = tkMaterial albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:-1
 				append ms.materials newMat
 			)else(
@@ -199,8 +203,11 @@ private
 							diffMap = mat.diffuseMap
 							normalMap = mat.bumpMap 
 							specMap = mat.specularMap
-
-							albedoFileName = diffMap.fileName
+							
+							albedoFileName = ""
+							if diffMap != undefined then(
+								albedoFileName = diffMap.fileName
+							)
 							normalMapFileName = "" 
 							if normalMap != undefined then(
 								normalMapFileName = normalMap.fileName
@@ -209,7 +216,6 @@ private
 							if specMap != undefined then(
 								specMapFileName = specMap.fileName
 							)
-							--法線マップとスペキュラマップはまだ未対応。
 							newMat = tkMaterial albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:matId
 							append ms.materials newMat
 						)
@@ -223,7 +229,6 @@ private
 	
 	fn BuildMeshParts_IndexBuffer c_node meshObj numFace = 
 	(
-		
 		--マテリアルの数分だけインデックスバッファを作成する。
 		for tkMat in ms.materials do (
 			indices = #()
@@ -256,23 +261,33 @@ private
 		--メッシュ―パーツを作成。
 		ms = Meshparts materials:#() indexBufferArray:#() vertexBuffer:#()	
 		--集約しないとサブマテリアルＩＤが取れないぞいぞい。
-		meshObj = copy c_node 
-		meshObj = convertToMesh meshObj
-		numFace = getNumFaces meshObj
+		cloneMeshObj = copy c_node 
+		cloneMeshObj = convertToMesh cloneMeshObj
+		numFace = getNumFaces cloneMeshObj
 		
 		--マテリアル情報から構築する。
-		BuildMeshParts_Material c_node meshObj numFace
+		BuildMeshParts_Material c_node cloneMeshObj numFace
 
 		--頂点バッファを構築する。
-		BuildMeshPatrs_VertexBuffer c_node meshObj numFace
+		BuildMeshPatrs_VertexBuffer c_node cloneMeshObj numFace
 
 		--インデックスバッファを構築する。
-		BuildMeshParts_IndexBuffer c_node meshObj numFace
+		BuildMeshParts_IndexBuffer c_node cloneMeshObj numFace
 
 		--メッシュパーツを追加。
 		append md.meshParts ms
 
-		delete meshObj
+		delete cloneMeshObj
+		cloneMeshObj=undefined
+	),
+	--テクスチャをDDSファイルにコンバートしていく。
+	fn ConvertTextureToDDS srcTexFilePath =(
+		if srcTexFilePath != "" then(
+			currentDir = pathConfig.GetDir(#scripts)
+			command = currentDir+"\mk.bat"
+			arg = srcTexFilePath + " " + outputFolder
+			ShellLaunch command arg
+		)
 	),
 	fn InternalSave filePath = (
 		--保存だよ
@@ -316,6 +331,10 @@ private
 					WriteFileToFileNameFromFilePath file tkMat.normalMap
 					--スペキュラマップ。
 					WriteFileToFileNameFromFilePath file tkMat.specMap
+					--テクスチャをddsファイルにコンバート
+					ConvertTextureToDDS tkMat.albedoMap
+					ConvertTextureToDDS tkMat.normalMap
+					ConvertTextureToDDS tkMat.specMap
 				)
 
 				--頂点バッファを出力
@@ -377,22 +396,32 @@ public
 		) 
 		
 		
-		filepath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
+		filePath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		if filePath != undefined then(
-			--スケルトンが取得できる？
-			TrySaveSkeleton nodesTmp filepath
+			try(
+				--出力先のフォルダを取得。
+				outputFolder = pathConfig.removePathLeaf filePath
+				--スケルトンが取得できる？
+				TrySaveSkeleton nodesTmp filePath
 
-			md = ModelData meshParts:#()
+				md = ModelData meshParts:#()
 
-			for p in nodesTmp do (
-				--編集可能頂点に変換できるか調べる。
-				if canConvertTo p Mesh then(
-					--メッシュパーツをビルド				
-					BUildMeshParts p
+				for p in nodesTmp do (
+					--編集可能頂点に変換できるか調べる。
+					if canConvertTo p Mesh then(
+						--メッシュパーツをビルド				
+						BUildMeshParts p
+					)
+				) 
+				--保存。
+				InternalSave filePath
+				messageBox "出力成功しました。" beep:false
+			)catch(
+				if cloneMeshObj != undefined then(
+					delete cloneMeshObj
 				)
-			) 
-			--保存。
-			InternalSave filePath
+				messageBox "出力に失敗しました。" beep:false
+			)
 		)
 	)
 

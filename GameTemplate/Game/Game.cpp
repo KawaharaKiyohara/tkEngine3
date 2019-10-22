@@ -29,9 +29,21 @@ bool Game::Start()
 
 	lig = NewGO<prefab::CDirectionLight>(0);
 	lig->SetDirection({ -1.0f, 0.0f, 0.0f });
-	lig->SetColor({ 1.0f, 0.5f, 0.5f, 1.0f });
+	lig->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 
-#if 0
+#if 1
+	const char* tkaFilePaths[] = {
+		"animData/unityChan/idle.tka",
+		"animData/unityChan/run.tka",
+		"animData/unityChan/walk.tka",
+	};
+	m_modelRender->Init(
+		"modelData/unityChan.tkm",
+		tkaFilePaths
+	);
+	CQuaternion qRot;
+	qRot.SetRotationDeg(g_vec3AxisX, -90.0f);
+	m_modelRender->SetRotation(qRot);
 #else
 	const char* tkaFilePaths[] = {
 		"animData/thief/idle.tka",
@@ -42,6 +54,7 @@ bool Game::Start()
 		"modelData/Thethief_H.tkm",
 		tkaFilePaths
 	);
+	m_modelRender->SetScale({ 3.0f, 3.0f, 3.0f });
 #endif
 	return true;
 }
@@ -63,7 +76,7 @@ void Game::Update()
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 		m_modelRender->PlayAnimation(2, 0.3f);
 	}
-	m_modelRender->SetScale({3.0f, 3.0f, 3.0f});
+	
 	m_modelRender->Move(move);
 	m_modelRender->Rotate(qRot);
 }
