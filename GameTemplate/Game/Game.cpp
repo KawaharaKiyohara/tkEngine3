@@ -28,7 +28,7 @@ bool Game::Start()
 	lig->SetColor({1.0f, 1.0f, 1.0f, 1.0f});
 
 	lig = NewGO<prefab::CDirectionLight>(0);
-	lig->SetDirection({ -1.0f, 0.0f, 0.0f });
+	lig->SetDirection({ -0.707f, 0.0f, 0.707f });
 	lig->SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 
 #if 1
@@ -65,7 +65,7 @@ void Game::Update()
 	move.x = -g_pad[0]->GetLStickXF();
 	move.y = g_pad[0]->GetLStickYF();
 	CQuaternion qRot;
-	qRot.SetRotation(g_vec3AxisY, g_pad[0]->GetRStickXF() * 0.05f);
+	qRot.SetRotation(g_vec3AxisZ, g_pad[0]->GetRStickXF() * 0.05f);
 	
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		m_modelRender->PlayAnimation(0, 0.3f);

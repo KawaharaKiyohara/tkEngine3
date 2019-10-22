@@ -3,6 +3,92 @@
 
 namespace tkEngine {
 
+	//法線スムージング。
+	class NormalSmoothing {
+	private:
+		enum EnSmoothStatus {
+			enNotSmooth,	//スムージングしていない。
+			enReqSmooth,	//スムージングのリクエストを受けている。
+			enSmoothed		//スムージング済み。
+		};
+		struct SSmoothVertex {
+			EnSmoothStatus smoothStatus = enNotSmooth;	//スムージングステータス。
+			CTkmFile::SVertex* vertex = nullptr;
+		};
+	public:
+		template <class IndexBuffer>
+		void Execute(CTkmFile::SMesh& mesh, const IndexBuffer& indexBuffer)
+		{
+			//ステップ１面法線を計算して、重複頂点の法線を平均化していく。
+			{
+				auto numPolygon = indexBuffer.indices.size() / 3;
+				for (auto polyNo = 0; polyNo < numPolygon; polyNo++) {
+					auto no = polyNo * 3;
+					auto vertNo_0 = indexBuffer.indices[no];
+					auto vertNo_1 = indexBuffer.indices[no + 1];
+					auto vertNo_2 = indexBuffer.indices[no + 2];
+
+					auto& vert_0 = mesh.vertexBuffer[vertNo_0];
+					auto& vert_1 = mesh.vertexBuffer[vertNo_1];
+					auto& vert_2 = mesh.vertexBuffer[vertNo_2];
+
+					//法線を計算する。
+					CVector3 v0tov1 = vert_1.pos - vert_0.pos;
+					CVector3 v0tov2 = vert_2.pos - vert_0.pos;
+					CVector3 normal = Cross(v0tov1, v0tov2);
+					normal.Normalize();
+					vert_0.normal += normal;
+					vert_1.normal += normal;
+					vert_2.normal += normal;
+				}
+				//法線を平均化する。
+				for (auto& vert : mesh.vertexBuffer) {
+					vert.normal.Normalize();
+				}
+			}
+			//ステップ２　座標と向きが同じ頂点の法線を平均化していく。
+			{
+				//重複している頂点の法線を平均化
+				vector<SSmoothVertex> smoothVertex;
+				smoothVertex.reserve(mesh.vertexBuffer.size());
+				for (auto& v : mesh.vertexBuffer) {
+					smoothVertex.push_back({ enNotSmooth, &v });
+				}
+				for (auto& va : smoothVertex) {
+					if (va.smoothStatus == enNotSmooth) { //まだスムースされていない。
+						for (auto& vb : smoothVertex) {
+							if (va.vertex != vb.vertex) {
+								if (va.smoothStatus == enNotSmooth
+									&& va.vertex->pos.x == vb.vertex->pos.x
+									&& va.vertex->pos.y == vb.vertex->pos.y
+									&& va.vertex->pos.z == vb.vertex->pos.z
+									) {
+									//同じ座標。
+									if (va.vertex->normal.Dot(vb.vertex->normal) > 0.0f) {
+										//同じ向き。
+										va.vertex->normal += vb.vertex->normal;
+										vb.smoothStatus = enReqSmooth;	//スムースをリクエストをつける。
+										va.smoothStatus = enReqSmooth;	//スムースをリクエストをつける。
+									}
+								}
+
+							}
+						}
+						//スムース済みにする。
+						va.vertex->normal.Normalize();
+						va.smoothStatus = enSmoothed;
+						//今回の調査で重複頂点だった奴の法線を全部平均化して、かつ調査済みにする。
+						for (auto& vb : smoothVertex) {
+							if (vb.smoothStatus == enReqSmooth) {
+								vb.vertex->normal = va.vertex->normal;
+								vb.smoothStatus = enSmoothed; //スムース済みにする。
+							}
+						}
+					}
+				}
+			}
+		}
+	};
 	/// <summary>
 	/// TKMファイルフォーマット。
 	/// </summary>
@@ -97,15 +183,20 @@ namespace tkEngine {
 			tangent.Normalize();
 			binormal.Normalize();
 
-			vert_0.tangent = tangent;
-			vert_1.tangent = tangent;
-			vert_2.tangent = tangent;
+			vert_0.tangent += tangent;
+			vert_1.tangent += tangent;
+			vert_2.tangent += tangent;
 
-			vert_0.binormal = binormal;
-			vert_1.binormal = binormal;
-			vert_2.binormal = binormal;
-
+			vert_0.binormal += binormal;
+			vert_1.binormal += binormal;
+			vert_2.binormal += binormal;
 		}
+		//法線、接ベクトル、従ベクトルを平均化する。
+		for (auto& vert : mesh.vertexBuffer) {
+			vert.tangent.Normalize();
+			vert.binormal.Normalize();
+		}
+		
 	}
 	std::string CTkmFile::LoadTextureFileName(FILE* fp)
 	{
@@ -192,11 +283,14 @@ namespace tkEngine {
 	}
 	void CTkmFile::BuildTangentAndBiNormal() 
 	{
+		NormalSmoothing normalSmoothing;
 		for (auto& mesh : m_meshParts) {
 			for (auto& indexBuffer : mesh.indexBuffer16Array) {
+				normalSmoothing.Execute(mesh, indexBuffer);
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
 			}
 			for (auto& indexBuffer : mesh.indexBuffer32Array) {
+				normalSmoothing.Execute(mesh, indexBuffer);
 				BuildTangentAndBiNormalImp(mesh, indexBuffer);
 			}
 		}
@@ -239,9 +333,9 @@ namespace tkEngine {
 				auto& vertex = meshParts.vertexBuffer[vertNo];
 				vertex.pos.Set(vertexTmp.pos[0], vertexTmp.pos[1], vertexTmp.pos[2]);
 				vertex.normal.Set(vertexTmp.normal[0], vertexTmp.normal[1], vertexTmp.normal[2]);
-				//todo カリカリ。
-				vertex.tangent = vertex.normal;
-				vertex.binormal = vertex.binormal;
+			//	vertex.normal = g_vec3Zero;
+				vertex.tangent = g_vec3Zero;
+				vertex.binormal = g_vec3Zero;
 				vertex.uv.Set(vertexTmp.uv[0], vertexTmp.uv[1]);
 				vertex.skinWeights.Set(vertexTmp.weights[0], vertexTmp.weights[1], vertexTmp.weights[2], vertexTmp.weights[3]);
 				vertex.indices[0] = vertexTmp.indices[0] != -1 ? vertexTmp.indices[0] : 0;
