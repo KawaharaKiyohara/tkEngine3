@@ -27,10 +27,15 @@ namespace tkEngine {
 	void CMaterialDx12::InitFromTkmMaterila(const CTkmFile::SMaterial& tkmMat)
 	{
 		//todo シェーダーは仮。
-		m_vs.Load(L"shader/SimpleModel.fx", "VSMain", "vs_5_0");
-		m_vsNonSkin.Load(L"shader/SimpleModel.fx", "VSMainNonSkin", "vs_5_0");
-		m_ps.Load(L"shader/SimpleModel.fx", "PSMain", "ps_5_0");
-
+#if 1
+		m_vs.Load(L"shader/ModelPBR.fx", "VSMain", "vs_5_0");
+		m_vsNonSkin.Load(L"shader/ModelPBR.fx", "VSMainNonSkin", "vs_5_0");
+		m_ps.Load(L"shader/ModelPBR.fx", "PSMain", "ps_5_0");
+#else
+		m_vs.Load(L"shader/ModelSimple.fx", "VSMain", "vs_5_0");
+		m_vsNonSkin.Load(L"shader/ModelSimple.fx", "VSMainNonSkin", "vs_5_0");
+		m_ps.Load(L"shader/ModelSimple.fx", "PSMain", "ps_5_0");
+#endif
 		//テクスチャをロード。
 		InitTexture(tkmMat);
 		//ルートシグネチャを作成。
@@ -50,7 +55,7 @@ namespace tkEngine {
 		auto d3dDevice = ge12.GetD3DDevice();
 
 		D3D12_STATIC_SAMPLER_DESC sampler = {};
-		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 		sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 		sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

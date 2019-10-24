@@ -80,9 +80,9 @@ namespace {
 	*/
 	void SetTkEngineConfigForHighSpec(SInitParam& initParam)
 	{
-		initParam.screenWidth = 1920;
+		initParam.screenWidth = 1080;
 		initParam.screenHeight = 1080;
-		initParam.frameBufferWidth = 1920;
+		initParam.frameBufferWidth = 1080	;
 		initParam.frameBufferHeight = 1080;
 		//指向性シャドウの設定。
 		initParam.graphicsConfing.shadowRenderConfig.isEnable = true;
