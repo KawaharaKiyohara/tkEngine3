@@ -277,6 +277,14 @@ namespace tkEngine{
 		mRet.Multiply(m1, m2);
 		return mRet;
 	}
-
+	/// <summary>
+	/// íPà çsóÒ
+	/// </summary>
+	const CMatrix g_matIdentity = {
+		1.0f, 0.0f, 0.0f, 0.0f ,
+			0.0f, 1.0f, 0.0f, 0.0f ,
+			0.0f, 0.0f, 1.0f, 0.0f ,
+			0.0f, 0.0f, 0.0f, 1.0f
+	};
 };
 #endif // _TKMATRIX_H_

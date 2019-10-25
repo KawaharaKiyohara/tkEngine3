@@ -20,9 +20,8 @@ namespace tkEngine{
 		const float GetFrameDeltaTime() const
 		{
 			//固定FPSにする。可変は要検討。
-			return 1.0f / 60.0f;
-			//todo 時間の計測の処理が未実装。
-			//return m_frameDeltaTime;
+			//return 1.0f / 60.0f;
+			return m_frameDeltaTime;
 		}
 		void PushFrameDeltaTime(float deltaTime)
 		{

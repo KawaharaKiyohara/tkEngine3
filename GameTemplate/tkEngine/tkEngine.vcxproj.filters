@@ -284,6 +284,15 @@
     <ClInclude Include="graphics\Dx12\tkLightManagerDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkRenderTargetDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkSpriteDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\tkSprite.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -441,6 +450,15 @@
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkLightManagerDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkRenderTargetDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkSpriteDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkSprite.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

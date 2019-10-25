@@ -83,7 +83,7 @@ namespace tkEngine {
 			WS_OVERLAPPED,							  // ウィンドウスタイル
 			FALSE                                     // メニューフラグ
 		);
-		m_hWnd = CreateWindow(TEXT("GameDemo"), TEXT("GameDemo"),
+		m_hWnd = CreateWindow(TEXT("GameDemo"), TEXT("物理ベースレンダリング"),
 			WS_OVERLAPPEDWINDOW, 0, 0, rc.right - rc.left, rc.bottom - rc.top,
 			nullptr, nullptr, wc.hInstance, nullptr);
 
@@ -147,7 +147,8 @@ namespace tkEngine {
 		m_sw.Start();
 		//直列。
 		GameUpdate();
-		
+
+		m_sw.Stop();
 		g_gameTime->PushFrameDeltaTime((float)m_sw.GetElapsed());
 	}
 	LRESULT CALLBACK CEngine::MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

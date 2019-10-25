@@ -3,6 +3,8 @@
 #include "tkEngine/graphics/tkTkmFile.h"
 #include "tkEngine/prefab/light/tkDirectionLight.h"
 
+#include "tkEngine/graphics/Dx12/tkRenderTargetDx12.h"
+
 Game::Game()
 {
 }
@@ -13,6 +15,16 @@ Game::~Game()
 }
 bool Game::Start()
 {
+	//レンダリングターゲットの作成テスト。
+	CRenderTargetDx12 rt;
+	rt.Create( 
+		1920, 
+		1080, 
+		1, 
+		1, 
+		DXGI_FORMAT_R32G32B32A32_FLOAT, 
+		DXGI_FORMAT_D32_FLOAT
+	);
 	//カメラを設定。
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 	g_camera3D->SetNear(0.1f);
@@ -20,12 +32,16 @@ bool Game::Start()
 	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
 	g_camera3D->SetUp(g_vec3AxisY);
 	g_camera3D->Update();
-		g_lightManager->SetAmbientLight({ 0.3f, 0.3f, 0.3f });
+	g_lightManager->SetAmbientLight({ 0.3f, 0.3f, 0.3f });
 	auto lig = NewGO<prefab::CDirectionLight>(0);
 	
 	lig->SetDirection({ -1.0f, 0.0f, 0.0f });
-	lig->SetColor({ 1.0f, 1.0f, 1.0f, 3.0f });
+	lig->SetColor({ 0.7f, 0.7f, 0.7f, 0.5f });
 	
+	lig = NewGO<prefab::CDirectionLight>(0);
+	lig->SetDirection({ 0.707f, 0.0f, -0.707f });
+	lig->SetColor({ 0.7f, 0.7f, 0.7f, 0.5f });
+
 	m_modelRender[enRobo] = NewGO<prefab::CModelRender>(0);
 	m_modelRender[enRobo]->Init(
 		"modelData/robo.tkm");
@@ -38,9 +54,12 @@ bool Game::Start()
 	};
 	m_modelRender[enUnity] = NewGO<prefab::CModelRender>(0);
 	m_modelRender[enUnity]->Init(
-		"modelData/unityChan.tkm"/*,
-		tkaFilePaths*/
+		"modelData/unityChan.tkm",
+		tkaFilePaths
 	);
+	CQuaternion qRot;
+	qRot.SetRotationDeg(g_vec3AxisX, 90.0f);
+	m_modelRender[enUnity]->SetRotation(qRot);
 	m_modelRender[enUnity]->SetScale( 2.0f, 2.0f, 2.0f );
 	m_modelRender[enUnity]->SetActiveFlag(false);
 
@@ -54,7 +73,9 @@ bool Game::Start()
 		"modelData/Thethief_H.tkm",
 		ninjaTkaFilePaths
 	);
-	m_modelRender[enNinja]->SetScale( 8.0f, 8.0f, 8.0f );
+	qRot.SetRotationDeg(g_vec3AxisX, 180.0f);
+	m_modelRender[enNinja]->SetRotation(qRot);
+	m_modelRender[enNinja]->SetScale( 3.0f, 3.0f, 3.0f );
 	m_modelRender[enNinja]->SetActiveFlag(false);
 
 	m_modelRender[m_currentModel]->SetActiveFlag(true);
@@ -68,8 +89,12 @@ void Game::Update()
 	move.x = -g_pad[0]->GetLStickXF();
 	move.y = g_pad[0]->GetLStickYF();
 	CQuaternion qRot;
-	qRot.SetRotation(g_vec3AxisY, g_pad[0]->GetRStickXF() * 0.05f);
-
+	if (m_currentModel == enUnity) {
+		qRot.SetRotation(g_vec3AxisZ, g_pad[0]->GetRStickXF() * 0.05f);
+	}
+	else {
+		qRot.SetRotation(g_vec3AxisY, g_pad[0]->GetRStickXF() * 0.05f);
+	}
 	if (g_pad[0]->IsTrigger(enButtonA)) {
 		m_modelRender[m_currentModel]->PlayAnimation(0, 0.3f);
 	}

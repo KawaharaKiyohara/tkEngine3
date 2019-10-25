@@ -7,6 +7,7 @@
 #include <dxgi1_2.h>
 #include <dxgi1_3.h>
 #include <dxgi1_4.h>
+#include "tkRenderTargetDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -14,6 +15,9 @@ namespace tkEngine {
 	/// </summary>
 	class CGraphicsEngineDx12 : public IGraphicsEngine {
 	public:
+		enum {
+			FRAME_COUNT = 2
+		};
 		/// <summary>
 		/// 初期化
 		/// </summary>
@@ -132,11 +136,12 @@ namespace tkEngine {
 		/// 1フレーム前の描画が終わるのを待つ。
 		/// </summary>
 		void WaitDraw();
-		
+		/// <summary>
+		/// メインレンダリングターゲットに描き込まれた内容をバックバッファにコピー。
+		/// </summary>
+		void CopyBackBufferFromMainRenderTarget();
 	private:
-		enum {
-			FRAME_COUNT = 2
-		};
+		
 		D3D12_VIEWPORT						m_viewport;			//ビューポート。
 		D3D12_RECT							m_scissorRect;		//シザリング矩形。
 		ComPtr<ID3D12Device>				m_d3dDevice;		//D3Dデバイス。
@@ -147,6 +152,7 @@ namespace tkEngine {
 		ComPtr<ID3D12CommandAllocator>		m_commandAllocator;	//コマンドアロケータ。
 		ComPtr<ID3D12GraphicsCommandList>	m_commandList;		//コマンドリスト。
 		ComPtr<ID3D12PipelineState>			m_pipelineState;	//パイプラインステート。
+		CRenderTargetDx12					m_mainRenderTarget;	//メインレンダリングターゲット。
 		// Synchronization objects.
 		UINT m_frameIndex;
 		HANDLE m_fenceEvent;

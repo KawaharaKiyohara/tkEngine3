@@ -301,9 +301,11 @@
     <ClInclude Include="graphics\Dx12\tkMeshPartsDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12_inline.h" />
+    <ClInclude Include="graphics\Dx12\tkRenderTargetDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRootSignatureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkShaderDx12.h" />
     <ClInclude Include="graphics\Dx12\tkShaderResourceDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkSpriteDx12.h" />
     <ClInclude Include="graphics\Dx12\tkStructuredBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTextureDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h" />
@@ -325,6 +327,7 @@
     <ClInclude Include="graphics\tkRenderContext.h" />
     <ClInclude Include="graphics\tkShape.h" />
     <ClInclude Include="graphics\tkSkeleton.h" />
+    <ClInclude Include="graphics\tkSprite.h" />
     <ClInclude Include="graphics\tkTexture.h" />
     <ClInclude Include="graphics\tkTkaFile.h" />
     <ClInclude Include="graphics\tkTkmFile.h" />
@@ -371,8 +374,10 @@
     <ClCompile Include="graphics\Dx12\tkLightManagerDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkRenderTargetDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkSpriteDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkStructuredBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp" />
@@ -390,6 +395,7 @@
     <ClCompile Include="graphics\tkModel.cpp" />
     <ClCompile Include="graphics\tkShape.cpp" />
     <ClCompile Include="graphics\tkSkeleton.cpp" />
+    <ClCompile Include="graphics\tkSprite.cpp" />
     <ClCompile Include="graphics\tkTkaFile.cpp" />
     <ClCompile Include="graphics\tkTkmFile.cpp" />
     <ClCompile Include="graphics\tkTksFile.cpp" />

@@ -1,6 +1,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "dx12Common.h"
 
+//#define USE_MAIN_RENDER_TARGET
 namespace tkEngine {
 	
 	void CGraphicsEngineDx12::WaitDraw()
@@ -36,35 +37,35 @@ namespace tkEngine {
 		//D3Dデバイスの作成。
 		if (!CreateD3DDevice()) {
 			//デバイスの作成に失敗した。
-			TK_WARNING_MESSAGE_BOX("D3Dデバイスの作成に失敗しました。");
+			TK_ASSERT(false, "D3Dデバイスの作成に失敗しました。");
 			return false;
 		}
 
 		//コマンドキューの作成。
 		if (!CreateCommandQueue()) {
 			//コマンドキューの作成に失敗した。
-			TK_WARNING_MESSAGE_BOX("コマンドキューの作成に失敗しました。");
+			TK_ASSERT(false, "コマンドキューの作成に失敗しました。");
 			return false;
 		}
 		//スワップチェインの作成。
 		if (!CreateSwapChain(hwnd, initParam, dxGiFactory)) {
 			//スワップチェインの作成に失敗した。
-			TK_WARNING_MESSAGE_BOX("スワップチェインの作成に失敗しました。");
+			TK_ASSERT(false, "スワップチェインの作成に失敗しました。");
 			return false;
 		}
 		//フレームバッファのRTV用のディスクリプタヒープを作成する。
 		if (!CreateDescriptorHeapForFrameBuffer()) {
-			TK_WARNING_MESSAGE_BOX("ディスクリプタヒープの作成に失敗しました。");
+			TK_ASSERT(false, "ディスクリプタヒープの作成に失敗しました。");
 			return false;
 		}
 		//フレームバッファ用のRTVを作成する。
 		if (!CreateRTVForFameBuffer()) {
-			TK_WARNING_MESSAGE_BOX("フレームバッファ用のRTVの作成に失敗しました。");
+			TK_ASSERT(false, "フレームバッファ用のRTVの作成に失敗しました。");
 			return false;
 		}
 		//フレームバッファ用のDSVを作成する。
 		if (!CreateDSVForFrameBuffer(initParam)) {
-			TK_WARNING_MESSAGE_BOX("フレームバッファ用のDSVの作成に失敗しました。");
+			TK_ASSERT(false, "フレームバッファ用のDSVの作成に失敗しました。");
 			return false;
 		}
 		//コマンドアロケータの作成。
@@ -72,18 +73,29 @@ namespace tkEngine {
 			D3D12_COMMAND_LIST_TYPE_DIRECT, 
 			IID_PPV_ARGS(&m_commandAllocator));
 		if (!m_commandAllocator) {
-			TK_WARNING_MESSAGE_BOX("コマンドアロケータの作成に失敗しました。");
+			TK_ASSERT(false, "コマンドアロケータの作成に失敗しました。");
 			return false;
 		}
 		
 		//コマンドリストの作成。
 		if (!CreateCommandList()) {
-			TK_WARNING_MESSAGE_BOX("コマンドリストの作成に失敗しました。");
+			TK_ASSERT(false, "コマンドリストの作成に失敗しました。");
 			return false;
 		}
 		//GPUと同期をとるためのオブジェクトを作成する。
 		if (!CreateSynchronizationWithGPUObject()) {
-			TK_WARNING_MESSAGE_BOX("GPUとの同期オブジェクトの作成に失敗しました。");
+			TK_ASSERT(false, "GPUとの同期オブジェクトの作成に失敗しました。");
+			return false;
+		}
+		//メインレンダリングターゲットを作成。
+		if (m_mainRenderTarget.Create(
+			initParam.frameBufferWidth,
+			initParam.frameBufferHeight,
+			1,
+			1,
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			DXGI_FORMAT_D32_FLOAT) == false ) {
+			TK_ASSERT(false, "メインレンダリングターゲットの作成に失敗しました。");
 			return false;
 		}
 		//ビューポートを初期化。
@@ -123,6 +135,24 @@ namespace tkEngine {
 		m_commandList->RSSetScissorRects(1, &m_scissorRect);
 		//レンダリングターゲットへの書き込み完了待ち
 		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+#ifdef USE_MAIN_RENDER_TARGET
+		//レンダリングターゲットをメインにする。
+		auto rtvHandle = m_mainRenderTarget.GetRTVCpuDescriptorHandle();
+		auto dsvHandle = m_mainRenderTarget.GetDSVCpuDescriptorHandle();
+		//レンダリングターゲットを設定。
+		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+
+		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		m_commandList->ClearDepthStencilView(
+			dsvHandle,
+			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+			1.0f,
+			0,
+			0,
+			nullptr);
+
+#else
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
 		//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
@@ -139,15 +169,26 @@ namespace tkEngine {
 			0,
 			0,
 			nullptr);
-
+#endif
 		
+	}
+	void CGraphicsEngineDx12::CopyBackBufferFromMainRenderTarget()
+	{
+#ifdef USE_MAIN_RENDER_TARGET
+		//メインレンダリングターゲットへの書き込み待ち。
+		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_mainRenderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON));
+#endif
+		// Indicate that the back buffer will now be used to present.
+		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
 	}
 	void CGraphicsEngineDx12::EndRender()
 	{
-		// Indicate that the back buffer will now be used to present.
-		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-		m_commandList->Close();
-
+		
+		//バックバッファにテクスチャをコピー。
+		CopyBackBufferFromMainRenderTarget();
+				m_commandList->Close();
+		
 		//コマンドを実行。
 		ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
 		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
