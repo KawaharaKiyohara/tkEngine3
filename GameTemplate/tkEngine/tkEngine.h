@@ -149,6 +149,7 @@ namespace tkEngine{
 
 	extern IGraphicsEngine* g_graphicsEngine;
 	extern CCamera* g_camera3D;
+	extern CCamera* g_camera2D;
 	extern CGameTime* g_gameTime;
 	extern ILightManager* g_lightManager;
 	extern std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;

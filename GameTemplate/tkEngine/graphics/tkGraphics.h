@@ -11,6 +11,7 @@ namespace tkEngine {
 	enum EnPrimitiveTopology {
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 		enPrimitiveTopology_TriangleList = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		enPrimitiveTopology_TriangleStrip = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
 #endif
 		enPrimitiveTopology_Undex = 0xFFFFFFFF
 	};

@@ -60,11 +60,6 @@ namespace tkEngine {
 		/// <param name="tkmMat">tkmマテリアル</param>
 		void InitPipelineState(const CTkmFile::SMaterial& tkmMat);
 		/// <summary>
-		/// ルートシグネチャを初期化。
-		/// </summary>
-		/// <param name="tkmMat">tkmMat</param>
-		void InitRootSignature(const CTkmFile::SMaterial& tkmMat);
-		/// <summary>
 		/// テクスチャを初期化。
 		/// </summary>
 		/// <param name="tkmMat"></param>
@@ -83,7 +78,7 @@ namespace tkEngine {
 		CTextureDx12	m_albedoMap;	//アルベドマップ。
 		CTextureDx12	m_normalMap;	//法線マップ。
 		CTextureDx12	m_specularMap;	//スペキュラマップ。
-		ComPtr<ID3D12RootSignature> m_rootSignature;		//ルートシグネチャ。
+		CRootSignatureDx12 m_rootSignature;	//ルートシグネチャ。
 		ComPtr<ID3D12PipelineState> m_pipelineState;			//パイプラインステート。
 		ComPtr<ID3D12PipelineState> m_pipelineStateNonSkin;		//スキンなしモデルを描画する時のパイプラインステート。
 		CConstantBufferDx12 m_constantBuffer;	//定数バッファ。

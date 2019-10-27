@@ -13,11 +13,13 @@ namespace tkEngine {
 #include "tkVertexBufferDx12.h"
 
 #include "tkGraphicsEngineDx12.h"
+#include "tkRootSignatureDx12.h"
 #include "tkRenderContextDx12.h"
 #include "tkShaderDx12.h"
 #include "tkConstantBufferDx12.h"
 #include "tkRootSignatureDx12.h"
 #include "tkTextureDx12.h"
+
 #include "tkStructuredBufferDx12.h"
 #include "tkRenderContextDx12_inline.h"
 

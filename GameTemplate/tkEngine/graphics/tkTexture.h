@@ -11,6 +11,14 @@ namespace tkEngine {
 		{
 			return m_isValid;
 		}
+		/// <summary>
+		/// ITextureの派生クラスのインスタンスにキャスト。
+		/// </summary>
+		template< class T>
+		T& As()
+		{
+			return (T&)*this;
+		}
 	protected:
 		/// <summary>
 		/// テクスチャを利用可能にする。

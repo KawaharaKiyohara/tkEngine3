@@ -11,6 +11,7 @@
 namespace tkEngine {
 	IGraphicsEngine* g_graphicsEngine = nullptr;
 	CCamera* g_camera3D = nullptr;
+	CCamera* g_camera2D = nullptr;
 	CGameTime* g_gameTime = nullptr;
 	ILightManager* g_lightManager = nullptr;
 
@@ -22,6 +23,7 @@ namespace tkEngine {
 		m_graphicsEngine = m_graphisInstanceFactory->CreateGraphicsEngine();
 		g_graphicsEngine = m_graphicsEngine.get();
 		g_camera3D = &m_graphicsEngine->GetCamera3D();
+		g_camera2D = &m_graphicsEngine->GetCamera2D();
 		g_gameTime = &m_gameTime;
 		for (int i = 0; i < CPad::CONNECT_PAD_MAX; i++) {
 			g_pad[i] = &m_pad[i];

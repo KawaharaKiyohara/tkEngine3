@@ -1,5 +1,8 @@
 #pragma once
 
+#include "tkEngine/graphics/tkIndexbuffer.h"
+#include "tkEngine/graphics/tkVertexBuffer.h"
+
 namespace tkEngine {
 	/// <summary>
 	/// スプライトクラス。
@@ -7,6 +10,7 @@ namespace tkEngine {
 	class ISprite : Noncopyable {
 	public:
 		static const CVector2	DEFAULT_PIVOT;					//!<ピボット。
+		virtual ~ISprite();
 		/// <summary>
 		/// 初期化。
 		/// </summary>
@@ -64,9 +68,12 @@ namespace tkEngine {
 		/// <param name="viewMatrix">ビュー行列</param>
 		/// <param name="projMatrix">プロジェクション行列</param>
 		virtual void OnDraw(IRenderContext& renderContext, const CMatrix& viewMatrix, const CMatrix& projMatrix) = 0;
-	private:
+	protected:
+		UPIIndexBuffer m_indexBuffer;				//インデックスバッファ。
+		UPIVertexBuffer m_vertexBuffer;				//頂点バッファ。
 		ITexture* m_texture = nullptr;
 		CVector3 m_position = g_vec3Zero;			//座標。
+		CVector2 m_size = g_vec2Zero;				//サイズ。
 		CQuaternion m_rotation = g_quatIdentity;	//回転。
 		CMatrix m_world = g_matIdentity;			//ワールド行列。
 	};

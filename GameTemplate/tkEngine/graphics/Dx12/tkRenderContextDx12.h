@@ -105,6 +105,10 @@ namespace tkEngine {
 		{
 			m_commandList->SetGraphicsRootSignature(rootSignature.Get());
 		}
+		void SetRootSignature(CRootSignatureDx12& rootSignature)
+		{
+			m_commandList->SetGraphicsRootSignature(rootSignature.Get());
+		}
 		/// <summary>
 		/// パイプラインステートを設定。
 		/// </summary>

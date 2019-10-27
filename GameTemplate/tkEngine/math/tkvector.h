@@ -708,7 +708,7 @@ namespace tkEngine{
 		qRet.Multiply(q2, q1);
 		return qRet;
 	}
-
+	const CVector2 g_vec2Zero = { 0.0f, 0.0f };
 	const CVector3 g_vec3Zero  = { 0.0f,  0.0f,  0.0f };
 	const CVector3 g_vec3Right = { 1.0f,  0.0f,  0.0f };
 	const CVector3 g_vec3Left  = { -1.0f,  0.0f,  0.0f };

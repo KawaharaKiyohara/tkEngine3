@@ -70,6 +70,14 @@ namespace tkEngine {
 			return m_camera3D;
 		}
 		/// <summary>
+		/// 2Dカメラの取得。
+		/// </summary>
+		/// <returns></returns>
+		CCamera& GetCamera2D()
+		{
+			return m_camera2D;
+		}
+		/// <summary>
 		/// ライトマネージャーを取得。
 		/// </summary>
 		/// <returns></returns>
@@ -109,7 +117,10 @@ namespace tkEngine {
 	protected:
 		int	m_frameBufferWidth = 0;			//フレームバッファの幅。
 		int m_frameBufferHeight = 0;		//フレームバッファの高さ。
+		const int m_2dSpaceScreenWidth = 1280;	//2D空間のスクリーンの幅。2Dはこの座標系を前提に表示されていれば、解像度が変わっても大丈夫。
+		const int m_2dSpaceScreenHeight = 720;	//2D空間のスクリーンの高さ。2Dはこの座標系を前提に表示されていれば、解像度が変わっても大丈夫。
 		CCamera m_camera3D;					//3Dカメラ。	
+		CCamera m_camera2D;					//2Dカメラ。
 		UPIRenderContext m_renderContext;	//レンダリングコンテキスト。今は一本。
 		UPILightManager m_lightManager;		//ライトマネージャ。
 	};

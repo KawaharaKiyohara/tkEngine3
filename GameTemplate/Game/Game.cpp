@@ -4,6 +4,7 @@
 #include "tkEngine/prefab/light/tkDirectionLight.h"
 
 #include "tkEngine/graphics/Dx12/tkRenderTargetDx12.h"
+#include "tkEngine/graphics/Dx12/tkSpriteDx12.h"
 
 Game::Game()
 {
@@ -25,13 +26,17 @@ bool Game::Start()
 		DXGI_FORMAT_R32G32B32A32_FLOAT, 
 		DXGI_FORMAT_D32_FLOAT
 	);
+	auto gfxFactory = Engine().GetGraphicsInstanceFactory();
+	m_texture = gfxFactory->CreateTextureFromDDSFile(L"modelData/utc_all2.DDS");
+	m_sprite.Init(m_texture.get(), 512.0f, 512.0f);
+
 	//ƒJƒƒ‰‚ðÝ’èB
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 	g_camera3D->SetNear(0.1f);
 	g_camera3D->SetFar(10000.0f);
 	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
 	g_camera3D->SetUp(g_vec3AxisY);
-	g_camera3D->Update();
+	
 	g_lightManager->SetAmbientLight({ 0.3f, 0.3f, 0.3f });
 	auto lig = NewGO<prefab::CDirectionLight>(0);
 	
@@ -116,4 +121,10 @@ void Game::Update()
 		m_currentModel = min(enNumModel-1, m_currentModel);
 	}
 	m_modelRender[m_currentModel]->SetActiveFlag(true);
+
+	m_sprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
+}
+void Game::ForwardRender(IRenderContext& rc) 
+{
+	m_sprite.Draw(rc, g_camera2D->GetViewMatrix(), g_camera2D->GetProjectionMatrix());
 }

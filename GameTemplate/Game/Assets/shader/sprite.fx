@@ -1,13 +1,13 @@
 /*!
- * @brief	ƒXƒvƒ‰ƒCƒg—p‚ÌƒVƒF[ƒ_[B
+ * @brief	ï¿½Xï¿½vï¿½ï¿½ï¿½Cï¿½gï¿½pï¿½ÌƒVï¿½Fï¿½[ï¿½_ï¿½[ï¿½B
  */
 
 cbuffer cb : register(b0){
-	float4x4 mvp;		//ƒ[ƒ‹ƒhƒrƒ…[ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñB
-	float4 mulColor;	//æZƒJƒ‰[B
+	float4x4 mvp;		//ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½hï¿½rï¿½ï¿½ï¿½[ï¿½vï¿½ï¿½ï¿½Wï¿½Fï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½B
+	float4 mulColor;	//ï¿½ï¿½Zï¿½Jï¿½ï¿½ï¿½[ï¿½B
 };
 struct VSInput{
-	float4 pos : SV_Position;
+	float4 pos : POSITION;
 	float2 uv  : TEXCOORD0;
 };
 
@@ -16,7 +16,7 @@ struct PSInput{
 	float2 uv  : TEXCOORD0;
 };
 
-Texture2D<float4> colorTexture : register(t0);	//ƒJƒ‰[ƒeƒNƒXƒ`ƒƒB
+Texture2D<float4> colorTexture : register(t0);	//ï¿½Jï¿½ï¿½ï¿½[ï¿½eï¿½Nï¿½Xï¿½`ï¿½ï¿½ï¿½B
 sampler Sampler : register(s0);
 
 PSInput VSMain(VSInput In) 
