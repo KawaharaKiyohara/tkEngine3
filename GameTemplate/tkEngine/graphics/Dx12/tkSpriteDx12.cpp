@@ -8,17 +8,6 @@ namespace tkEngine {
 	}
 	void CSpriteDx12::OnInit(ITexture* texture, float w, float h)
 	{
-		//ルートシグネチャの初期化。
-		m_rootSignature.Init(
-			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-			D3D12_TEXTURE_ADDRESS_MODE_WRAP);
-		//シェーダーをロード。
-		m_vs.Load(L"shader/sprite.fx", "VSMain", "vs_5_0");
-		m_ps.Load(L"shader/sprite.fx", "PSMain", "ps_5_0");
-		//パイプラインステートを初期化。
-		InitPipelineState();
 		//ディスクリプタヒープを初期化。
 		InitDescriptorHeap();
 		//定数バッファの作成。
@@ -40,9 +29,9 @@ namespace tkEngine {
 
 		auto& rc12 = renderContext.As<CRenderContextDx12>();
 		//ルートシグネチャを設定。
-		rc12.SetRootSignature(m_rootSignature);
+		rc12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
 		//パイプラインステートを設定。
-		rc12.SetPipelineState(m_pipelineState);
+		rc12.SetPipelineState(CPipelineStatesDx12::m_spritePipeline);
 		//頂点バッファを設定。
 		rc12.SetVertexBuffer(m_vertexBuffer);
 		//インデックスバッファを設定。
@@ -68,39 +57,7 @@ namespace tkEngine {
 		//ドロー。
 		rc12.DrawIndexed(m_indexBuffer->GetCount());
 	}
-	void CSpriteDx12::InitPipelineState()
-	{
-		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = ge12.GetD3DDevice();
-		// 頂点レイアウトを定義する。
-		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		};
 
-		//パイプラインステートを作成。
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = { 0 };
-		psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-		psoDesc.pRootSignature = m_rootSignature.Get();
-		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vs.GetCompiledBlob().Get());
-		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_ps.GetCompiledBlob().Get());
-		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-		psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-		psoDesc.DepthStencilState.DepthEnable = FALSE;
-		psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-		psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-		psoDesc.DepthStencilState.StencilEnable = FALSE;
-		psoDesc.SampleMask = UINT_MAX;
-		psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		psoDesc.NumRenderTargets = 1;
-		psoDesc.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-		psoDesc.SampleDesc.Count = 1;
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
-
-	}
 	void CSpriteDx12::InitDescriptorHeap()
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();

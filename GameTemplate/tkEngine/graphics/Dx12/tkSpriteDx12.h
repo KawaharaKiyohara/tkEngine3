@@ -40,17 +40,13 @@ namespace tkEngine {
 		/// <param name="projMatrix">プロジェクション行列</param>
 		void OnDraw(IRenderContext& renderContext, const CMatrix& viewMatrix, const CMatrix& projMatrix) override final;
 
-		void InitPipelineState();
+		
 		void InitDescriptorHeap();
 	private:
 		struct SConstantBuffer {
 			CMatrix mvp;
 			CVector4 mulColor;
 		};
-		CRootSignatureDx12 m_rootSignature;	//ルートシグネチャ。
-		ComPtr< ID3D12PipelineState>	m_pipelineState;	//パイプラインステート。
-		CShaderDx12 m_vs;								//頂点シェーダー。
-		CShaderDx12 m_ps;								//ピクセルシェーダー。
 		SConstantBuffer m_constantBufferCPU;			//CPU側の定数バッファ。
 		CConstantBufferDx12 m_constantBufferGPU;		//GPU側の定数バッファ。
 		ComPtr< ID3D12DescriptorHeap> m_descriptorHeap;	//ディスクリプタヒープ。
