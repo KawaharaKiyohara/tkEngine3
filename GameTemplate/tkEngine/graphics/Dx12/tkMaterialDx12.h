@@ -72,15 +72,9 @@ namespace tkEngine {
 			int hasNormalMap;	//法線マップを保持しているかどうかのフラグ。
 			int hasSpecMap;		//スペキュラマップを保持しているかどうかのフラグ。
 		};
-		CShaderDx12		m_vsNonSkin;	//スキンなしモデルの頂点シェーダー。
-		CShaderDx12		m_vs;			//頂点シェーダー。
-		CShaderDx12		m_ps;			//ピクセルシェーダー。
 		CTextureDx12	m_albedoMap;	//アルベドマップ。
 		CTextureDx12	m_normalMap;	//法線マップ。
 		CTextureDx12	m_specularMap;	//スペキュラマップ。
-		CRootSignatureDx12 m_rootSignature;	//ルートシグネチャ。
-		ComPtr<ID3D12PipelineState> m_pipelineState;			//パイプラインステート。
-		ComPtr<ID3D12PipelineState> m_pipelineStateNonSkin;		//スキンなしモデルを描画する時のパイプラインステート。
 		CConstantBufferDx12 m_constantBuffer;	//定数バッファ。
 	};
 

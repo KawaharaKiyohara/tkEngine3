@@ -1,6 +1,8 @@
 #pragma once
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
+#include "tkTextureDx12.h"
+
 namespace tkEngine {
 	class CGraphicsEngineDx12;
 
@@ -47,7 +49,7 @@ namespace tkEngine {
 		/// レンダリングターゲットとなるテクスチャを取得。
 		/// </summary>
 		/// <returns></returns>
-		ComPtr<ID3D12Resource>& GetRenderTargetTexture() 
+		CTextureDx12& GetRenderTargetTexture()
 		{
 			return m_renderTargetTexture;
 		}
@@ -101,7 +103,8 @@ namespace tkEngine {
 		/// <returns>trueが返ってｋチアら成功。</returns>
 		void CreateDescriptor(ComPtr<ID3D12Device>& d3dDevice);
 	private:
-		ComPtr<ID3D12Resource> m_renderTargetTexture;		//レンダリングターゲットとなるテクスチャ。
+		CTextureDx12 m_renderTargetTexture;
+		ComPtr<ID3D12Resource> m_renderTargetTextureDx12;	//レンダリングターゲットとなるテクスチャ。
 		ComPtr< ID3D12Resource> m_depthStencilTexture;		//深度ステンシルバッファとなるテクスチャ。
 		ComPtr< ID3D12DescriptorHeap>		m_rtvHeap;		//RTV用のディスクリプタヒープ。
 		ComPtr< ID3D12DescriptorHeap>		m_dsvHeap;		//深度ステンシルバッファビューのディスクリプタヒープ。

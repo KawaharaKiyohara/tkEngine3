@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tkShaderResourceDx12.h"
 
 namespace tkEngine {
 	class CGraphicsEngineDx12;
@@ -25,12 +26,20 @@ namespace tkEngine {
 		/// <param name="memory">テクスチャデータが格納されているメモリの先頭アドレス</param>
 		/// <param name="size">テクスチャのサイズ。</param>
 		void InitFromMemory(const char* memory, unsigned int size);
-		
+		/// <summary>
+		/// D3Dリソースからテクスチャを初期化する。
+		/// </summary>
+		/// <param name="resrouce">D3Dリソース。</param>
+		void InitFromD3DResource(ComPtr<ID3D12Resource> texture);
 		/// <summary>
 		/// SRVに登録。
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
 		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle) override final;
+		ID3D12Resource* Get()
+		{
+			return m_texture.Get();
+		}
 	private:
 		/// <summary>
 		/// DDSファイルからテクスチャをロード。

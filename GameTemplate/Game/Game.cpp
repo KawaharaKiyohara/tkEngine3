@@ -16,16 +16,6 @@ Game::~Game()
 }
 bool Game::Start()
 {
-	//レンダリングターゲットの作成テスト。
-	CRenderTargetDx12 rt;
-	rt.Create( 
-		1920, 
-		1080, 
-		1, 
-		1, 
-		DXGI_FORMAT_R32G32B32A32_FLOAT, 
-		DXGI_FORMAT_D32_FLOAT
-	);
 	auto gfxFactory = Engine().GetGraphicsInstanceFactory();
 	m_texture = gfxFactory->CreateTextureFromDDSFile(L"modelData/utc_all2.DDS");
 	m_sprite.Init(m_texture.get(), 512.0f, 512.0f);
@@ -122,7 +112,11 @@ void Game::Update()
 	}
 	m_modelRender[m_currentModel]->SetActiveFlag(true);
 
-	m_sprite.Update(g_vec3Zero, g_quatIdentity, g_vec3One);
+	static float angle = 0;
+	CQuaternion rot;
+	angle += 2.0f;
+	rot.SetRotationDeg(g_vec3AxisZ, angle);
+	m_sprite.Update(g_vec3Zero, rot, g_vec3One);
 }
 void Game::ForwardRender(IRenderContext& rc) 
 {

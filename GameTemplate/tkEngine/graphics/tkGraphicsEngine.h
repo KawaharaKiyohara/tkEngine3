@@ -121,6 +121,7 @@ namespace tkEngine {
 		const int m_2dSpaceScreenHeight = 720;	//2D空間のスクリーンの高さ。2Dはこの座標系を前提に表示されていれば、解像度が変わっても大丈夫。
 		CCamera m_camera3D;					//3Dカメラ。	
 		CCamera m_camera2D;					//2Dカメラ。
+		CCamera m_cameraPostEffect;			//ポストエフェクト用のカメラ。
 		UPIRenderContext m_renderContext;	//レンダリングコンテキスト。今は一本。
 		UPILightManager m_lightManager;		//ライトマネージャ。
 	};

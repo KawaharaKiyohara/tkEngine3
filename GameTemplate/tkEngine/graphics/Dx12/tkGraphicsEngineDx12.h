@@ -8,6 +8,7 @@
 #include <dxgi1_3.h>
 #include <dxgi1_4.h>
 #include "tkRenderTargetDx12.h"
+#include "tkSpriteDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -153,6 +154,7 @@ namespace tkEngine {
 		ComPtr<ID3D12GraphicsCommandList>	m_commandList;		//コマンドリスト。
 		ComPtr<ID3D12PipelineState>			m_pipelineState;	//パイプラインステート。
 		CRenderTargetDx12					m_mainRenderTarget;	//メインレンダリングターゲット。
+		CSpriteDx12 m_copyFullScreenSprite;	//フルスクリーンコピー用のスプライト。
 		// Synchronization objects.
 		UINT m_frameIndex;
 		HANDLE m_fenceEvent;

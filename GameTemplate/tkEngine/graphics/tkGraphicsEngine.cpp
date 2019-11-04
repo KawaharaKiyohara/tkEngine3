@@ -24,6 +24,15 @@ namespace tkEngine {
 		m_camera2D.SetNear(0.1f);
 		m_camera2D.SetFar(1000.0f);
 		m_camera2D.Update();
+
+		m_cameraPostEffect.SetTarget(CVector3::Zero);
+		m_cameraPostEffect.SetPosition({ 0.0f, 0.0f, -10.0f });
+		m_cameraPostEffect.SetUpdateProjMatrixFunc(CCamera::enUpdateProjMatrixFunc_Ortho);
+		m_cameraPostEffect.SetWidth(m_frameBufferWidth);
+		m_cameraPostEffect.SetHeight(m_frameBufferHeight);
+		m_cameraPostEffect.SetNear(0.1f);
+		m_cameraPostEffect.SetFar(1000.0f);
+		m_cameraPostEffect.Update();
 		//3DÉJÉÅÉâÇÃèâä˙âªÅB
 		m_camera3D.SetTarget({ 0.0f, 50.0f, 0.0f });
 		m_camera3D.SetNear(0.1f);

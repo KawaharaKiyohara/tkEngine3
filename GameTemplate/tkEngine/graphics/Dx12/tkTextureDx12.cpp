@@ -17,6 +17,12 @@ namespace tkEngine {
 		//テクスチャを利用可能にする。
 		SetValid();
 	}
+	void CTextureDx12::InitFromD3DResource(ComPtr<ID3D12Resource> texture)
+	{
+		m_texture = texture;
+		m_textureDesc = m_texture->GetDesc();
+		SetValid();
+	}
 	void CTextureDx12::InitFromMemory(const char* memory, unsigned int size)
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();

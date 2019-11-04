@@ -1,7 +1,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "dx12Common.h"
 
-//#define USE_MAIN_RENDER_TARGET
+#define USE_MAIN_RENDER_TARGET
 namespace tkEngine {
 	
 	void CGraphicsEngineDx12::WaitDraw()
@@ -93,11 +93,15 @@ namespace tkEngine {
 			initParam.frameBufferHeight,
 			1,
 			1,
-			DXGI_FORMAT_R8G8B8A8_UNORM,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
 			DXGI_FORMAT_D32_FLOAT) == false ) {
 			TK_ASSERT(false, "メインレンダリングターゲットの作成に失敗しました。");
 			return false;
 		}
+		//パイプラインステートを初期化。
+		CPipelineStatesDx12::Init();
+
+		m_copyFullScreenSprite.Init(&m_mainRenderTarget.GetRenderTargetTexture(), initParam.frameBufferWidth, initParam.frameBufferHeight);
 		//ビューポートを初期化。
 		m_viewport.TopLeftX = 0;
 		m_viewport.TopLeftY = 0;
@@ -134,8 +138,14 @@ namespace tkEngine {
 		//シザリング矩形を設定。
 		m_commandList->RSSetScissorRects(1, &m_scissorRect);
 		//レンダリングターゲットへの書き込み完了待ち
-		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		m_commandList->ResourceBarrier(
+			1, 
+			&CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
+		);
 #ifdef USE_MAIN_RENDER_TARGET
+		m_commandList->ResourceBarrier(1, 
+			&CD3DX12_RESOURCE_BARRIER::Transition(m_mainRenderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET)
+		);
 		//レンダリングターゲットをメインにする。
 		auto rtvHandle = m_mainRenderTarget.GetRTVCpuDescriptorHandle();
 		auto dsvHandle = m_mainRenderTarget.GetDSVCpuDescriptorHandle();
@@ -175,8 +185,36 @@ namespace tkEngine {
 	void CGraphicsEngineDx12::CopyBackBufferFromMainRenderTarget()
 	{
 #ifdef USE_MAIN_RENDER_TARGET
+		auto& texture = m_mainRenderTarget.GetRenderTargetTexture();
+		auto* d3dResrouce = texture.Get();
+		d3dResrouce->SetName(L"mainRenderTargetTexture");
+		
 		//メインレンダリングターゲットへの書き込み待ち。
-		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_mainRenderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON));
+		m_commandList->ResourceBarrier(
+			1, 
+			&CD3DX12_RESOURCE_BARRIER::Transition(
+				m_mainRenderTarget.GetRenderTargetTexture().Get(), 
+				D3D12_RESOURCE_STATE_RENDER_TARGET, 
+				D3D12_RESOURCE_STATE_COMMON)
+		);
+
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+		//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+		//レンダリングターゲットを設定。
+		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+
+		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		m_commandList->ClearDepthStencilView(
+			dsvHandle,
+			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+			1.0f,
+			0,
+			0,
+			nullptr);
+		m_copyFullScreenSprite.Draw(*m_renderContext, m_cameraPostEffect.GetViewMatrix(), m_cameraPostEffect.GetProjectionMatrix());
 #endif
 		// Indicate that the back buffer will now be used to present.
 		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));

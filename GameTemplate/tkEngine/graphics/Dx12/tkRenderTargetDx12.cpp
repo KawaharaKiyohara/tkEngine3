@@ -100,15 +100,16 @@ namespace tkEngine {
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_COMMON,
 			&clearValue,
-			IID_PPV_ARGS(&m_renderTargetTexture)
+			IID_PPV_ARGS(&m_renderTargetTextureDx12)
 		);
 
 		if (FAILED(hr)) {
 			//çÏê¨Ç…é∏îsÅB
 			return false;
 		}
+		m_renderTargetTexture.InitFromD3DResource(m_renderTargetTextureDx12);
 		return true;
 	}
 	bool CRenderTargetDx12::CreateDepthStencilTexture(

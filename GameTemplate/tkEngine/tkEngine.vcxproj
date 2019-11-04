@@ -299,6 +299,7 @@
     <ClInclude Include="graphics\Dx12\tkLightManagerDx12.h" />
     <ClInclude Include="graphics\Dx12\tkMaterialDx12.h" />
     <ClInclude Include="graphics\Dx12\tkMeshPartsDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkPipelineStatesDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12_inline.h" />
     <ClInclude Include="graphics\Dx12\tkRenderTargetDx12.h" />
@@ -374,6 +375,7 @@
     <ClCompile Include="graphics\Dx12\tkLightManagerDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkPipelineStatesDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRenderTargetDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkShaderDx12.cpp" />

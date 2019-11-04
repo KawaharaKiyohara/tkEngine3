@@ -17,6 +17,7 @@ namespace tkEngine {
 		/// <param name="w">幅</param>
 		/// <param name="h">高さ</param>
 		void OnInit(ITexture* texture, float w, float h) override final;
+	
 		/// <summary>
 		/// 更新時に呼ばれる処理。派生クラスで実装してください。
 		/// </summary>
