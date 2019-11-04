@@ -1,5 +1,6 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "dx12Common.h"
+#include "tkEngine/gameObject/tkGameObjectManager.h"
 
 #define USE_MAIN_RENDER_TARGET
 namespace tkEngine {
@@ -214,6 +215,11 @@ namespace tkEngine {
 			0,
 			0,
 			nullptr);
+
+		//コピー用のパイプラインステートを設定する。
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
+		rcDx12.SetPipelineState(CPipelineStatesDx12::m_copyMainTargetToFrameBufferPipeline);
 		m_copyFullScreenSprite.Draw(*m_renderContext, m_cameraPostEffect.GetViewMatrix(), m_cameraPostEffect.GetProjectionMatrix());
 #endif
 		// Indicate that the back buffer will now be used to present.
@@ -238,18 +244,23 @@ namespace tkEngine {
 		WaitDraw();
 		
 	}
-	void CGraphicsEngineDx12::OnRender(
-		std::function<void(IRenderContext& rc)> onRender,
-		std::function<void(IRenderContext& rc)> onPreForwardRender,
-		std::function<void(IRenderContext& rc)> onForwardRender,
-		std::function<void(IRenderContext& rc)> onPostRender)
+	void CGraphicsEngineDx12::OnRender(CGameObjectManager* goMgr)
 	{
 		BeginRender();
 		
-		onRender( *m_renderContext );
-		onPreForwardRender( *m_renderContext );
-		onForwardRender( *m_renderContext );
-		onPostRender( *m_renderContext );
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//G-Bufferへのレンダリングパス。
+		goMgr->RenderGBuffer(rcDx12);
+		
+		//フォワードレンダリングパス。
+		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
+		goMgr->ForwardRender(rcDx12);
+		
+		//HUD描画パス。
+		//HUD描画用のパイプラインステートを設定する。
+		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
+		rcDx12.SetPipelineState(CPipelineStatesDx12::m_spritePipeline);
+		goMgr->RenderHUD( rcDx12 );
 
 		EndRender();
 	}

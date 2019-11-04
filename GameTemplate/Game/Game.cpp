@@ -18,7 +18,7 @@ bool Game::Start()
 {
 	auto gfxFactory = Engine().GetGraphicsInstanceFactory();
 	m_texture = gfxFactory->CreateTextureFromDDSFile(L"modelData/utc_all2.DDS");
-	m_sprite.Init(m_texture.get(), 512.0f, 512.0f);
+	m_sprite.Init(m_texture.get(), 128, 128);
 
 	//ƒJƒƒ‰‚ðÝ’èB
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
@@ -116,9 +116,12 @@ void Game::Update()
 	CQuaternion rot;
 	angle += 2.0f;
 	rot.SetRotationDeg(g_vec3AxisZ, angle);
-	m_sprite.Update(g_vec3Zero, rot, g_vec3One);
+	m_sprite.Update({-200.0f, 200.0f, 0.0f}, rot, g_vec3One);
 }
 void Game::ForwardRender(IRenderContext& rc) 
+{
+}
+void Game::RenderHUD(IRenderContext& rc)
 {
 	m_sprite.Draw(rc, g_camera2D->GetViewMatrix(), g_camera2D->GetProjectionMatrix());
 }

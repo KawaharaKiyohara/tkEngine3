@@ -190,24 +190,23 @@ namespace tkEngine{
 			}
 			
 		}
+		void ForwardRender(IRenderContext& rc);
+		void RenderHUD(IRenderContext& rc);
+		void RenderGBuffer(IRenderContext& rc)
+		{
+		}
 	private:
 		/*!
 		 *@brief	ゲームオブジェクトの削除を実行。
 		 */
 		void ExecuteDeleteGameObjects();
-		/*!
-		*@brief	シーングラフの更新。
-		*/
-		void UpdateSceneGraph();
-
+	
 		void Start();
 		void PreUpdate();
 		void Update();
 		void PostUpdate();
 		void BeginRender(IRenderContext& rc);
-		void ForwardPreRender(IRenderContext& rc);
-		void ForwardRender(IRenderContext& rc);
-		void PostRender(IRenderContext& rc);
+		
 	private:
 		CTransform m_transform;												//!<Transform。
 		typedef std::list<IGameObject*>	GameObjectList;

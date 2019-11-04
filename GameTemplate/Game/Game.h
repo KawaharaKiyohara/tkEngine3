@@ -12,6 +12,7 @@ public:
 	bool Start() override;
 	void Update() override;
 	void ForwardRender(IRenderContext& rc) override ;
+	void RenderHUD(IRenderContext& rc) override;
 private:
 	enum EnInitStep {
 		enInitStep_LoadStart,	//“Ç‚İ‚İŠJnB

@@ -28,10 +28,7 @@ namespace tkEngine {
 		m_constantBufferGPU.Update(&m_constantBufferCPU);
 
 		auto& rc12 = renderContext.As<CRenderContextDx12>();
-		//ルートシグネチャを設定。
-		rc12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
-		//パイプラインステートを設定。
-		rc12.SetPipelineState(CPipelineStatesDx12::m_spritePipeline);
+	
 		//頂点バッファを設定。
 		rc12.SetVertexBuffer(m_vertexBuffer);
 		//インデックスバッファを設定。

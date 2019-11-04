@@ -44,14 +44,7 @@ namespace tkEngine{
 	{
 		TK_WARNING("CGameObjectManager::Begin Renderが未実装。");
 	}
-	void CGameObjectManager::ForwardPreRender(IRenderContext& rc)
-	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
-				obj->PreForwardRenderWrapper(rc);
-			}
-		}
-	}
+
 	void CGameObjectManager::ForwardRender(IRenderContext& rc)
 	{
 		for (GameObjectList objList : m_gameObjectListArray) {
@@ -61,12 +54,12 @@ namespace tkEngine{
 		}
 	
 	}
-	void CGameObjectManager::PostRender(IRenderContext& rc)
+	void CGameObjectManager::RenderHUD(IRenderContext& rc)
 	{
 	
 		for (GameObjectList objList : m_gameObjectListArray) {
 			for (IGameObject* obj : objList) {
-				obj->PostRenderWrapper(rc);
+				obj->RenderHUD(rc);
 			}
 		}
 	}
@@ -83,27 +76,14 @@ namespace tkEngine{
 			Update();
 			//遅延アップデート。
 			PostUpdate();
-			//シーングラフを更新。
-			UpdateSceneGraph();
 		}
 		//描画系の処理。
 		{
-			g_graphicsEngine->Render(
-				[&](IRenderContext& rc) {},
-				[&](IRenderContext& rc) {ForwardPreRender(rc); },
-				[&](IRenderContext& rc) {ForwardRender(rc); },
-				[&](IRenderContext& rc) {PostRender(rc); }
-			);
+			g_graphicsEngine->Render(this);
 		}
 		ExecuteDeleteGameObjects();
 	}
-	void CGameObjectManager::UpdateSceneGraph()
-	{
-		//ワールド行列を更新。
-		for (auto transform : m_childrenOfRootTransformList) {
-			transform->UpdateWorldMatrixAll();
-		}
-	}
+
 	void CGameObjectManager::ExecuteDeleteGameObjects()
 	{
 		int preBufferNo = m_currentDeleteObjectBufferNo;

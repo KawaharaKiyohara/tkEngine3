@@ -50,14 +50,9 @@ namespace tkEngine {
 		//2Dカメラの更新。
 		m_camera2D.Update();
 	}
-	void IGraphicsEngine::Render(
-		std::function<void(IRenderContext & rc)> onRender,
-		std::function<void(IRenderContext & rc)> onPreForwardRender,
-		std::function<void(IRenderContext & rc)> onForwardRender,
-		std::function<void(IRenderContext & rc)> onPostRender
-	)
+	void IGraphicsEngine::Render(CGameObjectManager* goMgr)
 	{
 		m_lightManager->Render(*m_renderContext);
-		OnRender( onRender, onPreForwardRender, onForwardRender, onPostRender);
+		OnRender(goMgr);
 	}
 }

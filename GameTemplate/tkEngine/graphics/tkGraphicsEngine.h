@@ -25,16 +25,8 @@ namespace tkEngine {
 		/// <summary>
 		/// 描画。
 		/// </summary>
-		/// <param name="onRender">G-Bufferへのレンダリングパスで呼ばれる関数。</param>
-		/// <param name="onPreForwardRender">プレフォワードレンダリングのパスで呼ばれる関数。</param>
-		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
-		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
-		void Render(
-			std::function<void(IRenderContext& rc)> onRender,
-			std::function<void(IRenderContext& rc)> onPreForwardRender,
-			std::function<void(IRenderContext& rc)> onForwardRender,
-			std::function<void(IRenderContext& rc)> onPostRender
-		);
+		/// <param name="goMgr">ゲームオブジェクトマネージャ</param>
+		void Render(CGameObjectManager* goMgr);
 		/// <summary>
 		/// 破棄。
 		/// </summary>
@@ -104,16 +96,8 @@ namespace tkEngine {
 		/// <summary>
 		/// 描画時に呼ばれる処理。
 		/// </summary>
-		/// <param name="onRender">G-Bufferへのレンダリングパスで呼ばれる関数。</param>
-		/// <param name="onPreForwardRender">プレフォワードレンダリングのパスで呼ばれる関数。</param>
-		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
-		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
-		virtual void OnRender(
-			std::function<void(IRenderContext & rc)> onRender,
-			std::function<void(IRenderContext & rc)> onPreForwardRender,
-			std::function<void(IRenderContext & rc)> onForwardRender,
-			std::function<void(IRenderContext & rc)> onPostRender
-		) = 0;
+		/// <param name="goMgr">ゲームオブジェクトマネージャ</param>
+		virtual void OnRender(CGameObjectManager* goMgr) = 0;
 	protected:
 		int	m_frameBufferWidth = 0;			//フレームバッファの幅。
 		int m_frameBufferHeight = 0;		//フレームバッファの高さ。

@@ -18,6 +18,7 @@ namespace tkEngine{
         static ComPtr<ID3D12PipelineState> m_skinModelPipeline;		//スキンモデル描画用のパイプライン。
         static ComPtr<ID3D12PipelineState> m_nonSkinModelPipeline;	//ノンスキンモデル用のパイプライン。
 		static ComPtr<ID3D12PipelineState> m_spritePipeline;		//スプライト用のパイプライン。
+		static ComPtr<ID3D12PipelineState> m_copyMainTargetToFrameBufferPipeline;	//メインレンダリングターゲットからフレームバッファにコピーする用のパイプライン。
 	private:
 		/// <summary>
 		/// シェーダーを初期化。

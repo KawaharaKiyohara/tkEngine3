@@ -33,17 +33,8 @@ namespace tkEngine {
 		/// <summary>
 		/// 描画。
 		/// </summary>
-		/// <param name="onRender">G-Bufferへのレンダリングパスで呼ばれる関数。</param>
-		/// <param name="onPreForwardRender">プレフォワードレンダリングのパスで呼ばれる関数。</param>
-		/// <param name="onForwardRender">フォワードレンダリングのパスで呼ばれる関数。</param>
-		/// <param name="onPostRender">ポストレンダリングのパスで呼ばれる関数。</param>
-
-		void OnRender(
-			std::function<void(IRenderContext& rc)> onRender,
-			std::function<void(IRenderContext& rc)> onPreForwardRender,
-			std::function<void(IRenderContext& rc)> onForwardRender,
-			std::function<void(IRenderContext& rc)> onPostRender
-		) override final;
+		/// <param name="goMgr">ゲームオブジェクトマネージャ</param>
+		void OnRender(CGameObjectManager* goMgr) override final;
 		/// <summary>
 		/// D3Dデバイスを取得。
 		/// </summary>

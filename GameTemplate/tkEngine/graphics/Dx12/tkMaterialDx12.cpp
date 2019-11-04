@@ -41,7 +41,6 @@ namespace tkEngine {
 		//ルートシグネチャとパイプラインステートを設定。
 		auto& rcDx12 = rc.As<CRenderContextDx12>();
 		
-		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
 		if (hasSkin) {
 			rcDx12.SetPipelineState(CPipelineStatesDx12::m_skinModelPipeline);
 		}

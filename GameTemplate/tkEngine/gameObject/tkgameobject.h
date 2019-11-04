@@ -71,6 +71,14 @@ namespace tkEngine{
 		{
 			(void)renderContext;
 		}
+		/// <summary>
+		/// HUD描画パスで呼ばれる処理。派生クラスで実装してください。
+		/// </summary>
+		/// <param name="renderContext">レンダリングコンテキスト</param>
+		virtual void RenderHUD(IRenderContext& renderContext)
+		{
+			(void)renderContext;
+		}
 		/*!
 		 *@brief	削除されるときに呼ばれる。
 		 *@details	CGameManager::DeleteGameObjectを呼んだときに実行されます。
@@ -99,20 +107,6 @@ namespace tkEngine{
 		 */
 		virtual void PostUpdate() {} 
 		
-		/*!
-		*@brief	Render関数が実行される前に呼ばれる描画処理。
-		*/
-		virtual void PreForwardRender(IRenderContext& renderContext) {
-			(void)renderContext;
-		}
-		/*!
-		 *@brief	Render関数が実行された後で呼ばれる描画処理
-		 *@details
-		 * ポストエフェクトの後で実行されます。HUDなどポストエフェクトの影響を受けたくない描画物はここでレンダリングしてください。
-		 */
-		virtual void PostRender(IRenderContext& renderContext) {
-			(void)renderContext;
-		}
 		/*!
 		*@brief	死亡フラグを立てる。
 		*@details
@@ -188,10 +182,10 @@ namespace tkEngine{
 		}
 #endif
 	public:
-		void PostRenderWrapper(IRenderContext& renderContext)
+		void RenderHUDWrapper(IRenderContext& renderContext)
 		{
 			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {
-				PostRender(renderContext);
+				RenderHUD(renderContext);
 			}
 		}
 		void ForwardRenderWrapper(IRenderContext& renderContext)
@@ -200,12 +194,7 @@ namespace tkEngine{
 				ForwardRender(renderContext);
 			}
 		}
-		void PreForwardRenderWrapper(IRenderContext& renderContext)
-		{
-			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {
-				PreForwardRender(renderContext);
-			}
-		}
+
 		void PostUpdateWrapper()
 		{
 			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {

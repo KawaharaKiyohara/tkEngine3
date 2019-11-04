@@ -63,6 +63,9 @@
     <Filter Include="Source Files\prefab\light">
       <UniqueIdentifier>{12258cd6-fe6d-422d-9bde-b8b4c27cfc7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\graphics\Dx12\postEffect">
+      <UniqueIdentifier>{d7651ae8-bbe5-4898-aa3a-520e22752a83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObject\tkGameObjectManager.h">

@@ -12,7 +12,8 @@ namespace tkEngine {
 	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_nonSkinModelPipeline; //ノンスキンモデル用の場イプライン。
 	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_spritePipeline;
 	CRootSignatureDx12 CPipelineStatesDx12::m_modelDrawRootSignature;
-		
+	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_copyMainTargetToFrameBufferPipeline;
+
 	void CPipelineStatesDx12::Init()
 	{
 		InitShaders();
@@ -115,6 +116,10 @@ namespace tkEngine {
 			psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 			psoDesc.SampleDesc.Count = 1;
 			d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_spritePipeline));
+
+			//メインレンダリングターゲットからフレームバッファに書き込む用のパイプラインステートを作成。
+			psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+			d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_copyMainTargetToFrameBufferPipeline));
 
 		}
 	}
