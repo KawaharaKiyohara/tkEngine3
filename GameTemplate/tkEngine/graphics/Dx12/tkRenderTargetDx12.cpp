@@ -27,9 +27,11 @@ namespace tkEngine {
 			return false;
 		}
 		//深度ステンシルバッファとなるテクスチャを作成する。
-		if (!CreateDepthStencilTexture(ge12, d3dDevice, w, h, depthStencilFormat) ){
-			TK_ASSERT(false, "深度ステンシルバッファとなるテクスチャの作成に失敗しました。");
-			return false;
+		if (depthStencilFormat != DXGI_FORMAT_UNKNOWN) {
+			if (!CreateDepthStencilTexture(ge12, d3dDevice, w, h, depthStencilFormat)) {
+				TK_ASSERT(false, "深度ステンシルバッファとなるテクスチャの作成に失敗しました。");
+				return false;
+			}
 		}
 		//ディスクリプタを作成する。
 		CreateDescriptor(d3dDevice);
@@ -156,9 +158,11 @@ namespace tkEngine {
 		//カラーテクスチャのディスクリプタを作成。
 		auto rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		d3dDevice->CreateRenderTargetView(m_renderTargetTexture.Get(), nullptr, rtvHandle);
-		//深度テクスチャのディスクリプタを作成
-		auto dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		d3dDevice->CreateDepthStencilView(m_depthStencilTexture.Get(), nullptr, dsvHandle);
+		if (m_depthStencilTexture) {
+			//深度テクスチャのディスクリプタを作成
+			auto dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+			d3dDevice->CreateDepthStencilView(m_depthStencilTexture.Get(), nullptr, dsvHandle);
+		}
 	}
 }
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

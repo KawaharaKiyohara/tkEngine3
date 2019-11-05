@@ -102,6 +102,9 @@ namespace tkEngine {
 		//パイプラインステートを初期化。
 		CPipelineStatesDx12::Init();
 
+		//ポストエフェクトの初期化。
+		m_bloom.Init(initParam.graphicsConfing);
+
 		m_copyFullScreenSprite.Init(&m_mainRenderTarget.GetRenderTargetTexture(), initParam.frameBufferWidth, initParam.frameBufferHeight);
 		//ビューポートを初期化。
 		m_viewport.TopLeftX = 0;
@@ -118,7 +121,7 @@ namespace tkEngine {
 		m_scissorRect.bottom = initParam.frameBufferHeight;
 
 		//レンダリングコンテキストの作成。
-		auto giFactry = Engine().GetGraphicsInstanceFactory();
+		auto giFactry = g_engine->GetGraphicsInstanceFactory();
 		m_renderContext = giFactry->CreateRenderContext();
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		rcDx12.SetCommandList(m_commandList);

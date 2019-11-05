@@ -46,7 +46,7 @@ namespace tkEngine {
 
 		};
 		short indices[] = { 0,1,2,3 };
-		auto gfxFactory = Engine().GetGraphicsInstanceFactory();
+		auto gfxFactory = g_engine->GetGraphicsInstanceFactory();
 		m_vertexBuffer = gfxFactory->CreateVertexBuffer(sizeof(vertices), sizeof(vertices[0]));
 		m_vertexBuffer->Copy(vertices);
 

@@ -35,7 +35,7 @@ namespace tkEngine{
 		 *@brief	初期化。
 		 *@param[in]	initParam		初期化パラメータ。
 		 */
-		bool Init(const SInitParam& initParam);
+		static bool Init(const SInitParam& initParam);
 		/*!
 		 *@brief	終了処理。
 		 */
@@ -97,6 +97,12 @@ namespace tkEngine{
 			return m_graphisInstanceFactory.get();
 		}
 	private:
+		/// <summary>
+		/// 内部の初期化処理
+		/// </summary>
+		/// <param name="initParam">初期化パラメータ。</param>
+		/// <returns></returns>
+		bool InitInternal(const SInitParam& initParam);
 		/*!
 		 *@brief	ウィンドウ初期化。
 		 */
@@ -146,26 +152,20 @@ namespace tkEngine{
 		CStopwatch				m_sw;
 	};
 	//エンジンの外部にインスタンスを公開するグローバルなアクセスポイント。
-
+	extern CEngine* g_engine;
 	extern IGraphicsEngine* g_graphicsEngine;
 	extern CCamera* g_camera3D;
 	extern CCamera* g_camera2D;
 	extern CGameTime* g_gameTime;
 	extern ILightManager* g_lightManager;
 	extern std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;
-	/*!
-	* @brief	Engineのインスタンスを取得。
-	*/
-	static inline CEngine& Engine()
-	{
-		return CEngine::GetInstance();
-	}
+
 	/*!
 	* @brief	CSoundEngineのインスタンスを取得。
 	*/
 	static inline CSoundEngine& SoundEngine()
 	{
-		return Engine().GetSoundEngine();
+		return g_engine->GetSoundEngine();
 	}
 
 	/*!
@@ -173,7 +173,7 @@ namespace tkEngine{
 	 */
 	static inline CRandom& Random()
 	{
-		return Engine().GetRandom();
+		return g_engine->GetRandom();
 	}
 	
 }

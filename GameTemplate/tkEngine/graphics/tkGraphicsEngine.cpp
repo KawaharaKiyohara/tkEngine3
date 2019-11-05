@@ -13,7 +13,7 @@ namespace tkEngine {
 			return false;
 		}
 		//ライトマネージャを作成。
-		m_lightManager = Engine().GetGraphicsInstanceFactory()->CreateLightManager();
+		m_lightManager = g_engine->GetGraphicsInstanceFactory()->CreateLightManager();
 		m_lightManager->Init();
 		//2Dカメラの初期化。
 		m_camera2D.SetTarget(CVector3::Zero);

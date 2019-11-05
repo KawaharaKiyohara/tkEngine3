@@ -299,6 +299,9 @@
     <ClInclude Include="graphics\Dx12\tkPipelineStatesDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\postEffect\tkBloomDx12.h">
+      <Filter>Source Files\graphics\Dx12\postEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -468,6 +471,9 @@
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkPipelineStatesDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\postEffect\tkBloomDx12.cpp">
+      <Filter>Source Files\graphics\Dx12\postEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

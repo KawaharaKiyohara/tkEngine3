@@ -292,6 +292,7 @@
     <ClInclude Include="gameObject\tkGameObjectManager.h" />
     <ClInclude Include="gameObject\tkTransform.h" />
     <ClInclude Include="graphics\Dx12\dx12Common.h" />
+    <ClInclude Include="graphics\Dx12\postEffect\tkBloomDx12.h" />
     <ClInclude Include="graphics\Dx12\tkConstantBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h" />
@@ -368,6 +369,7 @@
     <ClCompile Include="gameObject\tkGameObject.cpp" />
     <ClCompile Include="gameObject\tkgameobjectmanager.cpp" />
     <ClCompile Include="gameObject\tkTransform.cpp" />
+    <ClCompile Include="graphics\Dx12\postEffect\tkBloomDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkConstantBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />

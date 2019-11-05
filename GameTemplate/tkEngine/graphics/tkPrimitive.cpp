@@ -12,7 +12,7 @@ namespace tkEngine {
 		EnPrimitiveTopology enPrimTopology)
 	{
 		//頂点バッファとインデックスバッファを作成。
-		auto factory = Engine().GetGraphicsInstanceFactory();
+		auto factory = g_engine->GetGraphicsInstanceFactory();
 		m_vertexBuffer = factory->CreateVertexBuffer(vertexBufferSize, vertexBufferStride);
 		m_indexBuffer = factory->CreateIndexBuffer(indexBufferSize, indexBufferStride);
 		m_vertexBuffer->Copy(srcVertexData);

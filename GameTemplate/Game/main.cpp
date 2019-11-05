@@ -132,15 +132,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	SetTkEngineConfigForHighSpec(initParam);
 	
 #endif
-
 	//エンジンを初期化。
-	if (Engine().Init(initParam) == true) {
+	if (CEngine::Init(initParam) == true) {
 		NewGO<Game>(0, nullptr);
 		//ゲームループを実行。
-		Engine().RunGameLoop();
+		g_engine->RunGameLoop();
 	}
 	//エンジンの終了処理。
-	Engine().Final();
+	g_engine->Final();
 
 	return 0;
 }

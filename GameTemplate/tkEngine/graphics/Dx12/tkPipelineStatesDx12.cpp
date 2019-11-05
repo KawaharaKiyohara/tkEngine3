@@ -23,17 +23,17 @@ namespace tkEngine {
 	void CPipelineStatesDx12::InitShaders()
 	{
 #if 1
-		m_skinModelVS.Load(L"shader/ModelPBR.fx", "VSMain", "vs_5_0");
-		m_nonSkinModelVS.Load(L"shader/ModelPBR.fx", "VSMainNonSkin", "vs_5_0");
-		m_skinModelPS.Load(L"shader/ModelPBR.fx", "PSMain", "ps_5_0");
+		m_skinModelVS.Load(L"shader/ModelPBR.fx", "VSMain", g_vsShaderModelName);
+		m_nonSkinModelVS.Load(L"shader/ModelPBR.fx", "VSMainNonSkin", g_vsShaderModelName);
+		m_skinModelPS.Load(L"shader/ModelPBR.fx", "PSMain", g_psShaderModelName);
 #else
-		m_vs.Load(L"shader/ModelSimple.fx", "VSMain", "vs_5_0");
-		m_vsNonSkin.Load(L"shader/ModelSimple.fx", "VSMainNonSkin", "vs_5_0");
-		m_ps.Load(L"shader/ModelSimple.fx", "PSMain", "ps_5_0");
+		m_vs.Load(L"shader/ModelSimple.fx", "VSMain", g_vsShaderModelName);
+		m_vsNonSkin.Load(L"shader/ModelSimple.fx", "VSMainNonSkin", g_vsShaderModelName);
+		m_ps.Load(L"shader/ModelSimple.fx", "PSMain", g_psShaderModelName);
 #endif
 		//シェーダーをロード。
-		m_spriteVS.Load(L"shader/sprite.fx", "VSMain", "vs_5_0");
-		m_spritePS.Load(L"shader/sprite.fx", "PSMain", "ps_5_0");
+		m_spriteVS.Load(L"shader/sprite.fx", "VSMain", g_vsShaderModelName);
+		m_spritePS.Load(L"shader/sprite.fx", "PSMain", g_psShaderModelName);
 	}
 	
 	void CPipelineStatesDx12::InitRootSignature()

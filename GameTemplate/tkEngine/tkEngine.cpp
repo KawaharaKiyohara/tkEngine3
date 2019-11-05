@@ -9,6 +9,7 @@
 
 
 namespace tkEngine {
+	CEngine* g_engine = nullptr;
 	IGraphicsEngine* g_graphicsEngine = nullptr;
 	CCamera* g_camera3D = nullptr;
 	CCamera* g_camera2D = nullptr;
@@ -19,6 +20,7 @@ namespace tkEngine {
 
 	CEngine::CEngine()
 	{
+		g_engine = this;
 		m_graphisInstanceFactory = IGraphicsInstanceFactory::CreateInstance();
 		m_graphicsEngine = m_graphisInstanceFactory->CreateGraphicsEngine();
 		g_graphicsEngine = m_graphicsEngine.get();
@@ -33,7 +35,7 @@ namespace tkEngine {
 	{
 		Final();
 	}
-	bool CEngine::Init(const SInitParam& initParam)
+	bool CEngine::InitInternal(const SInitParam& initParam)
 	{
 		std::locale("");
 		//カレントディレクトリをAssetsに。
@@ -51,7 +53,7 @@ namespace tkEngine {
 		g_lightManager = m_graphicsEngine->GetLightManager().get();
 		//SoundEngineの初期化
 		m_soundEngine.Init();
-;
+		;
 		//乱数を初期化。
 		m_random.Init((unsigned long)time(NULL));
 		//パッドを初期化。
@@ -62,6 +64,15 @@ namespace tkEngine {
 		}
 #
 		return true;
+	}
+	bool CEngine::Init(const SInitParam& initParam)
+	{
+		static CEngine* instance = nullptr;
+		if (instance == nullptr) {
+			instance = new CEngine;
+		}
+		return instance->InitInternal(initParam);
+		
 	}
 	
 	bool CEngine::InitWindow(const SInitParam& initParam)

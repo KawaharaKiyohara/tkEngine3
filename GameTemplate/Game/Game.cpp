@@ -16,7 +16,7 @@ Game::~Game()
 }
 bool Game::Start()
 {
-	auto gfxFactory = Engine().GetGraphicsInstanceFactory();
+	auto gfxFactory = g_engine->GetGraphicsInstanceFactory();
 	m_texture = gfxFactory->CreateTextureFromDDSFile(L"modelData/utc_all2.DDS");
 	m_sprite.Init(m_texture.get(), 128, 128);
 

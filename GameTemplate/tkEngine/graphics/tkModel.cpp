@@ -24,7 +24,7 @@ namespace tkEngine {
 		}
 		
 		//メッシュパーツの作成。
-		auto factory = Engine().GetGraphicsInstanceFactory();
+		auto factory = g_engine->GetGraphicsInstanceFactory();
 		m_meshParts = factory->CreateMeshPartsFromTkmFile(m_tkmFile);
 	}
 	void CModel::Update(CVector3 pos, CQuaternion rot, CVector3 scale)

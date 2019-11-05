@@ -9,6 +9,7 @@
 #include <dxgi1_4.h>
 #include "tkRenderTargetDx12.h"
 #include "tkSpriteDx12.h"
+#include "postEffect/tkBloomDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -146,6 +147,7 @@ namespace tkEngine {
 		ComPtr<ID3D12PipelineState>			m_pipelineState;	//パイプラインステート。
 		CRenderTargetDx12					m_mainRenderTarget;	//メインレンダリングターゲット。
 		CSpriteDx12 m_copyFullScreenSprite;	//フルスクリーンコピー用のスプライト。
+		CBloomDx12 m_bloom;	//ブルーム。
 		// Synchronization objects.
 		UINT m_frameIndex;
 		HANDLE m_fenceEvent;
