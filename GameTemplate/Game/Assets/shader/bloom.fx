@@ -4,7 +4,7 @@
  
 
 struct VSInput{
-	float4 pos : SV_Position;
+	float4 pos : POSITION;
 	float2 uv  : TEXCOORD0;
 };
 struct PSInput{

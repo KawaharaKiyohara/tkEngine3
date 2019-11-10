@@ -2,7 +2,6 @@
 #include "dx12Common.h"
 #include "tkEngine/gameObject/tkGameObjectManager.h"
 
-#define USE_MAIN_RENDER_TARGET
 namespace tkEngine {
 	
 	void CGraphicsEngineDx12::WaitDraw()
@@ -131,142 +130,7 @@ namespace tkEngine {
 
 		return true;
 	}
-	void CGraphicsEngineDx12::BeginRender()
-	{
-		//コマンドアロケータをリセット。
-		m_commandAllocator->Reset();
-		//コマンドリストもリセット。
-		m_commandList->Reset(m_commandAllocator.Get(), m_pipelineState.Get());
-		//ビューポートを設定。
-		m_commandList->RSSetViewports(1, &m_viewport);
-		//シザリング矩形を設定。
-		m_commandList->RSSetScissorRects(1, &m_scissorRect);
-		//レンダリングターゲットへの書き込み完了待ち
-		m_commandList->ResourceBarrier(
-			1, 
-			&CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
-		);
-#ifdef USE_MAIN_RENDER_TARGET
-		m_commandList->ResourceBarrier(1, 
-			&CD3DX12_RESOURCE_BARRIER::Transition(m_mainRenderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET)
-		);
-		//レンダリングターゲットをメインにする。
-		auto rtvHandle = m_mainRenderTarget.GetRTVCpuDescriptorHandle();
-		auto dsvHandle = m_mainRenderTarget.GetDSVCpuDescriptorHandle();
-		//レンダリングターゲットを設定。
-		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
-		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		m_commandList->ClearDepthStencilView(
-			dsvHandle,
-			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
-			1.0f,
-			0,
-			0,
-			nullptr);
-
-#else
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
-		//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
-		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		//レンダリングターゲットを設定。
-		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-		
-		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		m_commandList->ClearDepthStencilView(
-			dsvHandle,
-			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
-			1.0f,
-			0,
-			0,
-			nullptr);
-#endif
-		
-	}
-	void CGraphicsEngineDx12::CopyBackBufferFromMainRenderTarget()
-	{
-#ifdef USE_MAIN_RENDER_TARGET
-		auto& texture = m_mainRenderTarget.GetRenderTargetTexture();
-		auto* d3dResrouce = texture.Get();
-		d3dResrouce->SetName(L"mainRenderTargetTexture");
-		
-		//メインレンダリングターゲットへの書き込み待ち。
-		m_commandList->ResourceBarrier(
-			1, 
-			&CD3DX12_RESOURCE_BARRIER::Transition(
-				m_mainRenderTarget.GetRenderTargetTexture().Get(), 
-				D3D12_RESOURCE_STATE_RENDER_TARGET, 
-				D3D12_RESOURCE_STATE_COMMON)
-		);
-
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
-		//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
-		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		//レンダリングターゲットを設定。
-		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-		const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
-		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-		m_commandList->ClearDepthStencilView(
-			dsvHandle,
-			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
-			1.0f,
-			0,
-			0,
-			nullptr);
-
-		//コピー用のパイプラインステートを設定する。
-		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
-		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
-		rcDx12.SetPipelineState(CPipelineStatesDx12::m_copyMainTargetToFrameBufferPipeline);
-		m_copyFullScreenSprite.Draw(*m_renderContext, m_cameraPostEffect.GetViewMatrix(), m_cameraPostEffect.GetProjectionMatrix());
-#endif
-		// Indicate that the back buffer will now be used to present.
-		m_commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_renderTargets[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-
-	}
-	void CGraphicsEngineDx12::EndRender()
-	{
-		
-		//バックバッファにテクスチャをコピー。
-		CopyBackBufferFromMainRenderTarget();
-				m_commandList->Close();
-		
-		//コマンドを実行。
-		ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
-		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-		// Present the frame.
-		m_swapChain->Present(1, 0);
-
-		//描画完了待ち。
-		WaitDraw();
-		
-	}
-	void CGraphicsEngineDx12::OnRender(CGameObjectManager* goMgr)
-	{
-		BeginRender();
-		
-		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
-		//G-Bufferへのレンダリングパス。
-		goMgr->RenderGBuffer(rcDx12);
-		
-		//フォワードレンダリングパス。
-		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
-		goMgr->ForwardRender(rcDx12);
-		
-		//HUD描画パス。
-		//HUD描画用のパイプラインステートを設定する。
-		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
-		rcDx12.SetPipelineState(CPipelineStatesDx12::m_spritePipeline);
-		goMgr->RenderHUD( rcDx12 );
-
-		EndRender();
-	}
 	ComPtr<IDXGIFactory4> CGraphicsEngineDx12::CreateDXGIFactory()
 	{
 		UINT dxgiFactoryFlags = 0;
@@ -463,5 +327,94 @@ namespace tkEngine {
 			return false;
 		}
 		return true;
+	}
+	void CGraphicsEngineDx12::BeginRender()
+	{
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//コマンドアロケータをリセット。
+		m_commandAllocator->Reset();
+		//レンダリング子テキストもリセット。
+		rcDx12.Reset(m_commandAllocator, m_pipelineState);
+		//ビューポートを設定。
+		rcDx12.SetViewport(m_viewport);
+		//シザリング矩形を設定。
+		rcDx12.SetScissorRect(m_scissorRect);
+
+		//レンダリングターゲットをメインにする。
+		//レンダリングターゲットとして利用可能になるまで待つ。
+		rcDx12.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+		//レンダリングターゲットを設定。
+		rcDx12.SetRenderTarget(m_mainRenderTarget);
+		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		rcDx12.ClearRenderTargetView(m_mainRenderTarget, clearColor);
+		rcDx12.ClearDepthStencilView(m_mainRenderTarget, 1.0f);
+	}
+	void CGraphicsEngineDx12::EndRender()
+	{
+
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//バックバッファにテクスチャをコピー。
+		{
+			//メインレンダリングターゲットへの書き込み待ち。
+			rcDx12.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+			//バックバッファがレンダリングターゲットとして設定可能になるまで待つ。
+			rcDx12.WaitUntilToPossibleSetRenderTarget(m_renderTargets[m_frameIndex]);
+
+			D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+			rtvHandle.ptr += m_frameIndex * m_rtvDescriptorSize;
+			//深度ステンシルバッファのディスクリプタヒープの開始アドレスを取得。
+			D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap->GetCPUDescriptorHandleForHeapStart();
+			//レンダリングターゲットを設定。
+			rcDx12.SetRenderTarget(rtvHandle, dsvHandle);
+
+			const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+			rcDx12.ClearRenderTargetView(rtvHandle, clearColor);
+			rcDx12.ClearDepthStencilView(dsvHandle, 1.0f);
+
+			//コピー用のパイプラインステートを設定する。
+			rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
+			rcDx12.SetPipelineState(CPipelineStatesDx12::m_copyMainTargetToFrameBufferPipeline);
+
+			m_copyFullScreenSprite.Draw(rcDx12, m_cameraPostEffect.GetViewMatrix(), m_cameraPostEffect.GetProjectionMatrix());
+			// レンダリングターゲットへの描き込み完了待ち
+			rcDx12.WaitUntilFinishDrawingToRenderTarget(m_renderTargets[m_frameIndex]);
+		}
+		
+		//レンダリングコンテキストを閉じる。
+		rcDx12.Close();
+
+		//コマンドを実行。
+		ID3D12CommandList* ppCommandLists[] = { m_commandList.Get() };
+		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+		// Present the frame.
+		m_swapChain->Present(1, 0);
+
+		//描画完了待ち。
+		WaitDraw();
+
+	}
+	void CGraphicsEngineDx12::OnRender(CGameObjectManager* goMgr)
+	{
+		BeginRender();
+
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//G-Bufferへのレンダリングパス。
+		goMgr->RenderGBuffer(rcDx12);
+
+		//フォワードレンダリングパス。
+		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
+		goMgr->ForwardRender(rcDx12);
+
+		//ポストエフェクト
+		m_bloom.Render(rcDx12);
+
+		//HUD描画パス。
+		//HUD描画用のパイプラインステートを設定する。
+		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
+		rcDx12.SetPipelineState(CPipelineStatesDx12::m_spritePipeline);
+		goMgr->RenderHUD(rcDx12);
+
+		EndRender();
 	}
 }

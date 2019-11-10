@@ -25,4 +25,5 @@ namespace tkEngine {
 #include "tkStructuredBufferDx12.h"
 #include "tkRenderContextDx12_inline.h"
 #include "tkPipelineStatesDx12.h"
+#include "tkRenderTargetDx12.h"
 

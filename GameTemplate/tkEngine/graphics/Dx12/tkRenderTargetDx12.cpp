@@ -16,11 +16,7 @@ namespace tkEngine {
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = ge12.GetD3DDevice();
-		if (!CreateDescriptorHeap(ge12, d3dDevice)) {
-			//ディスクリプタヒープの作成に失敗した。
-			TK_ASSERT(false, "ディスクプリタヒープの作成に失敗しました。");
-			return false;
-		}
+		
 		//レンダリングターゲットとなるテクスチャを作成する。
 		if (!CreateRenderTargetTexture(ge12, d3dDevice, w, h, mipLevel, arraySize, colorFormat)) {
 			TK_ASSERT(false, "レンダリングターゲットとなるテクスチャの作成に失敗しました。");
@@ -32,6 +28,11 @@ namespace tkEngine {
 				TK_ASSERT(false, "深度ステンシルバッファとなるテクスチャの作成に失敗しました。");
 				return false;
 			}
+		}
+		if (!CreateDescriptorHeap(ge12, d3dDevice)) {
+			//ディスクリプタヒープの作成に失敗した。
+			TK_ASSERT(false, "ディスクプリタヒープの作成に失敗しました。");
+			return false;
 		}
 		//ディスクリプタを作成する。
 		CreateDescriptor(d3dDevice);
@@ -54,16 +55,18 @@ namespace tkEngine {
 		//ディスクリプタのサイズを取得。
 		m_rtvDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-		//DSV用のディスクリプタヒープを作成する。
-		desc.NumDescriptors = 1;
-		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-		d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_dsvHeap));
-		if (m_dsvHeap == false) {
-			//DSV用のディスクリプタヒープの作成に失敗した。
-			return false;
+		if (m_depthStencilTexture) {
+			//DSV用のディスクリプタヒープを作成する。
+			desc.NumDescriptors = 1;
+			desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+			d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_dsvHeap));
+			if (m_dsvHeap == false) {
+				//DSV用のディスクリプタヒープの作成に失敗した。
+				return false;
+			}
+			//ディスクリプタのサイズを取得。
+			m_dsvDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 		}
-		//ディスクリプタのサイズを取得。
-		m_dsvDescriptorSize = d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 		return true;
 	}
 	bool CRenderTargetDx12::CreateRenderTargetTexture(

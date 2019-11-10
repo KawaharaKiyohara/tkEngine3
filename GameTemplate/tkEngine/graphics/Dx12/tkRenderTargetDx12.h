@@ -53,6 +53,14 @@ namespace tkEngine {
 		{
 			return m_renderTargetTexture;
 		}
+		/// <summary>
+		/// デプスステンシルバッファが存在しているか判定
+		/// </summary>
+		/// <returns></returns>
+		bool IsExsitDepthStencilBuffer() const
+		{
+			return m_depthStencilTexture;
+		}
 	private:
 		/// <summary>
 		/// ディスクリプタヒープを作成。

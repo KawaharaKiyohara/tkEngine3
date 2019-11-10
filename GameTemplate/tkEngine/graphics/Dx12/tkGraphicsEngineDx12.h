@@ -68,6 +68,14 @@ namespace tkEngine {
 		{
 			return m_cbrSrvDescriptorSize;
 		}
+		/// <summary>
+		/// メインレンダリングターゲットを取得。
+		/// </summary>
+		/// <returns></returns>
+		CRenderTargetDx12& GetMainRenderTarget()
+		{
+			return m_mainRenderTarget;
+		}
 	private:
 		/// <summary>
 		/// 1フレーム描画開始時の処理。
@@ -129,10 +137,6 @@ namespace tkEngine {
 		/// 1フレーム前の描画が終わるのを待つ。
 		/// </summary>
 		void WaitDraw();
-		/// <summary>
-		/// メインレンダリングターゲットに描き込まれた内容をバックバッファにコピー。
-		/// </summary>
-		void CopyBackBufferFromMainRenderTarget();
 	private:
 		
 		D3D12_VIEWPORT						m_viewport;			//ビューポート。

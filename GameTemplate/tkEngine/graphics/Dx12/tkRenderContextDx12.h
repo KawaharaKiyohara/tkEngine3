@@ -20,7 +20,7 @@ namespace tkEngine {
 		{
 			m_commandList = commandList;
 		}
-		
+
 		/// <summary>
 		/// コマンドリストを設定。
 		/// </summary>
@@ -28,6 +28,22 @@ namespace tkEngine {
 		void SetCommandList(ComPtr<ID3D12GraphicsCommandList> commandList)
 		{
 			m_commandList = commandList;
+		}
+		/// <summary>
+		/// ビューポートを設定
+		/// </summary>
+		/// <param name="viewport">ビューポート</param>
+		void SetViewport(D3D12_VIEWPORT& viewport)
+		{
+			m_commandList->RSSetViewports(1, &viewport);
+		}
+		/// <summary>
+		/// シザリング矩形を設定
+		/// </summary>
+		/// <param name="rect"></param>
+		void SetScissorRect(D3D12_RECT& rect)
+		{
+			m_commandList->RSSetScissorRects(1, &rect);
 		}
 		/// <summary>
 		/// プリミティブのトポロジーを設定。
@@ -73,7 +89,7 @@ namespace tkEngine {
 		{
 			m_commandList->IASetIndexBuffer(&ib->GetView());
 		}
-	
+
 		/// <summary>
 		/// 定数バッファ、シェーダーリソース、UAV(UnorderResrouceView)をディスクリプタヒープに登録する。
 		/// </summary>
@@ -132,6 +148,129 @@ namespace tkEngine {
 				RootParameterIndex,
 				BaseDescriptor
 			);
+		}
+		/// <summary>
+		/// レンダリングターゲットを設定
+		/// </summary>
+		void SetRenderTarget(CRenderTargetDx12& renderTarget)
+		{
+			auto rtvHandle = renderTarget.GetRTVCpuDescriptorHandle();
+			if (renderTarget.IsExsitDepthStencilBuffer() ){
+				auto dsvHandle = renderTarget.GetDSVCpuDescriptorHandle();
+				m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+			}
+			else {
+				//デプスステンシルバッファはない。
+				m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+			}
+		}
+		void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
+		{
+			m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+		}
+		/// <summary>
+		/// レンダリングターゲットビューのクリア。
+		/// </summary>
+		/// <param name="renderTarget">レンダリングターゲット</param>
+		/// <param name="clearColor">クリアカラー</param>
+		void ClearRenderTargetView(CRenderTargetDx12& renderTarget, const float* clearColor)
+		{
+			auto rtvHandle = renderTarget.GetRTVCpuDescriptorHandle();
+			m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		}
+		void ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* clearColor)
+		{
+			m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+		}
+		/// <summary>
+		/// デプスステンシルビューをクリア
+		/// </summary>
+		/// <param name="renderTarget">レンダリングターゲット</param>
+		/// <param name="clearValue">クリア値</param>
+		void ClearDepthStencilView(CRenderTargetDx12& renderTarget, float clearValue)
+		{
+			auto dsvHandle = renderTarget.GetDSVCpuDescriptorHandle();
+			m_commandList->ClearDepthStencilView(
+				dsvHandle,
+				D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+				clearValue,
+				0,
+				0,
+				nullptr);
+		}
+		void ClearDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, float clearValue)
+		{
+			m_commandList->ClearDepthStencilView(
+				dsvHandle,
+				D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL,
+				clearValue,
+				0,
+				0,
+				nullptr);
+		}
+		/// <summary>
+		/// レンダリングターゲットへの描き込み待ち。
+		/// </summary>
+		/// <remarks>
+		/// レンダリングターゲットとして使われているテクスチャをシェーダーリソースビューとして
+		/// 使用したい場合は、この関数を使って描き込み完了待ちを行う必要があります。
+		/// </remarks>
+		/// <param name="renderTarget">レンダリングターゲット</param>
+		void WaitUntilFinishDrawingToRenderTarget(CRenderTargetDx12& renderTarget)
+		{
+			m_commandList->ResourceBarrier(
+				1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(
+					renderTarget.GetRenderTargetTexture().Get(),
+					D3D12_RESOURCE_STATE_RENDER_TARGET,
+					D3D12_RESOURCE_STATE_COMMON)
+			);
+		}
+		void WaitUntilFinishDrawingToRenderTarget(ComPtr<ID3D12Resource>& renderTarget)
+		{
+			m_commandList->ResourceBarrier(
+				1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(
+					renderTarget.Get(),
+					D3D12_RESOURCE_STATE_RENDER_TARGET,
+					D3D12_RESOURCE_STATE_PRESENT));
+		}
+		/// <summary>
+		/// レンダリングターゲットとして使用可能になるまで待つ。
+		/// </summary>
+		/// <remarks>
+		/// レンダリングターゲットとして設定したい場合は、
+		/// 本関数を使って使用可能になるまで待機する必要があります。
+		/// </remarks>
+		void WaitUntilToPossibleSetRenderTarget(CRenderTargetDx12& renderTarget)
+		{
+			//レンダリングターゲットが利用可能になるまでリソースバリア。
+			m_commandList->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET)
+			);
+		}
+		void WaitUntilToPossibleSetRenderTarget(ComPtr<ID3D12Resource>& renderTarget)
+		{
+			m_commandList->ResourceBarrier(
+				1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
+			);
+		}
+		/// <summary>
+		/// コマンドリストを閉じる
+		/// </summary>
+		void Close()
+		{
+			m_commandList->Close();
+		}
+		/// <summary>
+		/// コマンドリストをリセット。
+		/// </summary>
+		/// <param name="commandAllocator"></param>
+		/// <param name="pipelineState"></param>
+		void Reset(ComPtr<ID3D12CommandAllocator>& commandAllocator, ComPtr<ID3D12PipelineState>& pipelineState)
+		{
+			m_commandList->Reset(commandAllocator.Get(), pipelineState.Get());
 		}
 	private:
 		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
