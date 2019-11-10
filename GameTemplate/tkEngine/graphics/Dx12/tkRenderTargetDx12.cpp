@@ -16,7 +16,8 @@ namespace tkEngine {
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = ge12.GetD3DDevice();
-		
+		m_width = w;
+		m_height = h;
 		//レンダリングターゲットとなるテクスチャを作成する。
 		if (!CreateRenderTargetTexture(ge12, d3dDevice, w, h, mipLevel, arraySize, colorFormat)) {
 			TK_ASSERT(false, "レンダリングターゲットとなるテクスチャの作成に失敗しました。");

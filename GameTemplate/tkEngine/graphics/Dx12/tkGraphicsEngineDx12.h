@@ -76,6 +76,14 @@ namespace tkEngine {
 		{
 			return m_mainRenderTarget;
 		}
+		/// <summary>
+		/// メインレンダリングターゲットのビューポートを取得。
+		/// </summary>
+		/// <returns></returns>
+		D3D12_VIEWPORT& GetMainRenderTargetViewport()
+		{
+			return m_viewport;
+		}
 	private:
 		/// <summary>
 		/// 1フレーム描画開始時の処理。

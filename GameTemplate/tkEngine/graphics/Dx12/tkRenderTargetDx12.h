@@ -61,6 +61,22 @@ namespace tkEngine {
 		{
 			return m_depthStencilTexture;
 		}
+		/// <summary>
+		/// レンダリングターゲットの幅を取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetWidth() const
+		{
+			return m_width;
+		}
+		/// <summary>
+		/// レンダリングターゲットの高さを取得。
+		/// </summary>
+		/// <returns></returns>
+		int GetHeight() const
+		{
+			return m_height;
+		}
 	private:
 		/// <summary>
 		/// ディスクリプタヒープを作成。
@@ -118,6 +134,8 @@ namespace tkEngine {
 		ComPtr< ID3D12DescriptorHeap>		m_dsvHeap;		//深度ステンシルバッファビューのディスクリプタヒープ。
 		UINT m_rtvDescriptorSize = 0;						//フレームバッファのディスクリプタのサイズ。
 		UINT m_dsvDescriptorSize = 0;						//深度ステンシルバッファのディスクリプタのサイズ。
+		int m_width = 0;									//レンダリングターゲットの幅。
+		int m_height = 0;									//レンダリングターゲットの高さ。
 	};
 }
 
