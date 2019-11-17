@@ -28,14 +28,10 @@ bool Game::Start()
 	g_camera3D->SetUp(g_vec3AxisY);
 	
 	g_lightManager->SetAmbientLight({ 0.3f, 0.3f, 0.3f });
-	auto lig = NewGO<prefab::CDirectionLight>(0);
+	m_dirLig = NewGO<prefab::CDirectionLight>(0);
 	
-	lig->SetDirection({ -1.0f, 0.0f, 0.0f });
-	lig->SetColor({ 0.7f, 0.7f, 0.7f, 1.5f });
-	
-	lig = NewGO<prefab::CDirectionLight>(0);
-	lig->SetDirection({ 0.707f, 0.0f, -0.707f });
-	lig->SetColor({ 0.7f, 0.7f, 0.7f, 1.5f });
+	m_dirLig->SetDirection({ -0.0f, 0.0f, -1.0f });
+	m_dirLig->SetColor({ -0.7f, -0.7f, -0.7f, 1.5f });
 
 	m_modelRender[enRobo] = NewGO<prefab::CModelRender>(0);
 	m_modelRender[enRobo]->Init(
@@ -99,7 +95,20 @@ void Game::Update()
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 		m_modelRender[m_currentModel]->PlayAnimation(2, 0.3f);
 	}
-	
+	auto dirColor = m_dirLig->GetColor();
+	if (g_pad[0]->IsPress(enButtonUp)) {
+		dirColor.x += 0.01f;
+		dirColor.y += 0.01f;
+		dirColor.z += 0.01f;
+		m_dirLig->SetColor(dirColor);
+	}
+	if (g_pad[0]->IsPress(enButtonDown)) {
+		dirColor.x -= 0.01f;
+		dirColor.y -= 0.01f;
+		dirColor.z -= 0.01f;
+		m_dirLig->SetColor(dirColor);
+	}
+
 	m_modelRender[m_currentModel]->Move(move);
 	m_modelRender[m_currentModel]->Rotate(qRot);
 	m_modelRender[m_currentModel]->SetActiveFlag(false);

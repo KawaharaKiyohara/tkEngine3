@@ -35,6 +35,11 @@ namespace tkEngine{
 			*@param[in]	color	ライトのカラー。
 			*/
 			void SetColor(const CVector4& color);
+			//ライトのカラーを取得
+			const CVector4& GetColor() const
+			{
+				return m_light.color;
+			}
 			/*!
 			*@brief 生データの取得。
 			*/

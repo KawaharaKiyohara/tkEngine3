@@ -30,6 +30,7 @@ private:
 	CQuaternion m_rotation = g_quatIdentity;		//クォータニオン。
 	UPITexture m_texture;							//テクスチャ。
 	int m_currentModel = 0;
+	prefab::CDirectionLight* m_dirLig;
 	//スプライト作成テスト。
 	CSpriteDx12 m_sprite;
 
