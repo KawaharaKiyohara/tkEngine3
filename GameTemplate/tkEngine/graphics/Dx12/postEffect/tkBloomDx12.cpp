@@ -14,6 +14,12 @@ namespace tkEngine {
 		if (!config.bloomConfig.isEnable) {
 			return;
 		}
+		//ルートシグネチャを作成。
+		m_rootSignature.Init(
+			D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+			D3D12_TEXTURE_ADDRESS_MODE_BORDER,
+			D3D12_TEXTURE_ADDRESS_MODE_BORDER,
+			D3D12_TEXTURE_ADDRESS_MODE_BORDER);
 
 		//シェーダーを初期化。
 		InitShaders();
@@ -25,8 +31,12 @@ namespace tkEngine {
 		InitPipelineState();
 		//ディスクリプタヒープの初期化。
 		InitDescriptorHeap();
-		//定数バッファを初期化。
-		m_blurParamCB.Init(sizeof(m_blurParam), nullptr);
+		for (auto& cb : m_blurParamCB) {
+			//定数バッファを初期化。
+			cb.Init(sizeof(m_blurParam), nullptr);
+		}
+
+		
 	}
 	void CBloomDx12::InitRenderTargets()
 	{
@@ -62,6 +72,9 @@ namespace tkEngine {
 			TK_ASSERT(result, "縦ブラー用のレンダリングターゲットの作成に失敗しました。");
 
 		}
+		//ボケ画像合成用のレンダリングターゲットを作成。
+		result = m_combineRT.Create( w >> 2, h >> 2, 1, 1, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN );
+		TK_ASSERT(result, "ボケ画像合成用のレンダリングターゲットの作成に失敗しました。");
 	}
 	void CBloomDx12::InitQuadPrimitive()
 	{
@@ -121,7 +134,7 @@ namespace tkEngine {
 		//パイプラインステートを作成。
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = { 0 };
 		psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-		psoDesc.pRootSignature = CPipelineStatesDx12::m_modelDrawRootSignature.Get(); //モデル描画と共通でも問題ねーわ。
+		psoDesc.pRootSignature = m_rootSignature.Get(); 
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vs.GetCompiledBlob().Get());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psLuminance.GetCompiledBlob().Get());
 		psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
@@ -148,6 +161,20 @@ namespace tkEngine {
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsYBlur.GetCompiledBlob().Get());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psBlur.GetCompiledBlob().Get());
 		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_yblurLuminancePipelineState));
+		//ボケ画像合成用のパイプラインステート。
+		psoDesc.BlendState.RenderTarget[0].BlendEnable = FALSE;
+		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vs.GetCompiledBlob().Get());
+		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psCombine.GetCompiledBlob().Get());
+		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_combineBokeImagePipelineState));
+
+		//最終合成用のパイプラインステート。
+		psoDesc.BlendState.RenderTarget[0].BlendEnable = TRUE;
+		psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
+		psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_copyVS.GetCompiledBlob().Get());
+		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_copyPS.GetCompiledBlob().Get());
+		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_combineMainRenderTargetPipelineState));
 
 	}
 	void CBloomDx12::InitDescriptorHeap()
@@ -169,6 +196,15 @@ namespace tkEngine {
 			auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&downSampleDescriptorHeap));
 			TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
 		}
+		//ボケ画像合成用のディスクリプタヒープを作成。
+		srvHeapDesc.NumDescriptors = 4;
+		hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_combineBokeImageDescriptorHeap));
+		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
+		
+		//最終合成用のディスクリプタヒープを作成。
+		srvHeapDesc.NumDescriptors = 1;
+		hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_combineMainRenderTargetDescriptorHeap));
+		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
 	}
 	void CBloomDx12::UpdateWeight(float dispersion)
 	{
@@ -193,7 +229,8 @@ namespace tkEngine {
 		rc12.SetPipelineState(m_samplingLuminancePipelineState);
 		//レンダリングターゲットを輝度抽出用に切り替える。
 		rc12.SetRenderTarget(m_luminanceRT);
-		
+		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		rc12.ClearRenderTargetView(m_luminanceRT, clearColor);
 		//シェーダーリソースビューと定数バッファをセットする。
 		IShaderResourceDx12* srvTbl[] = {
 			&ge12.GetMainRenderTarget().GetRenderTargetTexture()
@@ -214,68 +251,23 @@ namespace tkEngine {
 		CRenderTargetDx12* prevRt = &m_luminanceRT;
 
 		int rtIndex = 0;
-		for (int i = 0; i < /*NUM_DOWN_SAMPLING_RT / 2*/1; i++) {
+		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++) {
 			//Xブラー。
 			{
 				m_blurParam.offset.x = 16.0f / prevRt->GetWidth();
 				m_blurParam.offset.y = 0.0f;
-				m_blurParamCB.Update(&m_blurParam);
+				m_blurParamCB[rtIndex].Update(&m_blurParam);
 
 				rc12.WaitUntilToPossibleSetRenderTarget(m_downSamplingRT[rtIndex]);
 				rc12.SetPipelineState(m_xblurLuminancePipelineState);
-				D3D12_VIEWPORT viewport;
-				viewport.TopLeftX = 0;
-				viewport.TopLeftY = 0;
-				viewport.Width = static_cast<float>(m_downSamplingRT[rtIndex].GetWidth());
-				viewport.Height = static_cast<float>(m_downSamplingRT[rtIndex].GetHeight());
-				viewport.MinDepth = D3D12_MIN_DEPTH;
-				viewport.MaxDepth = D3D12_MAX_DEPTH;
-				//rc12.SetViewport(viewport);
-				rc12.SetRenderTarget(m_downSamplingRT[rtIndex]);
+				rc12.SetRenderTargetAndViewport(m_downSamplingRT[rtIndex]);
 				
 				//シェーダーリソースビューと定数バッファをセットする。
 				IShaderResourceDx12* srvTbl[] = {
 					&prevRt->GetRenderTargetTexture()
 				};
 				CConstantBufferDx12* cbrTbl[] = {
-					&m_blurParamCB
-				};
-				rc12.SetCBR_SRV_UAV(
-					m_downSamplingDescriptorHeap[rtIndex].Get(),
-					1,
-					cbrTbl,
-					1,
-					srvTbl
-				);
-				rc12.DrawIndexed(4);
-				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
-			}
-		/*	prevRt = &m_downSamplingRT[rtIndex];
-			rtIndex++;
-			//Yブラー。
-			{
-				//これダメかも？
-				m_blurParam.offset.x = 0.0f;
-				m_blurParam.offset.y = 16.0f / prevRt->GetWidth();
-				m_blurParamCB.Update(&m_blurParam);
-
-				rc12.WaitUntilToPossibleSetRenderTarget(m_downSamplingRT[rtIndex]);
-				D3D12_VIEWPORT viewport;
-				viewport.TopLeftX = 0;
-				viewport.TopLeftY = 0;
-				viewport.Width = static_cast<float>(m_downSamplingRT[rtIndex].GetWidth());
-				viewport.Height = static_cast<float>(m_downSamplingRT[rtIndex].GetHeight());
-				viewport.MinDepth = D3D12_MIN_DEPTH;
-				viewport.MaxDepth = D3D12_MAX_DEPTH;
-				rc12.SetViewport(viewport);
-				rc12.SetRenderTarget(m_downSamplingRT[rtIndex]);
-				rc12.SetPipelineState(m_yblurLuminancePipelineState);
-				//シェーダーリソースビューと定数バッファをセットする。
-				IShaderResourceDx12* srvTbl[] = {
-					&prevRt->GetRenderTargetTexture()
-				};
-				CConstantBufferDx12* cbrTbl[] = {
-					&m_blurParamCB
+					&m_blurParamCB[rtIndex]
 				};
 				rc12.SetCBR_SRV_UAV(
 					m_downSamplingDescriptorHeap[rtIndex].Get(),
@@ -288,8 +280,81 @@ namespace tkEngine {
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
 			prevRt = &m_downSamplingRT[rtIndex];
-			rtIndex++;*/
+			rtIndex++;
+			//Yブラー。
+			{
+				m_blurParam.offset.x = 0.0f;
+				m_blurParam.offset.y = 16.0f / prevRt->GetWidth();
+				m_blurParamCB[rtIndex].Update(&m_blurParam);
+
+				rc12.WaitUntilToPossibleSetRenderTarget(m_downSamplingRT[rtIndex]);
+				rc12.SetRenderTargetAndViewport(m_downSamplingRT[rtIndex]);
+				rc12.SetPipelineState(m_yblurLuminancePipelineState);
+
+				//シェーダーリソースビューと定数バッファをセットする。
+				IShaderResourceDx12* srvTbl[] = {
+					&prevRt->GetRenderTargetTexture()
+				};
+				CConstantBufferDx12* cbrTbl[] = {
+					&m_blurParamCB[rtIndex]
+				};
+				rc12.SetCBR_SRV_UAV(
+					m_downSamplingDescriptorHeap[rtIndex].Get(),
+					1,
+					cbrTbl,
+					1,
+					srvTbl
+				);
+				rc12.DrawIndexed(4);
+				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
+			}
+			prevRt = &m_downSamplingRT[rtIndex];
+			rtIndex++;
 		}
+	}
+	void CBloomDx12::CombineBokeImage(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12)
+	{
+		rc12.WaitUntilToPossibleSetRenderTarget(m_combineRT);
+		rc12.SetPipelineState(m_combineBokeImagePipelineState);
+		rc12.SetRenderTargetAndViewport(m_combineRT);
+
+		//シェーダーリソースビューと定数バッファをセットする。
+		IShaderResourceDx12* srvTbl[] = {
+			&m_downSamplingRT[3].GetRenderTargetTexture(),
+			&m_downSamplingRT[5].GetRenderTargetTexture(),
+			&m_downSamplingRT[7].GetRenderTargetTexture(),
+			&m_downSamplingRT[9].GetRenderTargetTexture(),
+		};
+	
+		rc12.SetCBR_SRV_UAV(
+			m_combineBokeImageDescriptorHeap.Get(),
+			0,
+			nullptr,
+			4,
+			srvTbl
+		);
+		rc12.DrawIndexed(4);
+		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);
+
+	}
+	void CBloomDx12::CombineMainRenderTarget(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12)
+	{
+		rc12.WaitUntilToPossibleSetRenderTarget(ge12.GetMainRenderTarget());
+		rc12.SetPipelineState(m_combineMainRenderTargetPipelineState);
+		rc12.SetRenderTargetAndViewport(ge12.GetMainRenderTarget());
+
+		//シェーダーリソースビューと定数バッファをセットする。
+		IShaderResourceDx12* srvTbl[] = {&m_combineRT.GetRenderTargetTexture()};
+
+		rc12.SetCBR_SRV_UAV(
+			m_combineMainRenderTargetDescriptorHeap.Get(),
+			0,
+			nullptr,
+			1,
+			srvTbl
+		);
+		rc12.DrawIndexed(4);
+	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}
 	void CBloomDx12::Render(IRenderContext& rc)
 	{
@@ -299,6 +364,8 @@ namespace tkEngine {
 		//重みを更新。
 		UpdateWeight(25.0f);
 
+		//ルートシグネチャを設定。
+		rc12.SetRootSignature(m_rootSignature);
 		//頂点バッファを設定。
 		rc12.SetVertexBuffer(m_quadPrimitive.GetVertexBuffer());
 		//インデックスバッファを設定。
@@ -309,12 +376,10 @@ namespace tkEngine {
 		//輝度を抽出する
 		SamplingLuminance(ge12, rc12);
 		//輝度テクスチャをぼかす。
-		//BlurLuminanceTexture(ge12, rc12);
-
-		rc12.WaitUntilToPossibleSetRenderTarget(ge12.GetMainRenderTarget());
-		//レンダリングターゲットを輝度抽出用に切り替える。
-		rc12.SetRenderTarget(ge12.GetMainRenderTarget());
-		//ビューポートを戻す。
-		rc12.SetViewport(ge12.GetMainRenderTargetViewport());
+		BlurLuminanceTexture(ge12, rc12);
+		//ボケ画像を合成する。
+		CombineBokeImage(ge12, rc12);
+		//最終合成
+		CombineMainRenderTarget(ge12, rc12);
 	}
 }

@@ -27,9 +27,9 @@ namespace tkEngine {
 		m_nonSkinModelVS.Load(L"shader/ModelPBR.fx", "VSMainNonSkin", g_vsShaderModelName);
 		m_skinModelPS.Load(L"shader/ModelPBR.fx", "PSMain", g_psShaderModelName);
 #else
-		m_vs.Load(L"shader/ModelSimple.fx", "VSMain", g_vsShaderModelName);
-		m_vsNonSkin.Load(L"shader/ModelSimple.fx", "VSMainNonSkin", g_vsShaderModelName);
-		m_ps.Load(L"shader/ModelSimple.fx", "PSMain", g_psShaderModelName);
+		m_skinModelVS.Load(L"shader/ModelSimple.fx", "VSMain", g_vsShaderModelName);
+		m_nonSkinModelVS.Load(L"shader/ModelSimple.fx", "VSMainNonSkin", g_vsShaderModelName);
+		m_skinModelPS.Load(L"shader/ModelSimple.fx", "PSMain", g_psShaderModelName);
 #endif
 		//シェーダーをロード。
 		m_spriteVS.Load(L"shader/sprite.fx", "VSMain", g_vsShaderModelName);

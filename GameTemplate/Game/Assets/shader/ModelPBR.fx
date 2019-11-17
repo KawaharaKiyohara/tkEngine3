@@ -30,23 +30,26 @@ float spcFresnel(float f0, float u)
 
 float3 BRDF( float3 L, float3 V, float3 N )
 {
-	float m = 0.3;
+	float microfacet = 0.3;
 	float f0 = 0.5;
-	bool include_F = 1;
-	bool include_G = 1;
-
+	bool include_F = 0;
+	bool include_G = 0;
     // compute the half float3
     float3 H = normalize( L + V );
 
-    float NdotH = max( 0.01f, dot(N, H));
-    float VdotH = max( 0.01f, dot(V, H));
-    float NdotL = max( 0.01f, dot(N, L));
-    float NdotV = max( 0.01f, dot(N, V));
-    float oneOverNdotV = 1.0 / NdotV;
-	
-    float D = Beckmann(m, NdotH);
+    float NdotH = dot(N, H);
+    float VdotH = dot(V, H);
+    float NdotL = dot(N, L);
+    float NdotV = dot(N, V);
+
+ 	
+    float D = Beckmann(microfacet, NdotH);
     float F = spcFresnel(f0, VdotH);
 	
+	float t = 2.0 * NdotH / VdotH;
+    float G = max( 0.0f, min(1.0, min(t * NdotV, t * NdotL)) );
+	float m = 3.14159265 * NdotV * NdotL;
+	/*
     NdotH = NdotH + NdotH;
     float G = (NdotV < NdotL) ? 
         ((NdotV*NdotH < VdotH) ?
@@ -56,14 +59,9 @@ float3 BRDF( float3 L, float3 V, float3 N )
         ((NdotL*NdotH < VdotH) ?
          NdotH*NdotL / (VdotH*NdotV) :
          oneOverNdotV);
-
-    if (include_G) G = oneOverNdotV;
-    float val = NdotH < 0 ? 0.0 : D * G ;
-
-    if (include_F) val *= F;
-
-    val = val / NdotL;
-    return val;
+	*/
+    //if (include_G) G = oneOverNdotV;
+    return max(F * D * G / m, 0.0);
 }
 
 float SchlickFresnel(float u, float f0, float f90)
@@ -231,13 +229,13 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
 	for( int ligNo = 0; ligNo < numDirectionLight; ligNo++ ){
 	#if 0
 		//正規化ランバート拡散反射
-		lig += max( dot( normal, -directionLight[ligNo].direction ), 0.0f ) * directionLight[ligNo].color / PI;
+		lig += max( dot( normal, -directionLight[ligNo].direction ), 0.0f ) * directionLight[ligNo].color / PI * 1.0f - metaric;
 	#else
 		float3 baseColor = max( dot( normal, -directionLight[ligNo].direction ), 0.0f ) * directionLight[ligNo].color;
-		lig += NormalizedDisneyDiffuse(baseColor, normal, -directionLight[ligNo].direction, toEye, 1.0f - metaric );
+		lig += NormalizedDisneyDiffuse(baseColor, normal, -directionLight[ligNo].direction, toEye, 1.0f - metaric);
 	#endif
 		//スペキュラ反射
-		lig += BRDF(-directionLight[ligNo].direction, toEye, normal) * directionLight[ligNo].color * metaric * directionLight[ligNo].color.w;
+		lig += BRDF(-directionLight[ligNo].direction, toEye, normal) * directionLight[ligNo].color.xyz * metaric * directionLight[ligNo].color.w;
 	}
 	lig += ambientLight;
 	

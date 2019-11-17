@@ -31,11 +31,11 @@ bool Game::Start()
 	auto lig = NewGO<prefab::CDirectionLight>(0);
 	
 	lig->SetDirection({ -1.0f, 0.0f, 0.0f });
-	lig->SetColor({ 0.7f, 0.7f, 0.7f, 0.5f });
+	lig->SetColor({ 0.7f, 0.7f, 0.7f, 1.5f });
 	
 	lig = NewGO<prefab::CDirectionLight>(0);
 	lig->SetDirection({ 0.707f, 0.0f, -0.707f });
-	lig->SetColor({ 0.7f, 0.7f, 0.7f, 0.5f });
+	lig->SetColor({ 0.7f, 0.7f, 0.7f, 1.5f });
 
 	m_modelRender[enRobo] = NewGO<prefab::CModelRender>(0);
 	m_modelRender[enRobo]->Init(

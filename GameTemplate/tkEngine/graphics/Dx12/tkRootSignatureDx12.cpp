@@ -29,7 +29,7 @@ namespace tkEngine {
 		sampler.MipLODBias = 0;
 		sampler.MaxAnisotropy = 0;
 		sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-		sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+		sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
 		sampler.MinLOD = 0.0f;
 		sampler.MaxLOD = D3D12_FLOAT32_MAX;
 		sampler.ShaderRegister = 0;

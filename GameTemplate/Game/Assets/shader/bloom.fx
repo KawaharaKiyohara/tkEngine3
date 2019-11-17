@@ -141,6 +141,7 @@ float4 PSBlur( PS_BlurInput In ) : SV_Target0
 	               + luminanceTexture.Sample( Sampler, In.tex1 + offset ));
 	Color += weight[1].w * (luminanceTexture.Sample( Sampler, In.tex7 )
 	                 + luminanceTexture.Sample( Sampler, In.tex0 + offset ));
+
 	return float4(Color.xyz, 1.0f);
 }
 
@@ -152,7 +153,6 @@ Texture2D<float4> combineTexture00 : register(t0);
 Texture2D<float4> combineTexture01 : register(t1);	
 Texture2D<float4> combineTexture02 : register(t2);	
 Texture2D<float4> combineTexture03 : register(t3);	
-Texture2D<float4> combineTexture04 : register(t4);	
 /*!
  * @brief	çáê¨ÅB
  */
@@ -163,8 +163,7 @@ float4 PSCombine( PSInput In ) : SV_Target0
 	combineColor += combineTexture01.Sample(Sampler, uv);
 	combineColor += combineTexture02.Sample(Sampler, uv);
 	combineColor += combineTexture03.Sample(Sampler, uv);
-	combineColor += combineTexture03.Sample(Sampler, uv);
-	combineColor /= 5.0f;
+	combineColor /= 4.0f;
 	combineColor.a = 1.0f;
 	return combineColor;
 }

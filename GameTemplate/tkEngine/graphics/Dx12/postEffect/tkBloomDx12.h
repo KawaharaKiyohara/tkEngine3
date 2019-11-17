@@ -53,6 +53,18 @@ namespace tkEngine {
 		/// <param name="rc12"></param>
 		void BlurLuminanceTexture(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12);
 		/// <summary>
+		/// ボケ画像を合成する。
+		/// </summary>
+		/// <param name="ge12"></param>
+		/// <param name="rc12"></param>
+		void CombineBokeImage(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12);
+		/// <summary>
+		/// メインレンダリングターゲットへの合成。
+		/// </summary>
+		/// <param name="ge12"></param>
+		/// <param name="rc12"></param>
+		void CombineMainRenderTarget(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12);
+		/// <summary>
 		/// ディスクリプタヒープの初期化。
 		/// </summary>
 		void InitDescriptorHeap();
@@ -66,9 +78,18 @@ namespace tkEngine {
 			CVector4 offset;
 			float weights[NUM_WEIGHTS];
 		};
+		CRootSignatureDx12 m_rootSignature;	//ブルーム描画用のルートシグネチャ。
+		ComPtr< ID3D12DescriptorHeap> m_luminanceDescriptorHeap;	//輝度抽出時に使うディスクリプタヒープ。
+		ComPtr< ID3D12DescriptorHeap> m_downSamplingDescriptorHeap[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング時に使うディスクリプタヒープ。
+		ComPtr< ID3D12DescriptorHeap> m_combineBokeImageDescriptorHeap;	//ボケ画像合成時に使うディスクリプタヒープ。
+		ComPtr< ID3D12DescriptorHeap> m_combineMainRenderTargetDescriptorHeap;	//メインレンダリングターゲットへの合成ステップで使うディスクリプタヒープ。
+
 		ComPtr<ID3D12PipelineState> m_samplingLuminancePipelineState;	//輝度抽出ステップのパイプラインステート。
 		ComPtr<ID3D12PipelineState> m_xblurLuminancePipelineState;		//x方向に輝度をぼかすステップのパイプラインステート。
 		ComPtr<ID3D12PipelineState> m_yblurLuminancePipelineState;		//y方向に輝度をぼかすステップのパイプラインステート。
+		ComPtr<ID3D12PipelineState> m_combineBokeImagePipelineState;	//ボケ画像を合成するステップのパイプラインステート。
+		ComPtr<ID3D12PipelineState> m_combineMainRenderTargetPipelineState;			//メインレンダリングターゲットへの合成ステップのパイプラインステート。
+		
 		CPrimitive m_quadPrimitive;			//四角形プリミティブ。
 		CRenderTargetDx12 m_luminanceRT;	//輝度を抽出するためのレンダリングターゲット。
 		CRenderTargetDx12 m_combineRT;		//ぼかし合成用のレンダリングターゲット。
@@ -83,9 +104,7 @@ namespace tkEngine {
 		CShaderDx12 m_psCombine;		//合成パスのピクセルシェーダー。
 		CShaderDx12 m_copyVS;			//コピー用の頂点シェーダー。	
 		CShaderDx12 m_copyPS;			//コピー用のピクセルシェーダー。
-		CConstantBufferDx12 m_blurParamCB;	//ブラー用の定数バッファ。
-		ComPtr< ID3D12DescriptorHeap> m_luminanceDescriptorHeap;	//輝度抽出時に使うディスクリプタヒープ。
-		ComPtr< ID3D12DescriptorHeap> m_downSamplingDescriptorHeap[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング時に使うディスクリプタヒープ。
+		CConstantBufferDx12 m_blurParamCB[NUM_DOWN_SAMPLING_RT];	//ブラー用の定数バッファ。
 
 	};
 }

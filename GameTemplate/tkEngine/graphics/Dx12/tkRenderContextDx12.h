@@ -150,6 +150,22 @@ namespace tkEngine {
 			);
 		}
 		/// <summary>
+		/// レンダリングターゲットとビューポートを同時に設定する。
+		/// </summary>
+		/// <param name="renderTarget"></param>
+		void SetRenderTargetAndViewport(CRenderTargetDx12& renderTarget)
+		{
+			D3D12_VIEWPORT viewport;
+			viewport.TopLeftX = 0;
+			viewport.TopLeftY = 0;
+			viewport.Width = static_cast<float>(renderTarget.GetWidth());
+			viewport.Height = static_cast<float>(renderTarget.GetHeight());
+			viewport.MinDepth = D3D12_MIN_DEPTH;
+			viewport.MaxDepth = D3D12_MAX_DEPTH;
+			SetViewport(viewport);
+			SetRenderTarget(renderTarget);
+		}
+		/// <summary>
 		/// レンダリングターゲットを設定
 		/// </summary>
 		void SetRenderTarget(CRenderTargetDx12& renderTarget)
