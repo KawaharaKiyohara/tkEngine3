@@ -1,7 +1,8 @@
 #pragma once
 
 #include "tkEngine/graphics/tkPrimitive.h"
-#include "tkRenderContextDx12.h"
+#include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
+#include "tkEngine/graphics/Dx12/tkDescriptorHeapDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -79,10 +80,11 @@ namespace tkEngine {
 			float weights[NUM_WEIGHTS];
 		};
 		CRootSignatureDx12 m_rootSignature;	//ブルーム描画用のルートシグネチャ。
-		ComPtr< ID3D12DescriptorHeap> m_luminanceDescriptorHeap;	//輝度抽出時に使うディスクリプタヒープ。
-		ComPtr< ID3D12DescriptorHeap> m_downSamplingDescriptorHeap[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング時に使うディスクリプタヒープ。
-		ComPtr< ID3D12DescriptorHeap> m_combineBokeImageDescriptorHeap;	//ボケ画像合成時に使うディスクリプタヒープ。
-		ComPtr< ID3D12DescriptorHeap> m_combineMainRenderTargetDescriptorHeap;	//メインレンダリングターゲットへの合成ステップで使うディスクリプタヒープ。
+	
+		CDescriptorHeapDx12 m_luminanceDescriptorHeap;							//輝度抽出時に使うディスクリプタヒープ。
+		CDescriptorHeapDx12 m_downSamplingDescriptorHeap[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング時に使うディスクリプタヒープ。
+		CDescriptorHeapDx12 m_combineBokeImageDescriptorHeap;					//ボケ画像合成時に使うディスクリプタヒープ。
+		CDescriptorHeapDx12 m_combineMainRenderTargetDescriptorHeap;			//メインレンダリングターゲットへの合成ステップで使うディスクリプタヒープ。
 
 		ComPtr<ID3D12PipelineState> m_samplingLuminancePipelineState;	//輝度抽出ステップのパイプラインステート。
 		ComPtr<ID3D12PipelineState> m_xblurLuminancePipelineState;		//x方向に輝度をぼかすステップのパイプラインステート。

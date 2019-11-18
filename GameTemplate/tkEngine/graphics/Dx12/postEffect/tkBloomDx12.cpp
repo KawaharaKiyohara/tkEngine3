@@ -179,32 +179,17 @@ namespace tkEngine {
 	}
 	void CBloomDx12::InitDescriptorHeap()
 	{
-		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = ge12.GetD3DDevice();
-
 		//輝度抽出用のディスクリプタヒープを作成。
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-		srvHeapDesc.NumDescriptors = 1;
-		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_luminanceDescriptorHeap));
-		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
-		
+		m_luminanceDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);		
 		//ダウンサンプリング用のディスクリプタヒープを作成。
-		srvHeapDesc.NumDescriptors = 2;
 		for (auto& downSampleDescriptorHeap : m_downSamplingDescriptorHeap) {
-			auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&downSampleDescriptorHeap));
-			TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
+			downSampleDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 2);
 		}
 		//ボケ画像合成用のディスクリプタヒープを作成。
-		srvHeapDesc.NumDescriptors = 4;
-		hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_combineBokeImageDescriptorHeap));
-		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
-		
+		m_combineBokeImageDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4);
+
 		//最終合成用のディスクリプタヒープを作成。
-		srvHeapDesc.NumDescriptors = 1;
-		hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_combineMainRenderTargetDescriptorHeap));
-		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
+		m_combineMainRenderTargetDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
 	}
 	void CBloomDx12::UpdateWeight(float dispersion)
 	{

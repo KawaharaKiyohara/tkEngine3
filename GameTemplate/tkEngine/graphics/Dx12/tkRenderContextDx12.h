@@ -3,6 +3,7 @@
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
 #include "tkEngine/graphics/tkRenderContext.h"
+#include "tkEngine/graphics/Dx12/tkDescriptorHeapDx12.h"
 
 namespace tkEngine {
 	class CConstantBufferDx12;
@@ -105,7 +106,22 @@ namespace tkEngine {
 			int numShaderResource,
 			IShaderResourceDx12* shaderResourceArray[]
 		);
-
+		void SetCBR_SRV_UAV(
+			CDescriptorHeapDx12& descriptorHeap,
+			int numConstantBuffer,
+			CConstantBufferDx12* constantBufferArray[],
+			int numShaderResource,
+			IShaderResourceDx12* shaderResourceArray[]
+		)
+		{
+			SetCBR_SRV_UAV(
+				descriptorHeap.Get(), 
+				numConstantBuffer, 
+				constantBufferArray, 
+				numShaderResource, 
+				shaderResourceArray
+			);
+		}
 		/// <summary>
 		/// インデックスつきプリミティブを描画。
 		/// </summary>

@@ -302,6 +302,9 @@
     <ClInclude Include="graphics\Dx12\postEffect\tkBloomDx12.h">
       <Filter>Source Files\graphics\Dx12\postEffect</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkDescriptorHeapDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -474,6 +477,9 @@
     </ClCompile>
     <ClCompile Include="graphics\Dx12\postEffect\tkBloomDx12.cpp">
       <Filter>Source Files\graphics\Dx12\postEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkDescriptorHeapDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
