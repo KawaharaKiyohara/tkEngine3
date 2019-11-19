@@ -102,7 +102,7 @@ namespace tkEngine {
 		CPipelineStatesDx12::Init();
 
 		//ポストエフェクトの初期化。
-		m_bloom.Init(initParam.graphicsConfing);
+		m_postEffect.Init(initParam.graphicsConfing);
 
 		m_copyFullScreenSprite.Init(&m_mainRenderTarget.GetRenderTargetTexture(), initParam.frameBufferWidth, initParam.frameBufferHeight);
 		//ビューポートを初期化。
@@ -412,7 +412,7 @@ namespace tkEngine {
 		goMgr->ForwardRender(rcDx12);
 
 		//ポストエフェクト
-		m_bloom.Render(rcDx12);
+		m_postEffect.Render(rcDx12);
 
 		//HUD描画パス。
 		//HUD描画用のパイプラインステートを設定する。

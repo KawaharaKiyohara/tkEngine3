@@ -25,8 +25,6 @@ namespace tkEngine {
 		InitShaders();
 		//レンダリングターゲットを初期化。
 		InitRenderTargets();
-		//四角形プリミティブを初期化。
-		InitQuadPrimitive();
 		//パイプラインステートを初期化。
 		InitPipelineState();
 		
@@ -74,38 +72,6 @@ namespace tkEngine {
 		//ボケ画像合成用のレンダリングターゲットを作成。
 		result = m_combineRT.Create( w >> 2, h >> 2, 1, 1, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN );
 		TK_ASSERT(result, "ボケ画像合成用のレンダリングターゲットの作成に失敗しました。");
-	}
-	void CBloomDx12::InitQuadPrimitive()
-	{
-		SSimpleVertex vertices[] =
-		{
-			{
-				CVector4(-1.0f, -1.0f, 0.0f, 1.0f),
-				CVector2(0.0f, 1.0f),
-			},
-			{
-				CVector4(1.0f, -1.0f, 0.0f, 1.0f),
-				CVector2(1.0f, 1.0f),
-			},
-			{
-				CVector4(-1.0f, 1.0f, 0.0f, 1.0f),
-				CVector2(0.0f, 0.0f)
-			},
-			{
-				CVector4(1.0f, 1.0f, 0.0f, 1.0f),
-				CVector2(1.0f, 0.0f)
-			}
-
-		};
-		short indices[] = { 0,1,2,3 };
-		m_quadPrimitive.Init(
-			vertices,
-			sizeof(vertices),
-			sizeof(SSimpleVertex),
-			indices,
-			sizeof(indices),
-			2,
-			enPrimitiveTopology_TriangleStrip);
 	}
 	void CBloomDx12::InitShaders()
 	{
@@ -332,12 +298,6 @@ namespace tkEngine {
 
 		//ルートシグネチャを設定。
 		rc12.SetRootSignature(m_rootSignature);
-		//頂点バッファを設定。
-		rc12.SetVertexBuffer(m_quadPrimitive.GetVertexBuffer());
-		//インデックスバッファを設定。
-		rc12.SetIndexBuffer(m_quadPrimitive.GetIndexBuffer());
-		//プリミティブトポロジーを設定する。
-		rc12.SetPrimitiveTopology(m_quadPrimitive.GetPrimitiveTopology());
 
 		//輝度を抽出する
 		SamplingLuminance(ge12, rc12);

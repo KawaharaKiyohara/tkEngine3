@@ -1,7 +1,6 @@
 #pragma once
 
-#include "tkEngine/graphics/tkPrimitive.h"
-#include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
+
 #include "tkEngine/graphics/Dx12/tkDescriptorHeapDx12.h"
 
 namespace tkEngine {
@@ -30,10 +29,6 @@ namespace tkEngine {
 		/// レンダリングターゲットを初期化。
 		/// </summary>
 		void InitRenderTargets();
-		/// <summary>
-		/// 四角形プリミティブを初期化。
-		/// </summary>
-		void InitQuadPrimitive();
 		/// <summary>
 		/// シェーダーを初期化。
 		/// </summary>
@@ -85,7 +80,6 @@ namespace tkEngine {
 		ComPtr<ID3D12PipelineState> m_combineBokeImagePipelineState;	//ボケ画像を合成するステップのパイプラインステート。
 		ComPtr<ID3D12PipelineState> m_combineMainRenderTargetPipelineState;			//メインレンダリングターゲットへの合成ステップのパイプラインステート。
 		
-		CPrimitive m_quadPrimitive;			//四角形プリミティブ。
 		CRenderTargetDx12 m_luminanceRT;	//輝度を抽出するためのレンダリングターゲット。
 		CRenderTargetDx12 m_combineRT;		//ぼかし合成用のレンダリングターゲット。
 		CRenderTargetDx12 m_downSamplingRT[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング用のレンダリングターゲット。
