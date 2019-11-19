@@ -305,6 +305,9 @@
     <ClInclude Include="graphics\Dx12\tkDescriptorHeapDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkDescriptorHeapPoolDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -479,6 +482,9 @@
       <Filter>Source Files\graphics\Dx12\postEffect</Filter>
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkDescriptorHeapDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkDescriptorHeapPoolDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>

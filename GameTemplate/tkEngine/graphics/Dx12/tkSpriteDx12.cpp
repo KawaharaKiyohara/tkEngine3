@@ -45,7 +45,6 @@ namespace tkEngine {
 			&m_constantBufferGPU
 		};
 		rc12.SetCBR_SRV_UAV(
-			m_descriptorHeap.Get(),
 			ARRAYSIZE(cbrTbl),
 			cbrTbl,
 			ARRAYSIZE(srvTbl),

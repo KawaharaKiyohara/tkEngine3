@@ -65,10 +65,7 @@ namespace tkEngine {
 		/// <param name="ge12"></param>
 		/// <param name="rc12"></param>
 		void CombineMainRenderTarget(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12);
-		/// <summary>
-		/// ディスクリプタヒープの初期化。
-		/// </summary>
-		void InitDescriptorHeap();
+
 	private:
 		static const int NUM_WEIGHTS = 8;
 		static const int NUM_DOWN_SAMPLING_RT = 10;
@@ -81,11 +78,7 @@ namespace tkEngine {
 		};
 		CRootSignatureDx12 m_rootSignature;	//ブルーム描画用のルートシグネチャ。
 	
-		CDescriptorHeapDx12 m_luminanceDescriptorHeap;							//輝度抽出時に使うディスクリプタヒープ。
-		CDescriptorHeapDx12 m_downSamplingDescriptorHeap[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング時に使うディスクリプタヒープ。
-		CDescriptorHeapDx12 m_combineBokeImageDescriptorHeap;					//ボケ画像合成時に使うディスクリプタヒープ。
-		CDescriptorHeapDx12 m_combineMainRenderTargetDescriptorHeap;			//メインレンダリングターゲットへの合成ステップで使うディスクリプタヒープ。
-
+	
 		ComPtr<ID3D12PipelineState> m_samplingLuminancePipelineState;	//輝度抽出ステップのパイプラインステート。
 		ComPtr<ID3D12PipelineState> m_xblurLuminancePipelineState;		//x方向に輝度をぼかすステップのパイプラインステート。
 		ComPtr<ID3D12PipelineState> m_yblurLuminancePipelineState;		//y方向に輝度をぼかすステップのパイプラインステート。

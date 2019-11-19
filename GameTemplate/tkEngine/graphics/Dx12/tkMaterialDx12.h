@@ -78,7 +78,7 @@ namespace tkEngine {
 		CConstantBufferDx12 m_constantBuffer;	//定数バッファ。
 	};
 
-	using UPCMaterialDx12 = unique_ptr< CMaterialDx12>;
+	using UPCMaterialDx12 = unique_ptr< CMaterialDx12 >;
 }
 
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

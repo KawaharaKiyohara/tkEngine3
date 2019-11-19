@@ -6,6 +6,11 @@ namespace tkEngine {
 	/// </summary>
 	class CDescriptorHeapDx12 : Noncopyable {
 	public:
+		CDescriptorHeapDx12() {}
+		CDescriptorHeapDx12(CDescriptorHeapDx12&& rhs) :
+			m_descriptorHeap( std::move( rhs.m_descriptorHeap ) )
+		{
+		}
 		/// <summary>
 		/// ディスクリプタヒープの初期化。
 		/// </summary>

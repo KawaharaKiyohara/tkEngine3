@@ -10,6 +10,7 @@
 #include "tkRenderTargetDx12.h"
 #include "tkSpriteDx12.h"
 #include "postEffect/tkBloomDx12.h"
+#include "tkDescriptorHeapPoolDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -84,6 +85,15 @@ namespace tkEngine {
 		{
 			return m_viewport;
 		}
+		/// <summary>
+		/// ディスクリプタヒープを確保。
+		/// </summary>
+		/// <param name="numDescriptor"></param>
+		/// <returns></returns>
+		CDescriptorHeapDx12& AllocDescriptorHeap( int numDescriptor )
+		{
+			return m_descriptorHeapPool.AllocCbrSrvUavDescriptorHeap( numDescriptor );
+		}
 	private:
 		/// <summary>
 		/// 1フレーム描画開始時の処理。
@@ -146,18 +156,18 @@ namespace tkEngine {
 		/// </summary>
 		void WaitDraw();
 	private:
-		
-		D3D12_VIEWPORT						m_viewport;			//ビューポート。
-		D3D12_RECT							m_scissorRect;		//シザリング矩形。
-		ComPtr<ID3D12Device>				m_d3dDevice;		//D3Dデバイス。
-		ComPtr<ID3D12CommandQueue>			m_commandQueue;		//コマンドキュー。
-		ComPtr< IDXGISwapChain3>			m_swapChain;		//スワップチェイン。
-		ComPtr< ID3D12DescriptorHeap>		m_rtvHeap;			//フレームバッファのRTV用のディスクリプタヒープ。
-		ComPtr< ID3D12DescriptorHeap>		m_dsvHeap;			//フレームバッファ用の深度ステンシルバッファビューのディスクリプタヒープ。
-		ComPtr<ID3D12CommandAllocator>		m_commandAllocator;	//コマンドアロケータ。
-		ComPtr<ID3D12GraphicsCommandList>	m_commandList;		//コマンドリスト。
-		ComPtr<ID3D12PipelineState>			m_pipelineState;	//パイプラインステート。
-		CRenderTargetDx12					m_mainRenderTarget;	//メインレンダリングターゲット。
+		CDescriptorHeapPoolDx12				m_descriptorHeapPool;	//ディスクリプタヒーププール。
+		D3D12_VIEWPORT						m_viewport;				//ビューポート。
+		D3D12_RECT							m_scissorRect;			//シザリング矩形。
+		ComPtr<ID3D12Device>				m_d3dDevice;			//D3Dデバイス。
+		ComPtr<ID3D12CommandQueue>			m_commandQueue;			//コマンドキュー。
+		ComPtr< IDXGISwapChain3>			m_swapChain;			//スワップチェイン。
+		ComPtr< ID3D12DescriptorHeap>		m_rtvHeap;				//フレームバッファのRTV用のディスクリプタヒープ。
+		ComPtr< ID3D12DescriptorHeap>		m_dsvHeap;				//フレームバッファ用の深度ステンシルバッファビューのディスクリプタヒープ。
+		ComPtr<ID3D12CommandAllocator>		m_commandAllocator;		//コマンドアロケータ。
+		ComPtr<ID3D12GraphicsCommandList>	m_commandList;			//コマンドリスト。
+		ComPtr<ID3D12PipelineState>			m_pipelineState;		//パイプラインステート。
+		CRenderTargetDx12					m_mainRenderTarget;		//メインレンダリングターゲット。
 		CSpriteDx12 m_copyFullScreenSprite;	//フルスクリーンコピー用のスプライト。
 		CBloomDx12 m_bloom;	//ブルーム。
 		// Synchronization objects.

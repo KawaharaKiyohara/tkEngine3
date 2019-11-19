@@ -29,8 +29,7 @@ namespace tkEngine {
 		InitQuadPrimitive();
 		//パイプラインステートを初期化。
 		InitPipelineState();
-		//ディスクリプタヒープの初期化。
-		InitDescriptorHeap();
+		
 		for (auto& cb : m_blurParamCB) {
 			//定数バッファを初期化。
 			cb.Init(sizeof(m_blurParam), nullptr);
@@ -177,20 +176,7 @@ namespace tkEngine {
 		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_combineMainRenderTargetPipelineState));
 
 	}
-	void CBloomDx12::InitDescriptorHeap()
-	{
-		//輝度抽出用のディスクリプタヒープを作成。
-		m_luminanceDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);		
-		//ダウンサンプリング用のディスクリプタヒープを作成。
-		for (auto& downSampleDescriptorHeap : m_downSamplingDescriptorHeap) {
-			downSampleDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 2);
-		}
-		//ボケ画像合成用のディスクリプタヒープを作成。
-		m_combineBokeImageDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 4);
 
-		//最終合成用のディスクリプタヒープを作成。
-		m_combineMainRenderTargetDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
-	}
 	void CBloomDx12::UpdateWeight(float dispersion)
 	{
 		float total = 0;
@@ -221,7 +207,6 @@ namespace tkEngine {
 			&ge12.GetMainRenderTarget().GetRenderTargetTexture()
 		};
 		rc12.SetCBR_SRV_UAV(
-			m_luminanceDescriptorHeap.Get(),
 			0,
 			nullptr,
 			1,
@@ -255,7 +240,6 @@ namespace tkEngine {
 					&m_blurParamCB[rtIndex]
 				};
 				rc12.SetCBR_SRV_UAV(
-					m_downSamplingDescriptorHeap[rtIndex].Get(),
 					1,
 					cbrTbl,
 					1,
@@ -284,7 +268,6 @@ namespace tkEngine {
 					&m_blurParamCB[rtIndex]
 				};
 				rc12.SetCBR_SRV_UAV(
-					m_downSamplingDescriptorHeap[rtIndex].Get(),
 					1,
 					cbrTbl,
 					1,
@@ -312,7 +295,6 @@ namespace tkEngine {
 		};
 	
 		rc12.SetCBR_SRV_UAV(
-			m_combineBokeImageDescriptorHeap.Get(),
 			0,
 			nullptr,
 			4,
@@ -332,7 +314,6 @@ namespace tkEngine {
 		IShaderResourceDx12* srvTbl[] = {&m_combineRT.GetRenderTargetTexture()};
 
 		rc12.SetCBR_SRV_UAV(
-			m_combineMainRenderTargetDescriptorHeap.Get(),
 			0,
 			nullptr,
 			1,

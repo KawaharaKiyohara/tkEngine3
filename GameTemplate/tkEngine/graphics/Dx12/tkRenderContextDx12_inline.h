@@ -5,18 +5,21 @@
 
 namespace tkEngine {
 	inline void CRenderContextDx12::SetCBR_SRV_UAV(
-		ID3D12DescriptorHeap* descriptorHeap,
 		int numConstantBuffer, 
 		CConstantBufferDx12* constantBufferArray[], 
 		int numShaderResource, 
 		IShaderResourceDx12* shaderResourceArray[]
 	)
 	{
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		int numDescriptor = numConstantBuffer + numShaderResource;
+		auto descriptorHeap = ge12.AllocDescriptorHeap(numDescriptor).Get();
+
 		m_commandList->SetDescriptorHeaps(1, &descriptorHeap);
 
 		auto cpuHandle = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 		auto gpuHandle = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		
 		//定数バッファを登録していく。
 		for (int i = 0; i < numConstantBuffer; i++) {
 			constantBufferArray[i]->RegistConstantBufferView(cpuHandle);

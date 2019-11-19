@@ -94,34 +94,16 @@ namespace tkEngine {
 		/// <summary>
 		/// 定数バッファ、シェーダーリソース、UAV(UnorderResrouceView)をディスクリプタヒープに登録する。
 		/// </summary>
-		/// <param name="descriptorHeap">ディスクリプタヒープ</param>
 		/// <param name="numCBR">定数バッファの数</param>
 		/// <param name="constantBufferArray">定数バッファの配列</param>
 		/// <param name="numSRV">シェーダーリソースの数</param>
 		/// <param name="srvArray">シェーダーリソースの配列</param>
 		void SetCBR_SRV_UAV(
-			ID3D12DescriptorHeap* descriptorHeap,
 			int numConstantBuffer,
 			CConstantBufferDx12* constantBufferArray[],
 			int numShaderResource,
 			IShaderResourceDx12* shaderResourceArray[]
 		);
-		void SetCBR_SRV_UAV(
-			CDescriptorHeapDx12& descriptorHeap,
-			int numConstantBuffer,
-			CConstantBufferDx12* constantBufferArray[],
-			int numShaderResource,
-			IShaderResourceDx12* shaderResourceArray[]
-		)
-		{
-			SetCBR_SRV_UAV(
-				descriptorHeap.Get(), 
-				numConstantBuffer, 
-				constantBufferArray, 
-				numShaderResource, 
-				shaderResourceArray
-			);
-		}
 		/// <summary>
 		/// インデックスつきプリミティブを描画。
 		/// </summary>

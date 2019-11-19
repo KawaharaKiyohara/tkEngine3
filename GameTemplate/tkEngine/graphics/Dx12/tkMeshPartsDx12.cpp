@@ -17,8 +17,6 @@ namespace tkEngine {
 			});
 		//共通定数バッファの作成。
 		m_commonConstantBuffer.Init(sizeof(SConstantBuffer), nullptr);
-		//ディスクリプタヒープを作成。
-		CreateDescriptorHeaps();
 	}
 	void CMeshPartsDx12::CreateMeshFromTkmMesh(const CTkmFile::SMesh& tkmMesh, int meshNo)
 	{
@@ -79,27 +77,7 @@ namespace tkEngine {
 
 		m_meshs[meshNo] = std::move(mesh);
 	}
-	void CMeshPartsDx12::CreateDescriptorHeaps()
-	{
-		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto device = ge12.GetD3DDevice();
-		ComPtr< ID3D12DescriptorHeap> heap;
-		//マテリアルごとにディスクリプタヒープを作成する。
-		for (auto& mesh : m_meshs) {
-			for (auto& mat : mesh->m_materials) {
 
-				D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-				srvHeapDesc.NumDescriptors = 8;
-				srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-				srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-				auto hr = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&heap));
-				TK_ASSERT(SUCCEEDED(hr), "CMeshPartsDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
-
-				m_descriptorHeaps.push_back(std::move(heap));
-				
-			}
-		}
-	}
 	void CMeshPartsDx12::BindSkeleton(CSkeleton& skeleton)
 	{
 		m_skeleton = &skeleton;
@@ -137,16 +115,15 @@ namespace tkEngine {
 			//ボーン行列を更新する。
 			m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
 		}
-		int heapNo = 0;
+
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
 			rc12.SetVertexBuffer(mesh->m_vertexBuffer);
 			//マテリアルごとにドロー。
-			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++, heapNo++) {
+			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 				//このマテリアルが貼られているメッシュの描画開始。
 				mesh->m_materials[matNo]->BeginRender(rc, mesh->skinFlags[matNo]);
 
-				auto& descriptorHeap = m_descriptorHeaps[heapNo];
 				IShaderResourceDx12* srvTbl[] = {
 					&mesh->m_materials[matNo]->GetAlbedoMap(),
 					&mesh->m_materials[matNo]->GetNormalMap(),
@@ -161,7 +138,6 @@ namespace tkEngine {
 				};
 				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
 				rc12.SetCBR_SRV_UAV(
-					descriptorHeap.Get(), 
 					ARRAYSIZE(cbrTbl), 
 					cbrTbl, 
 					ARRAYSIZE(srvTbl),

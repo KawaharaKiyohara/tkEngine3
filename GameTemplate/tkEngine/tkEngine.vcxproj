@@ -295,6 +295,7 @@
     <ClInclude Include="graphics\Dx12\postEffect\tkBloomDx12.h" />
     <ClInclude Include="graphics\Dx12\tkConstantBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkDescriptorHeapDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkDescriptorHeapPoolDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h" />
     <ClInclude Include="graphics\Dx12\tkIndexBufferDx12.h" />
@@ -373,6 +374,7 @@
     <ClCompile Include="graphics\Dx12\postEffect\tkBloomDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkConstantBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkDescriptorHeapDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkDescriptorHeapPoolDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkIndexBufferDx12.cpp" />

@@ -58,10 +58,6 @@ namespace tkEngine {
 		/// 共通定数バッファの作成。
 		/// </summary>
 		void CreateCommonConstantBuffer();
-		/// <summary>
-		/// ディスクリプタヒープを作成。
-		/// </summary>
-		void CreateDescriptorHeaps();
 	private:
 		/// <summary>
 		/// 定数バッファ。
@@ -76,8 +72,7 @@ namespace tkEngine {
 		};
 		CConstantBufferDx12 m_commonConstantBuffer;				//メッシュ共通の定数バッファ。
 		CStructuredBufferDx12 m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
-		vector< UPSMesh > m_meshs;							//メッシュ。
-		vector<ComPtr< ID3D12DescriptorHeap>>	m_descriptorHeaps;
+		vector< UPSMesh > m_meshs;								//メッシュ。
 		CSkeleton* m_skeleton = nullptr;	//スケルトン。
 	};
 }

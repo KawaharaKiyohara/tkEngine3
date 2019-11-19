@@ -128,6 +128,9 @@ namespace tkEngine {
 		//CBR_SVRのディスクリプタのサイズを取得。
 		m_cbrSrvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
+		//ディスクリプタヒーププールの初期化。
+		m_descriptorHeapPool.Init();
+
 		return true;
 	}
 
@@ -331,6 +334,8 @@ namespace tkEngine {
 	void CGraphicsEngineDx12::BeginRender()
 	{
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//ディスクリプタヒーププールのリセット。
+		m_descriptorHeapPool.Reset();
 		//コマンドアロケータをリセット。
 		m_commandAllocator->Reset();
 		//レンダリング子テキストもリセット。
