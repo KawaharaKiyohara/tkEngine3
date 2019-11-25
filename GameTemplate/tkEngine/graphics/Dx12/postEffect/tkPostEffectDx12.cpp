@@ -13,6 +13,9 @@ namespace tkEngine {
 	{
 		//ブルームを初期化。
 		m_bloom.Init(config);
+		//トーンマップを初期化。
+		m_tonemap.Init(config);
+
 		//四角形プリミティブを初期化。
 		SSimpleVertex vertices[] =
 		{
@@ -55,6 +58,9 @@ namespace tkEngine {
 		//プリミティブトポロジーを設定する。
 		rc12.SetPrimitiveTopology(m_quadPrimitive.GetPrimitiveTopology());
 
+		//トーンマップ。
+		m_tonemap.Render(rc);
+		//ブルーム。
 		m_bloom.Render(rc);
 	}
 }

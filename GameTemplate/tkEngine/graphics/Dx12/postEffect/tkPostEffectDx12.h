@@ -3,6 +3,7 @@
 #include "tkEngine/graphics/tkPrimitive.h"
 #include "tkEngine/graphics/Dx12/tkRenderContextDx12.h"
 #include "tkBloomDx12.h"
+#include "tkTonemapDx12.h"
 
 namespace tkEngine {
 	/// <summary>
@@ -22,8 +23,9 @@ namespace tkEngine {
 		void Render(IRenderContext& rc);
 	
 	private:
-		CBloomDx12 m_bloom;	//ブルーム。
-		CPrimitive m_quadPrimitive;			//四角形プリミティブ。
+		CBloomDx12 m_bloom;				//ブルーム。
+		CTonemapDx12 m_tonemap;		//トーンマップ。
+		CPrimitive m_quadPrimitive;		//四角形プリミティブ。
 
 	};
 }
