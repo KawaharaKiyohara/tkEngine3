@@ -5,10 +5,10 @@
 
 namespace tkEngine {
 	inline void CRenderContextDx12::SetCBR_SRV_UAV(
-		int numConstantBuffer, 
-		CConstantBufferDx12* constantBufferArray[], 
-		int numShaderResource, 
-		IShaderResourceDx12* shaderResourceArray[]
+		CConstantBufferDx12* constantBufferArray[],
+		IShaderResourceDx12* shaderResourceArray[],
+		int numConstantBuffer,
+		int numShaderResource
 	)
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();

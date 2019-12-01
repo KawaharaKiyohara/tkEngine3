@@ -169,12 +169,7 @@ namespace tkEngine {
 		IShaderResourceDx12* srvTbl[] = {
 			&ge12.GetMainRenderTarget().GetRenderTargetTexture()
 		};
-		rc12.SetCBR_SRV_UAV(
-			0,
-			nullptr,
-			1,
-			srvTbl
-		);
+		rc12.SetCBR_SRV_UAV(nullptr,srvTbl,0,1);
 		//ドロドロ。
 		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_luminanceRT);	
@@ -202,12 +197,7 @@ namespace tkEngine {
 				CConstantBufferDx12* cbrTbl[] = {
 					&m_blurParamCB[rtIndex]
 				};
-				rc12.SetCBR_SRV_UAV(
-					1,
-					cbrTbl,
-					1,
-					srvTbl
-				);
+				rc12.SetCBR_SRV_UAV(cbrTbl,srvTbl,1,1);
 				rc12.DrawIndexed(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
@@ -230,12 +220,7 @@ namespace tkEngine {
 				CConstantBufferDx12* cbrTbl[] = {
 					&m_blurParamCB[rtIndex]
 				};
-				rc12.SetCBR_SRV_UAV(
-					1,
-					cbrTbl,
-					1,
-					srvTbl
-				);
+				rc12.SetCBR_SRV_UAV(cbrTbl,	srvTbl, 1, 1 );
 				rc12.DrawIndexed(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
@@ -257,12 +242,8 @@ namespace tkEngine {
 			&m_downSamplingRT[9].GetRenderTargetTexture(),
 		};
 	
-		rc12.SetCBR_SRV_UAV(
-			0,
-			nullptr,
-			4,
-			srvTbl
-		);
+		rc12.SetCBR_SRV_UAV(nullptr, srvTbl, 0, 4);
+
 		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);
 
@@ -276,12 +257,7 @@ namespace tkEngine {
 		//シェーダーリソースビューと定数バッファをセットする。
 		IShaderResourceDx12* srvTbl[] = {&m_combineRT.GetRenderTargetTexture()};
 
-		rc12.SetCBR_SRV_UAV(
-			0,
-			nullptr,
-			1,
-			srvTbl
-		);
+		rc12.SetCBR_SRV_UAV(nullptr,srvTbl, 0, 1);
 		rc12.DrawIndexed(4);
 	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}

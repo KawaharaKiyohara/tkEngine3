@@ -137,11 +137,7 @@ namespace tkEngine {
 					&mesh->m_materials[matNo]->GetConstantBuffer(),
 				};
 				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
-				rc12.SetCBR_SRV_UAV(
-					ARRAYSIZE(cbrTbl), 
-					cbrTbl, 
-					ARRAYSIZE(srvTbl),
-					srvTbl);
+				rc12.SetCBR_SRV_UAV(cbrTbl, srvTbl,	ARRAYSIZE(cbrTbl),ARRAYSIZE(srvTbl));
 
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];

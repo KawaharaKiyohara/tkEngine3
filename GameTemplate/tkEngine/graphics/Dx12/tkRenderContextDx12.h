@@ -95,15 +95,15 @@ namespace tkEngine {
 		/// <summary>
 		/// 定数バッファ、シェーダーリソース、UAV(UnorderResrouceView)をディスクリプタヒープに登録する。
 		/// </summary>
-		/// <param name="numCBR">定数バッファの数</param>
 		/// <param name="constantBufferArray">定数バッファの配列</param>
 		/// <param name="numSRV">シェーダーリソースの数</param>
+		/// /// <param name="numCBR">定数バッファの数</param>
 		/// <param name="srvArray">シェーダーリソースの配列</param>
 		void SetCBR_SRV_UAV(
-			int numConstantBuffer,
 			CConstantBufferDx12* constantBufferArray[],
-			int numShaderResource,
-			IShaderResourceDx12* shaderResourceArray[]
+			IShaderResourceDx12* shaderResourceArray[],
+			int numConstantBuffer,
+			int numShaderResource
 		);
 		/// <summary>
 		/// インデックスつきプリミティブを描画。

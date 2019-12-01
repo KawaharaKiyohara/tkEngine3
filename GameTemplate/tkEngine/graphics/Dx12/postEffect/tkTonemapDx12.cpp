@@ -166,7 +166,7 @@ namespace tkEngine {
 			IShaderResourceDx12* srvTbl[] = {
 				&ge12.GetMainRenderTarget().GetRenderTargetTexture()
 			};
-			rc.SetCBR_SRV_UAV(2,cbrTbl,1,srvTbl);
+			rc.SetCBR_SRV_UAV( cbrTbl,srvTbl, 2, 1);
 
 			
 			rc.DrawIndexed(4);
@@ -188,7 +188,7 @@ namespace tkEngine {
 				IShaderResourceDx12* srvTbl[] = {
 					&m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture()
 				};
-				rc.SetCBR_SRV_UAV( 2,cbrTbl, 1, srvTbl );
+				rc.SetCBR_SRV_UAV(cbrTbl, srvTbl, 2, 1);
 				rc.SetPipelineState(m_calsLuminanceAvaragePipelineState);
 				rc.DrawIndexed(4);
 				rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
@@ -209,7 +209,7 @@ namespace tkEngine {
 			IShaderResourceDx12* srvTbl[] = {
 				&m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture()
 			};
-			rc.SetCBR_SRV_UAV( 2, cbrTbl, 1, srvTbl );
+			rc.SetCBR_SRV_UAV( cbrTbl, srvTbl, 2, 1 );
 			//パイプラインステートを設定。
 			rc.SetPipelineState(m_calsLuminanceExpAvaragePipelineState);
 			rc.DrawIndexed(4);
@@ -227,7 +227,7 @@ namespace tkEngine {
 					&m_calcAvgRT[0].GetRenderTargetTexture() 
 				};
 				
-				rc.SetCBR_SRV_UAV(0, nullptr, 1, srvTbl);
+				rc.SetCBR_SRV_UAV( nullptr, srvTbl, 0, 1);
 				//パイプラインステートを設定する。
 				rc.SetPipelineState(m_psCalcAdaptedLuminanceFirstPipelineState);
 				rc.DrawIndexed(4);
@@ -249,7 +249,7 @@ namespace tkEngine {
 				CConstantBufferDx12* cbrTbl[] = {
 					&m_cbTonemapCommon
 				};
-				rc.SetCBR_SRV_UAV(1, cbrTbl, 3, srvTbl);
+				rc.SetCBR_SRV_UAV(cbrTbl,srvTbl, 1, 3);
 				rc.SetPipelineState(m_psCalcAdaptedLuminancePipelineState);
 				rc.DrawIndexed(4);
 			}
@@ -280,7 +280,7 @@ namespace tkEngine {
 			&ge12.GetMainRenderTarget().GetRenderTargetTexture(),
 			& m_avgRT[m_currentAvgRt].GetRenderTargetTexture()
 		};
-		rc12.SetCBR_SRV_UAV(1, cbrTbl, 2, srvTbl);
+		rc12.SetCBR_SRV_UAV(cbrTbl, srvTbl, 1, 2 );
 		rc12.SetPipelineState(m_finalPipelineState);
 		rc12.DrawIndexed(4);
 

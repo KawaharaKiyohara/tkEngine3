@@ -44,11 +44,7 @@ namespace tkEngine {
 		CConstantBufferDx12* cbrTbl[] = {
 			&m_constantBufferGPU
 		};
-		rc12.SetCBR_SRV_UAV(
-			ARRAYSIZE(cbrTbl),
-			cbrTbl,
-			ARRAYSIZE(srvTbl),
-			srvTbl);
+		rc12.SetCBR_SRV_UAV(cbrTbl,srvTbl,ARRAYSIZE(cbrTbl),ARRAYSIZE(srvTbl));
 
 		//ƒhƒ[B
 		rc12.DrawIndexed(m_indexBuffer->GetCount());
