@@ -76,21 +76,18 @@ namespace tkEngine {
 	void CBloomDx12::InitShaders()
 	{
 		//シェーダーをロード。
-		m_vs.Load(L"shader/bloom.fx", "VSMain", g_vsShaderModelName);
-		m_psLuminance.Load(L"shader/bloom.fx", "PSSamplingLuminance", g_psShaderModelName);
-		m_vsXBlur.Load(L"shader/bloom.fx", "VSXBlur", g_vsShaderModelName);
-		m_vsYBlur.Load(L"shader/bloom.fx", "VSYBlur", g_vsShaderModelName);
-		m_psBlur.Load(L"shader/bloom.fx", "PSBlur", g_psShaderModelName);
-		m_psCombine.Load(L"shader/bloom.fx", "PSCombine", g_psShaderModelName);
-		m_copyVS.Load(L"shader/copy.fx", "VSMain", g_vsShaderModelName);
-		m_copyPS.Load(L"shader/copy.fx", "PSMain", g_psShaderModelName);
+		m_vs.LoadVS(L"shader/bloom.fx", "VSMain");
+		m_psLuminance.LoadPS(L"shader/bloom.fx", "PSSamplingLuminance");
+		m_vsXBlur.LoadVS(L"shader/bloom.fx", "VSXBlur");
+		m_vsYBlur.LoadVS(L"shader/bloom.fx", "VSYBlur");
+		m_psBlur.LoadPS(L"shader/bloom.fx", "PSBlur");
+		m_psCombine.LoadPS(L"shader/bloom.fx", "PSCombine");
+		m_copyVS.LoadVS(L"shader/copy.fx", "VSMain");
+		m_copyPS.LoadPS(L"shader/copy.fx", "PSMain");
 
 	}
 	void CBloomDx12::InitPipelineState()
 	{
-		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = ge12.GetD3DDevice();
-
 		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
@@ -115,22 +112,23 @@ namespace tkEngine {
 		psoDesc.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		psoDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
 		psoDesc.SampleDesc.Count = 1;
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_samplingLuminancePipelineState));
-
+		m_samplingLuminancePipelineState.Init(psoDesc);
+		
 		//Xブラー用のパイプラインステート。
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsXBlur.GetCompiledBlob().Get());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psBlur.GetCompiledBlob().Get());
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_xblurLuminancePipelineState));
+		m_xblurLuminancePipelineState.Init(psoDesc);
 
 		//yブラー用のパイプラインステート。
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsYBlur.GetCompiledBlob().Get());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psBlur.GetCompiledBlob().Get());
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_yblurLuminancePipelineState));
+		m_yblurLuminancePipelineState.Init(psoDesc);
+
 		//ボケ画像合成用のパイプラインステート。
 		psoDesc.BlendState.RenderTarget[0].BlendEnable = FALSE;
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vs.GetCompiledBlob().Get());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psCombine.GetCompiledBlob().Get());
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_combineBokeImagePipelineState));
+		m_combineBokeImagePipelineState.Init(psoDesc);
 
 		//最終合成用のパイプラインステート。
 		psoDesc.BlendState.RenderTarget[0].BlendEnable = TRUE;
@@ -139,8 +137,7 @@ namespace tkEngine {
 		psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 		psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_copyVS.GetCompiledBlob().Get());
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_copyPS.GetCompiledBlob().Get());
-		d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_combineMainRenderTargetPipelineState));
-
+		m_combineMainRenderTargetPipelineState.Init(psoDesc);
 	}
 
 	void CBloomDx12::UpdateWeight(float dispersion)
@@ -160,12 +157,12 @@ namespace tkEngine {
 	{
 		//メインレンダリングターゲットをテクスチャとして利用するので
 		//利用できるようになるまで待機する。
-		rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
+	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 		rc12.WaitUntilToPossibleSetRenderTarget(m_luminanceRT);
 		//パイプラインステートを設定。
 		rc12.SetPipelineState(m_samplingLuminancePipelineState);
 		//レンダリングターゲットを輝度抽出用に切り替える。
-		rc12.SetRenderTarget(m_luminanceRT);
+		rc12.SetRenderTargetAndViewport(m_luminanceRT);
 		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		rc12.ClearRenderTargetView(m_luminanceRT, clearColor);
 		//シェーダーリソースビューと定数バッファをセットする。

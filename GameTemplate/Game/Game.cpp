@@ -37,7 +37,7 @@ bool Game::Start()
 	m_modelRender[enRobo]->Init(
 		"modelData/robo.tkm");
 	m_modelRender[enRobo]->SetScale( 12.0f, 12.0f, 12.0f );
-	m_modelRender[enRobo]->SetActiveFlag(false);
+//	m_modelRender[enRobo]->SetActiveFlag(false);
 	const char* tkaFilePaths[] = {
 		"animData/unityChan/idle.tka",
 		"animData/unityChan/run.tka",
@@ -52,7 +52,7 @@ bool Game::Start()
 	qRot.SetRotationDeg(g_vec3AxisX, 90.0f);
 	m_modelRender[enUnity]->SetRotation(qRot);
 	m_modelRender[enUnity]->SetScale( 2.0f, 2.0f, 2.0f );
-	m_modelRender[enUnity]->SetActiveFlag(false);
+//	m_modelRender[enUnity]->SetActiveFlag(false);
 
 	const char* ninjaTkaFilePaths[] = {
 		"animData/thief/idle.tka",
@@ -67,9 +67,9 @@ bool Game::Start()
 	qRot.SetRotationDeg(g_vec3AxisX, 180.0f);
 	m_modelRender[enNinja]->SetRotation(qRot);
 	m_modelRender[enNinja]->SetScale( 3.0f, 3.0f, 3.0f );
-	m_modelRender[enNinja]->SetActiveFlag(false);
+//	m_modelRender[enNinja]->SetActiveFlag(false);
 
-	m_modelRender[m_currentModel]->SetActiveFlag(true);
+//	m_modelRender[m_currentModel]->SetActiveFlag(true);
 
 	return true;
 }
@@ -111,7 +111,7 @@ void Game::Update()
 
 	m_modelRender[m_currentModel]->Move(move);
 	m_modelRender[m_currentModel]->Rotate(qRot);
-	m_modelRender[m_currentModel]->SetActiveFlag(false);
+//	m_modelRender[m_currentModel]->SetActiveFlag(false);
 	if (g_pad[0]->IsTrigger(enButtonLeft)) {
 		m_currentModel--;
 		m_currentModel = max(0, m_currentModel);
@@ -119,7 +119,7 @@ void Game::Update()
 		m_currentModel++;
 		m_currentModel = min(enNumModel-1, m_currentModel);
 	}
-	m_modelRender[m_currentModel]->SetActiveFlag(true);
+//	m_modelRender[m_currentModel]->SetActiveFlag(true);
 
 	static float angle = 0;
 	CQuaternion rot;

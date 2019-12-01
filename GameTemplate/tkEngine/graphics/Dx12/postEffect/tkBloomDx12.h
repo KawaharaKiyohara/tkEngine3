@@ -73,12 +73,11 @@ namespace tkEngine {
 		};
 		CRootSignatureDx12 m_rootSignature;	//ブルーム描画用のルートシグネチャ。
 	
-	
-		ComPtr<ID3D12PipelineState> m_samplingLuminancePipelineState;	//輝度抽出ステップのパイプラインステート。
-		ComPtr<ID3D12PipelineState> m_xblurLuminancePipelineState;		//x方向に輝度をぼかすステップのパイプラインステート。
-		ComPtr<ID3D12PipelineState> m_yblurLuminancePipelineState;		//y方向に輝度をぼかすステップのパイプラインステート。
-		ComPtr<ID3D12PipelineState> m_combineBokeImagePipelineState;	//ボケ画像を合成するステップのパイプラインステート。
-		ComPtr<ID3D12PipelineState> m_combineMainRenderTargetPipelineState;			//メインレンダリングターゲットへの合成ステップのパイプラインステート。
+		CPipelineStateDx12 m_samplingLuminancePipelineState;	//輝度抽出ステップのパイプラインステート。
+		CPipelineStateDx12 m_xblurLuminancePipelineState;		//x方向に輝度をぼかすステップのパイプラインステート。
+		CPipelineStateDx12 m_yblurLuminancePipelineState;		//y方向に輝度をぼかすステップのパイプラインステート。
+		CPipelineStateDx12 m_combineBokeImagePipelineState;	//ボケ画像を合成するステップのパイプラインステート。
+		CPipelineStateDx12 m_combineMainRenderTargetPipelineState;			//メインレンダリングターゲットへの合成ステップのパイプラインステート。
 		
 		CRenderTargetDx12 m_luminanceRT;	//輝度を抽出するためのレンダリングターゲット。
 		CRenderTargetDx12 m_combineRT;		//ぼかし合成用のレンダリングターゲット。

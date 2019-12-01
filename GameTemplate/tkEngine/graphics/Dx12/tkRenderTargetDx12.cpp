@@ -11,7 +11,8 @@ namespace tkEngine {
 		int mipLevel,
 		int arraySize,
 		DXGI_FORMAT colorFormat,
-		DXGI_FORMAT depthStencilFormat
+		DXGI_FORMAT depthStencilFormat,
+		float clearColor[4]
 	)
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
@@ -19,7 +20,7 @@ namespace tkEngine {
 		m_width = w;
 		m_height = h;
 		//レンダリングターゲットとなるテクスチャを作成する。
-		if (!CreateRenderTargetTexture(ge12, d3dDevice, w, h, mipLevel, arraySize, colorFormat)) {
+		if (!CreateRenderTargetTexture(ge12, d3dDevice, w, h, mipLevel, arraySize, colorFormat, clearColor)) {
 			TK_ASSERT(false, "レンダリングターゲットとなるテクスチャの作成に失敗しました。");
 			return false;
 		}
@@ -77,7 +78,8 @@ namespace tkEngine {
 		int h,
 		int mipLevel,
 		int arraySize,
-		DXGI_FORMAT format
+		DXGI_FORMAT format,
+		float clearColor[4]
 	)
 	{
 		CD3DX12_RESOURCE_DESC desc(
@@ -96,11 +98,18 @@ namespace tkEngine {
 
 		D3D12_CLEAR_VALUE clearValue;
 		clearValue.Format = format;
-		clearValue.Color[0] = 0.0f; 
-		clearValue.Color[1] = 0.0f;
-		clearValue.Color[2] = 0.0f;
-		clearValue.Color[3] = 1.0f;
-
+		if (clearColor != nullptr) {
+			clearValue.Color[0] = clearColor[0];
+			clearValue.Color[1] = clearColor[1];
+			clearValue.Color[2] = clearColor[2];
+			clearValue.Color[3] = clearColor[3];
+		}
+		else {
+			clearValue.Color[0] = 0.0f;
+			clearValue.Color[1] = 0.0f;
+			clearValue.Color[2] = 0.0f;
+			clearValue.Color[3] = 1.0f;
+		}
 		//リソースを作成。
 		auto hr = d3dDevice->CreateCommittedResource(
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),

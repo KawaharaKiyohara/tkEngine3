@@ -88,13 +88,15 @@ namespace tkEngine {
 			return false;
 		}
 		//メインレンダリングターゲットを作成。
+		float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 		if (m_mainRenderTarget.Create(
 			initParam.frameBufferWidth,
 			initParam.frameBufferHeight,
 			1,
 			1,
 			DXGI_FORMAT_R32G32B32A32_FLOAT,
-			DXGI_FORMAT_D32_FLOAT) == false ) {
+			DXGI_FORMAT_D32_FLOAT,
+			clearColor) == false) {
 			TK_ASSERT(false, "メインレンダリングターゲットの作成に失敗しました。");
 			return false;
 		}
@@ -350,7 +352,7 @@ namespace tkEngine {
 		rcDx12.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
 		//レンダリングターゲットを設定。
 		rcDx12.SetRenderTarget(m_mainRenderTarget);
-		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 		rcDx12.ClearRenderTargetView(m_mainRenderTarget, clearColor);
 		rcDx12.ClearDepthStencilView(m_mainRenderTarget, 1.0f);
 	}

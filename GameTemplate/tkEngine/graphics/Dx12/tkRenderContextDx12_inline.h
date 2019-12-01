@@ -22,13 +22,17 @@ namespace tkEngine {
 		
 		//定数バッファを登録していく。
 		for (int i = 0; i < numConstantBuffer; i++) {
-			constantBufferArray[i]->RegistConstantBufferView(cpuHandle);
+			if (constantBufferArray[i] != nullptr) {
+				constantBufferArray[i]->RegistConstantBufferView(cpuHandle);
+			}
 			//次に進める。
 			cpuHandle.ptr += ge12.GetCbrSrvDescriptorSize();
 		}
 		//続いてテクスチャ
 		for (int i = 0; i < numShaderResource; i++) {
-			shaderResourceArray[i]->RegistShaderResourceView(cpuHandle);
+			if (shaderResourceArray[i] != nullptr) {
+				shaderResourceArray[i]->RegistShaderResourceView(cpuHandle);
+			}
 			//次に進める。
 			cpuHandle.ptr += ge12.GetCbrSrvDescriptorSize();
 		}

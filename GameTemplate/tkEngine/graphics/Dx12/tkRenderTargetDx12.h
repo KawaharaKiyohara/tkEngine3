@@ -27,7 +27,8 @@ namespace tkEngine {
 			int mipLevel,
 			int arraySize,
 			DXGI_FORMAT colorFormat,
-			DXGI_FORMAT depthStencilFormat
+			DXGI_FORMAT depthStencilFormat,
+			float clearColor[4] = nullptr
 		);
 		/// <summary>
 		/// CPU側のレンダリングターゲットのディスクリプタハンドルを取得。
@@ -103,7 +104,8 @@ namespace tkEngine {
 			int h,
 			int mipLevel,
 			int arraySize,
-			DXGI_FORMAT format
+			DXGI_FORMAT format,
+			float clearColor[4]
 		);
 		/// <summary>
 		/// 深度ステンシルバッファとなるテクスチャを作成。

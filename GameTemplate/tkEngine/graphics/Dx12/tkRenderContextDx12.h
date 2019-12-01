@@ -4,6 +4,7 @@
 
 #include "tkEngine/graphics/tkRenderContext.h"
 #include "tkEngine/graphics/Dx12/tkDescriptorHeapDx12.h"
+#include "tkEngine/graphics/Dx12/tkPipelineStateDx12.h"
 
 namespace tkEngine {
 	class CConstantBufferDx12;
@@ -127,6 +128,10 @@ namespace tkEngine {
 		/// パイプラインステートを設定。
 		/// </summary>
 		void SetPipelineState(ComPtr<ID3D12PipelineState>& pipelineState)
+		{
+			m_commandList->SetPipelineState(pipelineState.Get());
+		}
+		void SetPipelineState(CPipelineStateDx12& pipelineState)
 		{
 			m_commandList->SetPipelineState(pipelineState.Get());
 		}

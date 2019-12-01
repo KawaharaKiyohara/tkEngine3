@@ -12,7 +12,8 @@ namespace tkEngine {
 		/// <param name="entryFuncName">エントリーポイントの関数名。</param>
 		/// <param name="shaderModel">シェーダ―モデル。</param>
 		void Load(const wchar_t* filePath, const char* entryFuncName, const char* shaderModel);
-
+		void LoadPS(const wchar_t* filePath, const char* entryFuncName);
+		void LoadVS(const wchar_t* filePath, const char* entryFuncName);
 		/// <summary>
 		/// コンパイル済みシェーダーデータを取得。
 		/// </summary>

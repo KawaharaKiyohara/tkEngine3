@@ -294,6 +294,7 @@
     <ClInclude Include="graphics\Dx12\dx12Common.h" />
     <ClInclude Include="graphics\Dx12\postEffect\tkBloomDx12.h" />
     <ClInclude Include="graphics\Dx12\postEffect\tkPostEffectDx12.h" />
+    <ClInclude Include="graphics\Dx12\postEffect\tkTonemapDx12.h" />
     <ClInclude Include="graphics\Dx12\tkConstantBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkDescriptorHeapDx12.h" />
     <ClInclude Include="graphics\Dx12\tkDescriptorHeapPoolDx12.h" />
@@ -303,6 +304,7 @@
     <ClInclude Include="graphics\Dx12\tkLightManagerDx12.h" />
     <ClInclude Include="graphics\Dx12\tkMaterialDx12.h" />
     <ClInclude Include="graphics\Dx12\tkMeshPartsDx12.h" />
+    <ClInclude Include="graphics\Dx12\tkPipelineStateDx12.h" />
     <ClInclude Include="graphics\Dx12\tkPipelineStatesDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12.h" />
     <ClInclude Include="graphics\Dx12\tkRenderContextDx12_inline.h" />
@@ -374,6 +376,7 @@
     <ClCompile Include="gameObject\tkTransform.cpp" />
     <ClCompile Include="graphics\Dx12\postEffect\tkBloomDx12.cpp" />
     <ClCompile Include="graphics\Dx12\postEffect\tkPostEffectDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\postEffect\tkTonemapDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkConstantBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkDescriptorHeapDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkDescriptorHeapPoolDx12.cpp" />
@@ -383,6 +386,7 @@
     <ClCompile Include="graphics\Dx12\tkLightManagerDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMaterialDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkMeshPartsDx12.cpp" />
+    <ClCompile Include="graphics\Dx12\tkPipelineStateDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkPipelineStatesDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRenderTargetDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkRootSignatureDx12.cpp" />

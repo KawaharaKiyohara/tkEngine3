@@ -22,6 +22,14 @@ namespace tkEngine {
 			}
 		}
 	}
+	void CShaderDx12::LoadPS(const wchar_t* filePath, const char* entryFuncName)
+	{
+		Load(filePath, entryFuncName, g_psShaderModelName);
+	}
+	void CShaderDx12::LoadVS(const wchar_t* filePath, const char* entryFuncName)
+	{
+		Load(filePath, entryFuncName, g_vsShaderModelName);
+	}
 }
 
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

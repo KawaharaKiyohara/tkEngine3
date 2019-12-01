@@ -3,7 +3,7 @@
  */
 
 struct VSInput{
-	float4 pos : SV_Position;
+	float4 pos : POSITION;
 	float2 uv  : TEXCOORD0;
 };
 struct PSInput{
@@ -12,7 +12,7 @@ struct PSInput{
 };
 
 //トーンマップの共通定数バッファ。
-cbuffer cbTonemapCommon : register(b1){
+cbuffer cbTonemapCommon : register(b0){
 	float deltaTime;
 	float middleGray;
 }
@@ -41,7 +41,7 @@ static const int    MAX_SAMPLES            = 16;    // Maximum texture grabs
 /*!
  * @brief	定数バッファ。
  */
-cbuffer cbCalcLuminanceLog : register(b0){
+cbuffer cbCalcLuminanceLog : register(b1){
 	float4 g_avSampleOffsets[MAX_SAMPLES];
 };
 /*!
@@ -56,7 +56,7 @@ float4 PSCalcLuminanceLogAvarage(PSInput In) : SV_Target0
     {
         // Compute the sum of log(luminance) throughout the sample points
         vSample = sceneTexture.Sample(Sampler, In.uv+g_avSampleOffsets[iSample].xy);
-        float d = dot(vSample, LUMINANCE_VECTOR)+0.0001f;
+        float d = max( dot(vSample, LUMINANCE_VECTOR), 0.0001f );
         fLogLumSum += log(d);
     }
     
@@ -145,7 +145,6 @@ float4 PSFinal( PSInput In) : SV_Target0
 {
 	float4 vSample = sceneTexture.Sample(Sampler, In.uv );
 	float fAvgLum = lumAvgTexture.Sample(Sampler, float2( 0.5f, 0.5f));
-	
 	vSample.rgb *= middleGray/max( 0.0001f, fAvgLum );
 //	vSample.rgb /= (1.0f+vSample);
 	return vSample;

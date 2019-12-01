@@ -229,7 +229,7 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
 	for( int ligNo = 0; ligNo < numDirectionLight; ligNo++ ){
 
 		float3 baseColor = max( dot( normal, -directionLight[ligNo].direction ), 0.0f ) * directionLight[ligNo].color;
-		lig += NormalizedDisneyDiffuse(baseColor, normal, -directionLight[ligNo].direction, toEye, 1.0f - metaric);
+		lig += NormalizedDisneyDiffuse(baseColor, normal, -directionLight[ligNo].direction, toEye, 0.5f);
 		//スペキュラ反射
 		lig += BRDF(-directionLight[ligNo].direction, toEye, normal) * directionLight[ligNo].color.xyz * metaric * directionLight[ligNo].color.w;
 	}
