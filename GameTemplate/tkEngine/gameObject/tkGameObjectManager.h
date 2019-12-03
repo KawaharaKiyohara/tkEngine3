@@ -195,6 +195,11 @@ namespace tkEngine{
 		void RenderGBuffer(IRenderContext& rc)
 		{
 		}
+		/// <summary>
+		/// シャドウマップへのレンダリング。
+		/// </summary>
+		/// <param name="rc"></param>
+		void RenderToShadowMap(IRenderContext& rc);
 	private:
 		/*!
 		 *@brief	ゲームオブジェクトの削除を実行。

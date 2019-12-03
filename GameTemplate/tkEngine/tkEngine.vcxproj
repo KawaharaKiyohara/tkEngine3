@@ -321,6 +321,7 @@
     <ClInclude Include="graphics\tkAnimationClip.h" />
     <ClInclude Include="graphics\tkAnimationPlayController.h" />
     <ClInclude Include="graphics\tkCamera.h" />
+    <ClInclude Include="graphics\tkDirectionalShadowMap.h" />
     <ClInclude Include="graphics\tkGraphics.h" />
     <ClInclude Include="graphics\tkGraphicsEngine.h" />
     <ClInclude Include="graphics\tkGraphicsInstanceFactory.h" />
@@ -400,6 +401,7 @@
     <ClCompile Include="graphics\tkAnimationClip.cpp" />
     <ClCompile Include="graphics\tkAnimationPlayController.cpp" />
     <ClCompile Include="graphics\tkCamera.cpp" />
+    <ClCompile Include="graphics\tkDirectionalShadowMap.cpp" />
     <ClCompile Include="graphics\tkGraphicsEngine.cpp" />
     <ClCompile Include="graphics\tkGraphicsInstanceFactory.cpp" />
     <ClCompile Include="graphics\tkIndexBuffer.cpp" />

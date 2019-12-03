@@ -60,7 +60,13 @@ namespace tkEngine{
 		 *@brief	更新
 		 */
 		virtual void Update() {}
-		
+		/// <summary>
+		/// シャドウマップへのレンダリングパスから呼ばれる描画処理。
+		/// </summary>
+		/// <param name="renderContext"></param>
+		virtual void RenderToShadowMap(IRenderContext& renderContext, const CMatrix& mLightView, const CMatrix& mLightProj) 
+		{
+		}
 		/*!
 		*@brief	フォワードレンダリングのパスから呼ばれる描画処理。
 		*@details
@@ -182,6 +188,12 @@ namespace tkEngine{
 		}
 #endif
 	public:
+		void RenderToShadowMapWrapper(IRenderContext& renderContext, const CMatrix& mLightView, const CMatrix& mLightProj)
+		{
+			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {
+				RenderToShadowMap(renderContext, mLightView, mLightProj);
+			}
+		}
 		void RenderHUDWrapper(IRenderContext& renderContext)
 		{
 			if (m_isActive && m_isStart && !m_isDead && !m_isRegistDeadList) {

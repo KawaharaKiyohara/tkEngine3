@@ -22,7 +22,7 @@ namespace tkEngine{
 			*@brief ライトの方向を設定。
 			*@param[in]	direction	ライトの方向。
 			*/
-			void SetDirection(const CVector3& direction);
+			void SetDirection(CVector3 direction);
 			/*!
 			 *@brief	ディレクションライトを取得。
 			 */

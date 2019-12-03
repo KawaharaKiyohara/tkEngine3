@@ -52,7 +52,15 @@ namespace tkEngine{
 				obj->ForwardRenderWrapper(rc);
 			}
 		}
-	
+	}
+	void CGameObjectManager::RenderToShadowMap(IRenderContext& rc)
+	{
+		for (GameObjectList objList : m_gameObjectListArray) {
+			for (IGameObject* obj : objList) {
+				//todo カメラ行列とプロジェクション行列は適当。
+				obj->RenderToShadowMapWrapper(rc, g_camera3D->GetViewMatrix(), g_camera3D->GetProjectionMatrix());
+			}
+		}
 	}
 	void CGameObjectManager::RenderHUD(IRenderContext& rc)
 	{

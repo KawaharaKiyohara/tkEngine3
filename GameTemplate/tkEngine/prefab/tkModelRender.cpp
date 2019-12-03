@@ -38,7 +38,7 @@ namespace tkEngine {
 				}
 				break;
 			case enInitStatus_WaitInitSkeleton:
-				if (m_skeleton.IsLoaded() ){
+				if (m_skeleton.IsLoaded()) {
 					m_skeleton.BuildBoneMatrices();
 					//スケルトンとモデルを関連付ける。
 					m_model.BindSkeleton(m_skeleton);
@@ -100,6 +100,12 @@ namespace tkEngine {
 		void CModelRender::ForwardRender(IRenderContext& renderContext)
 		{
 			m_model.Draw(renderContext, g_camera3D->GetViewMatrix(), g_camera3D->GetProjectionMatrix());
+		}
+		void CModelRender::RenderToShadowMap(IRenderContext& renderContext, const CMatrix& mLightView, const CMatrix& mLightProj)
+		{
+			if (m_isShadowCaster) {
+				m_model.Draw(renderContext, mLightView, mLightProj );
+			}
 		}
 	}
 }

@@ -24,8 +24,9 @@ namespace tkEngine{
 		{
 			m_light.lightingMaterialIDGroup = GetLightingMaterialIDGroup();
 		}
-		void CDirectionLight::SetDirection(const CVector3& direction)
+		void CDirectionLight::SetDirection( CVector3 direction)
 		{
+			direction.Normalize();
 			m_light.direction = direction;
 		}
 		

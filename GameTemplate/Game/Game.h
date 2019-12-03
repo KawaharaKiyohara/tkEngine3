@@ -24,6 +24,7 @@ private:
 		enNinja,
 		enNumModel,
 	};
+	prefab::CModelRender* m_bgModelRender = nullptr;				//背景モデルレンダラー。
 	prefab::CModelRender* m_modelRender[enNumModel] = { nullptr };	//モデルレンダラー。
 	EnInitStep m_initStep = enInitStep_LoadStart;	//初期化ステップ。
 	CVector3 m_position = g_vec3Zero;				//座標。

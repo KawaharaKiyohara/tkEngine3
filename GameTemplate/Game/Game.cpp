@@ -24,20 +24,31 @@ bool Game::Start()
 	g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 	g_camera3D->SetNear(0.1f);
 	g_camera3D->SetFar(10000.0f);
-	g_camera3D->SetPosition({ 0.0f, 50.0f, 200.0f });
+	g_camera3D->SetPosition({ 0.0f, 200.0f, 300.0f });
 	g_camera3D->SetUp(g_vec3AxisY);
 	
-	g_lightManager->SetAmbientLight({ 0.3f, 0.3f, 0.3f });
 	m_dirLig = NewGO<prefab::CDirectionLight>(0);
 	
-	m_dirLig->SetDirection({ -0.0f, 0.0f, -1.0f });
-	m_dirLig->SetColor({ -0.7f, -0.7f, -0.7f, 1.5f });
+	m_dirLig->SetDirection({ -1.0f, -1.0f, -0.0f });
+	m_dirLig->SetColor({ 0.5f, 0.5f, 0.5f, 1.5f });
+
+	m_dirLig = NewGO<prefab::CDirectionLight>(0);
+
+	m_dirLig->SetDirection({ 0.0f, -1.0f, -1.0f });
+	m_dirLig->SetColor({ 0.5f, 0.5f, 0.5f, 1.5f });
+
+	g_lightManager->SetAmbientLight({ 0.4f, 0.4f, 0.4f });
+
+	m_bgModelRender = NewGO<prefab::CModelRender>(0);
+	m_bgModelRender->Init("modelData/bg/bg.tkm");
+	m_bgModelRender->SetScale({ 2.0f, 2.0f, 2.0f });
 
 	m_modelRender[enRobo] = NewGO<prefab::CModelRender>(0);
 	m_modelRender[enRobo]->Init(
 		"modelData/robo.tkm");
 	m_modelRender[enRobo]->SetScale( 12.0f, 12.0f, 12.0f );
-//	m_modelRender[enRobo]->SetActiveFlag(false);
+	m_modelRender[enRobo]->Move({ 200.0f, 0.0f, 0.0f });
+
 	const char* tkaFilePaths[] = {
 		"animData/unityChan/idle.tka",
 		"animData/unityChan/run.tka",
@@ -52,7 +63,7 @@ bool Game::Start()
 	qRot.SetRotationDeg(g_vec3AxisX, 90.0f);
 	m_modelRender[enUnity]->SetRotation(qRot);
 	m_modelRender[enUnity]->SetScale( 2.0f, 2.0f, 2.0f );
-//	m_modelRender[enUnity]->SetActiveFlag(false);
+	m_modelRender[enUnity]->Move({-200.0f, 0.0f, 0.0f} );
 
 	const char* ninjaTkaFilePaths[] = {
 		"animData/thief/idle.tka",

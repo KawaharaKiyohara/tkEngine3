@@ -406,6 +406,9 @@ namespace tkEngine {
 		BeginRender();
 
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//シャドウマップへのレンダリング。
+		goMgr->RenderToShadowMap(rcDx12);
+
 		//G-Bufferへのレンダリングパス。
 		goMgr->RenderGBuffer(rcDx12);
 

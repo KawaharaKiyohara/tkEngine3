@@ -111,6 +111,37 @@ namespace tkEngine {
 			{
 				m_animation.Play(animNo, interpolateTime);
 			}
+			/// <summary>
+			/// シャドウマップへのレンダリング。
+			/// </summary>
+			/// <param name="renderContext">レンダリングコンテキスト</param>
+			/// <param name="mLightView">ライトビュー行列</param>
+			/// <param name="mLightProj">ライトプロジェクション行列。</param>
+			void RenderToShadowMap(IRenderContext& renderContext, const CMatrix& mLightView, const CMatrix& mLightProj) override;
+			/// <summary>
+			/// シャドウキャスターフラグを設定。
+			/// </summary>
+			/// <remarks>
+			/// シャドウキャスターフラグがtrueになっていると、
+			/// シャドウマップへのレンダリングが行われます。
+			/// </remarks>
+			/// <param name="flag"></param>
+			void SetShadowCasterFlag(bool flag)
+			{
+				m_isShadowCaster = flag;
+			}
+			/// <summary>
+			/// シャドウレシーバーフラグを設定。
+			/// </summary>
+			/// <remarks>
+			/// シャドウレシーバーフラグがtrueになっていると、
+			/// シャドウマップを参照して、他のオブジェクトからの影が落とされます。
+			/// </remarks>
+			/// <param name="flag"></param>
+			void SetShadowReceiverFlag(bool flag)
+			{
+				m_isShadowReceiver = flag;
+			}
 		private:
 			/// <summary>
 			/// 初期化ステータス。
@@ -133,6 +164,8 @@ namespace tkEngine {
 			vector< string > m_tkaFilePaths;			//tkaファイルのファイルパスのリスト。
 			vector< CUPAnimationClip> m_animationClips;	//アニメーションクリップの配列。
 			CAnimation m_animation;
+			bool m_isShadowCaster = false;				//シャドウキャスタ―フラグ。
+			bool m_isShadowReceiver = false;			//シャドウレシーバーフラグ。
 		};
 	}
 }

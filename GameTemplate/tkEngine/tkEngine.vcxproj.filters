@@ -317,6 +317,9 @@
     <ClInclude Include="graphics\Dx12\tkPipelineStateDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tkDirectionalShadowMap.h">
+      <Filter>Source Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -504,6 +507,9 @@
     </ClCompile>
     <ClCompile Include="graphics\Dx12\tkPipelineStateDx12.cpp">
       <Filter>Source Files\graphics\Dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\tkDirectionalShadowMap.cpp">
+      <Filter>Source Files\graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
