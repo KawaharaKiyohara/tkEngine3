@@ -183,7 +183,8 @@ rollout tkExporter "tkExporter" width:194 height:248
 					if p == undefined then(
 						append delObjArray $selection[i]
 					)
-	
+					addmodifier selection[i] (maxPlugin name:"MapChip")
+					messageBox("Test")
 				)
 				--編集可能ポリゴンに変換できなかったオブジェクトを削除。
 				for i=1 to delObjArray.count do
