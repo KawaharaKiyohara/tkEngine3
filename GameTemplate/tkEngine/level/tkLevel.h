@@ -15,6 +15,8 @@ namespace tkEngine{
 		CQuaternion rotation;	//!<回転。
 		CVector3 scale;			//!<拡大率。
 		const wchar_t* name;	//!<名前。
+		bool isShadowCaster; //!<シャドウキャスター
+		bool isShadowReceiver; //!<シャドウレシーバー
 		/*!
 		* @brief	引数で渡したオブジェクト名のオブジェクトか調べる。
 		*@param[in]	objName		調べる名前。

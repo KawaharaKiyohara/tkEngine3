@@ -48,7 +48,6 @@ namespace tkEngine{
 		wcstombs_s(&convertedChars, nstring, newsize, filePath, _TRUNCATE);
 		_mbscat_s((unsigned char*)nstring, newsize + strConcatsize, (unsigned char*)strConcat);
 		CSkeleton skeleton;
-		//skeleton.Load("level/testl.tkl");
 		skeleton.Load(nstring);
 		skeleton.BuildBoneMatrices();
 		//ç\ízç\ízÅB
