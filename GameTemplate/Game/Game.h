@@ -3,6 +3,9 @@
 #include "tkEngine/graphics/tkModel.h"
 #include "tkEngine/prefab/tkModelRender.h"
 #include "tkEngine/graphics/Dx12/tkSpriteDx12.h"
+#include "tkEngine/level/tkLevel.h"
+#include "tkEngine/level/tkMapChip.h"
+#include "tkEngine/level/tkMapChipRender.h"
 
 class Game : public IGameObject
 {
@@ -34,6 +37,6 @@ private:
 	prefab::CDirectionLight* m_dirLig;
 	//スプライト作成テスト。
 	CSpriteDx12 m_sprite;
-
+	CLevel m_level;
 };
 

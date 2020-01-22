@@ -66,6 +66,9 @@
     <Filter Include="Source Files\graphics\Dx12\postEffect">
       <UniqueIdentifier>{d7651ae8-bbe5-4898-aa3a-520e22752a83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\level">
+      <UniqueIdentifier>{ecb36131-7cc1-472b-bb0b-f6547a7a213c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameObject\tkGameObjectManager.h">
@@ -320,6 +323,15 @@
     <ClInclude Include="graphics\tkDirectionalShadowMap.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="level\tkMapChip.h">
+      <Filter>Source Files\level</Filter>
+    </ClInclude>
+    <ClInclude Include="level\tkMapChipRender.h">
+      <Filter>Source Files\level</Filter>
+    </ClInclude>
+    <ClInclude Include="level\tkLevel.h">
+      <Filter>Source Files\level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -510,6 +522,15 @@
     </ClCompile>
     <ClCompile Include="graphics\tkDirectionalShadowMap.cpp">
       <Filter>Source Files\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="level\tkMapChip.cpp">
+      <Filter>Source Files\level</Filter>
+    </ClCompile>
+    <ClCompile Include="level\tkMapChipRender.cpp">
+      <Filter>Source Files\level</Filter>
+    </ClCompile>
+    <ClCompile Include="level\tkLevel.cpp">
+      <Filter>Source Files\level</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

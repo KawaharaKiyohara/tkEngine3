@@ -342,6 +342,9 @@
     <ClInclude Include="graphics\tkTksFile.h" />
     <ClInclude Include="graphics\tkVertexBuffer.h" />
     <ClInclude Include="Input\tkPad.h" />
+    <ClInclude Include="level\tkLevel.h" />
+    <ClInclude Include="level\tkMapChip.h" />
+    <ClInclude Include="level\tkMapChipRender.h" />
     <ClInclude Include="math\tkAabb.h" />
     <ClInclude Include="math\tkBox.h" />
     <ClInclude Include="math\tkMath.h" />
@@ -417,6 +420,9 @@
     <ClCompile Include="graphics\tkTksFile.cpp" />
     <ClCompile Include="graphics\tkVertexBuffer.cpp" />
     <ClCompile Include="Input\tkPad.cpp" />
+    <ClCompile Include="level\tkLevel.cpp" />
+    <ClCompile Include="level\tkMapChip.cpp" />
+    <ClCompile Include="level\tkMapChipRender.cpp" />
     <ClCompile Include="math\tkAabb.cpp" />
     <ClCompile Include="math\tkBox.cpp" />
     <ClCompile Include="math\tkMath.cpp" />
