@@ -1,37 +1,51 @@
-fn SaveLevel = 
-(
-    filepath = getSaveFileName caption:"" types: "level (*.tkl)|*.tkl|All Files (*.*)|*.*|"
-    
-    if filepath != undefined then
-    (
-        
-        file = fopen filepath "wb"
-        
-        try(
-            --?øΩw?øΩb?øΩ_?øΩ[?øΩ?øΩo?øΩ?øΩ
-            WriteLong file g_objectParams.count
-            
-            for o in g_objectParams do (
-                
-                WriteByte file o.objName.count
-                WriteString file o.objName
-                WriteLong file o.parentId
-                --?øΩo?øΩC?øΩ?øΩ?øΩh?øΩ|?øΩ[?øΩY?øΩ?øΩo?øΩÕÅB
-                for i = 1 to 4 do(
-                    WriteFloat file o.bindPose[i].x
-                    WriteFloat file o.bindPose[i].y
-                    WriteFloat file o.bindPose[i].z
-                )
-                --?øΩo?øΩC?øΩ?øΩ?øΩh?øΩ|?øΩ[?øΩY?øΩÃãt?øΩ?øΩ?øΩ?øΩo?øΩÕÅB
-                for i = 1 to 4 do(
-                    WriteFloat file o.invBindPose[i].x
-                    WriteFloat file o.invBindPose[i].y
-                    WriteFloat file o.invBindPose[i].z
-                )
-            )
-        )catch(
-            Messagebox "?øΩt?øΩ@?øΩC?øΩ?øΩ?øΩÃï€ëÔøΩ?øΩ…éÔøΩ?øΩs?øΩ?øΩ?øΩ‹ÇÔøΩ?øΩ?øΩ"
-        )
-        FClose file
-    )
-)
+--„É¨„Éô„É´„Éá„Éº„Çø„ÅÆ„Ç®„ÇØ„Çπ„Éù„Éº„Çø„ÄÇ
+
+/*
+	 * „É¨„Éô„É´„Éá„Éº„Çø„Çí‰øùÂ≠ò„ÄÇ
+	 */
+     fn SaveLevel = 
+     (
+         filepath = getSaveFileName caption:"" types: "level (*.tkl)|*.tkl|All Files (*.*)|*.*|"
+         
+         if filepath != undefined then
+         (
+             
+             file = fopen filepath "wb"
+             
+             try(
+                 --„Éò„ÉÉ„ÉÄ„Éº„ÇíÂá∫Âäõ
+                 WriteLong file g_objectParams.count
+                 
+                 for o in g_objectParams do (
+                     WriteByte file o.objName.count
+                     WriteString file o.objName
+                     WriteLong file o.parentId
+                     --„Éê„Ç§„É≥„Éâ„Éù„Éº„Ç∫„ÇíÂá∫Âäõ„ÄÇ
+                     for i = 1 to 4 do(
+                         WriteFloat file o.bindPose[i].x
+                         WriteFloat file o.bindPose[i].y
+                         WriteFloat file o.bindPose[i].z
+                     )
+                     --„Éê„Ç§„É≥„Éâ„Éù„Éº„Ç∫„ÅÆÈÄÜÊï∞„ÇíÂá∫Âäõ„ÄÇ
+                     for i = 1 to 4 do(
+                         WriteFloat file o.invBindPose[i].x
+                         WriteFloat file o.invBindPose[i].y
+                         WriteFloat file o.invBindPose[i].z
+                     )
+                     --„Ç∑„É£„Éâ„Ç¶„Ç≠„É£„Çπ„Çø„Éº„Éï„É©„Ç∞„ÇíÂá∫Âäõ„ÄÇ
+                     if o.isShadowCaster == true then
+                        WriteByte file 1
+                     else
+                        WriteByte file 0
+                    --„Ç∑„É£„Éâ„Ç¶„É¨„Ç∑„Éº„Éê„Éº„Éï„É©„Ç∞„ÇíÂá∫Âäõ„ÄÇ
+                    if o.isShadowReceiver == true then
+                        WriteByte file 1
+                    else
+                        WriteByte file 0
+                 )
+             )catch(
+                 Messagebox "„Éï„Ç°„Ç§„É´„ÅÆ‰øùÂ≠ò„Å´Â§±Êïó„Åó„Åæ„Åó„Åü"
+             )
+             FClose file
+         )
+     )
