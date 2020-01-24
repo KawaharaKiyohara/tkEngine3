@@ -3,6 +3,7 @@
  */
 
 #pragma once
+#include "tkTklFile.h"
 
 namespace tkEngine{
 	class CMapChip;
@@ -74,7 +75,19 @@ namespace tkEngine{
 		/// <returns></returns>
 		CMapChipRender* CreateMapChipRenderOrAddRenderObject( const LevelObjectData& objData );
 	private:
+		/// <summary>
+		/// ボーン行列の構築。
+		/// </summary>
+		void BuildBoneMatrices();
+
 		std::vector<CMapChipPtr> m_mapChipPtrs;			//マップチップの可変長配列。
 		std::map< unsigned int, CMapChipRender*> m_mapChipRenderPtrs;	//マップチップレンダラーの可変長配列。
+
+		CTklFile m_tklFile;
+		static const int BONE_MAX = 512;				//ボーンの最大数。
+		using CBonePtr = std::unique_ptr<CBone>;
+		std::vector<CBonePtr>	m_bones;				//ボーンの配列。
+		std::unique_ptr<CMatrix[]>	m_boneMatrixs;		//ボーン行列。
+		bool m_isInited = false;						//初期化済み？
 	};
 }

@@ -332,6 +332,9 @@
     <ClInclude Include="level\tkLevel.h">
       <Filter>Source Files\level</Filter>
     </ClInclude>
+    <ClInclude Include="level\tkTklFile.h">
+      <Filter>Source Files\level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -530,6 +533,9 @@
       <Filter>Source Files\level</Filter>
     </ClCompile>
     <ClCompile Include="level\tkLevel.cpp">
+      <Filter>Source Files\level</Filter>
+    </ClCompile>
+    <ClCompile Include="level\tkTklFile.cpp">
       <Filter>Source Files\level</Filter>
     </ClCompile>
   </ItemGroup>

@@ -82,7 +82,7 @@ bool Game::Start()
 
 //	m_modelRender[m_currentModel]->SetActiveFlag(true);
 
-	m_level.Init(L"level/testl.tkl", [&](LevelObjectData& objData) {
+	m_level.Init(L"level/wtf.tkl", [&](LevelObjectData& objData) {
 		return false;
 	});
 	return true;

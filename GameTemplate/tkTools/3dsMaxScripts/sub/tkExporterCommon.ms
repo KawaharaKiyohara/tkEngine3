@@ -1,8 +1,8 @@
 /*!
- * @brief	tkエクスポーターの共通処理。
+ * @brief	tk�G�N�X�|�[�^�[�̋��ʏ����B
  */
  
---オブジェクトパラメータ。
+--�I�u�W�F�N�g�p�����[�^�B
 struct ObjectParam(
 	objName,
 	bindPose,
@@ -11,11 +11,12 @@ struct ObjectParam(
 	n
 )
 
---オブジェクトパラメータの配列。
+
+--�I�u�W�F�N�g�p�����[�^�̔z��B
 g_objectParams = #()
 
 /*
-*  出力するノードの情報を構築。
+*  �o�͂���m�[�h�̏���\�z�B
 */
 fn BuildOutputNodeInfo n parentId= 
 (
@@ -25,64 +26,63 @@ fn BuildOutputNodeInfo n parentId=
 	objParam.invBindPose = inverse n.transform
 	objParam.n = n
 	if n.parent == undefined then(
-		--親がいない
+		--�e�����Ȃ�
 		objParam.parentId = -1
 	)else(
-		--親がいる
+		--�e������
 		objParam.parentId = parentId
 	)
-
 	append g_objectParams objParam
 	parentId = g_objectParams.count-1
-	--子供も。
+	--�q����B
 	for child in n.children do(
 		BuildOutputNodeInfo child parentId
 	)
 )
 
 /*!
- * ボーンインデックスを取得する。
- * この関数を呼び出すには、BuildOutputNodeInfoを実行して
- * スケルトン情報を構築済みである必要があります。
+ * �{�[���C���f�b�N�X��擾����B
+ * ���̊֐���Ăяo���ɂ́ABuildOutputNodeInfo����s����
+ * �X�P���g������\�z�ς݂ł���K�v������܂��B
 */
 fn GetBoneIndex boneName =
 (
 	boneNo = 0
 	for op in g_objectParams do(
 		if op.objName == boneName then(
-			--見つけた
+			--������
 			return boneNo
 		)
 		boneNo += 1
 	)
 )
 /*
-*  スキンモディファイアが設定されているノードがあったら、そのノードに割り当てられているスケルトンのルートを取得。
+*  �X�L�����f�B�t�@�C�A���ݒ肳��Ă���m�[�h����������A���̃m�[�h�Ɋ��蓖�Ă��Ă���X�P���g���̃��[�g��擾�B
 */
 fn GetSkeletonRoot nodes =
 (
 	for p in nodes do
 	(
-		--スキンモディファイアを取得。
+		--�X�L�����f�B�t�@�C�A��擾�B
 		skinMod = p.modifiers[skin]
 		
 		if skinMod != undefined then(
-			--スキンを見つけた。
+			--�X�L��������B
 			max modify mode
 			
 			modPanel.setCurrentObject skinMod
 			numBone = skinOps.GetNumberBones( skinMod )
 			if numBone > 0 then(
-				--bone発見したぞいぞい
+				--bone����������������
 				boneName = skinOps.GetBoneName skinMod 1 1 
-				--名前からノードを選択
+				--���O����m�[�h��I��
 				boneNode = getNodebyName(boneName)
 				if boneNode != undefined  then (
-					--スケルトンのルートを検索するぞ
+					--�X�P���g���̃��[�g������邼
 					while boneNode.parent != undefined  do(
 						boneNode = boneNode.parent
 					)
-					--ルートを返すん。
+					--���[�g��Ԃ���B
 					return boneNode
 				)
 			)
@@ -91,7 +91,7 @@ fn GetSkeletonRoot nodes =
 	return undefined
 )
 /*
-*  マテリアルが貼られていないノードがないかチェックを行う。
+*  �}�e���A�����\���Ă��Ȃ��m�[�h���Ȃ����`�F�b�N��s���B
 */
 fn CheckMaterial nodes =
 (
@@ -99,17 +99,17 @@ fn CheckMaterial nodes =
 	(
 		meshCount = GetTriMeshFaceCount(p)
 		if classof( p ) == BoneGeometry do(
-			--こいつはボーン
+			--�����̓{�[��
 			meshCount[1] = 0
 			meshCount[2] = 0
 		)
 		if meshCount[1] > 0 do
 		(
-			--メッシュがある。
+			--���b�V��������B
 			if p.material == undefined do
 			(
-				--マテリアルが張られていない。
-				errorMessage = "エラー\n " + p.name + "にマテリアルが割り当てられていないため出力できません。\n"+ "マテリアルを割り当ててください。\n"
+				--�}�e���A���������Ă��Ȃ��B
+				errorMessage = "�G���[\n " + p.name + "�Ƀ}�e���A�������蓖�Ă��Ă��Ȃ����ߏo�͂ł��܂���B\n"+ "�}�e���A����蓖�ĂĂ��������B\n"
 				messagebox errorMessage
 				return false				
 			)

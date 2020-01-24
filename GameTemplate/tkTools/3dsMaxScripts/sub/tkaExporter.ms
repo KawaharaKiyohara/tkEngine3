@@ -1,15 +1,15 @@
---ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã‚¨ã‚¯ã‚¹ãƒãƒ¼ã‚¿ãƒ¼ã€‚
+--ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒvƒGƒNƒXƒ|[ƒ^[B
 
---ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ 
+--ƒAƒjƒ[ƒVƒ‡ƒ“ƒL[ƒtƒŒ[ƒ€
 struct KeyFrame(
 	boneId,
 	t,
 	localTransform
 )
---ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—
+--ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv
 struct AnimationClip(
-	animClipName,		--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—å
-	keyFrames = #()		--ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒªã‚¹ãƒˆ
+	animClipName,		--ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv–¼
+	keyFrames = #()		--ƒL[ƒtƒŒ[ƒ€‚ÌƒŠƒXƒg
 )
 
 
@@ -17,7 +17,7 @@ startFrame = 0
 endFrame = 0
 
 /*
-*  ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ä¿å­˜ã€‚
+*  ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì•Û‘¶B
 */
 fn SaveAnimationClip=
 (
@@ -28,7 +28,7 @@ fn SaveAnimationClip=
         
         numKey = endFrame - startFrame + 1
         if numKey <= 0 then(
-            --1ãƒ•ãƒ¬ãƒ¼ãƒ ã ã‘å‡ºã™ã€‚
+            --1ƒtƒŒ[ƒ€‚¾‚¯o‚·B
             endFrame = startFrame
             numKey = 1
         )
@@ -40,17 +40,17 @@ fn SaveAnimationClip=
         matRotList = #()
 
         file = fopen filepath "wb"
-        --ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
+        --ƒwƒbƒ_[‚ğo—Í
         WriteLong file numKey
-        --ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã®æ•°ã‚’å‡ºåŠ›
+        --ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚Ì”‚ğo—Í
         numNoteTrack = numNoteTracks selection[1]
 
         if numNoteTrack > 0 then(
-            --ãƒãƒ¼ãƒˆã‚­ãƒ¼ã®æ•°ã‚’å‡ºåŠ›
+            --ƒm[ƒgƒL[‚Ì”‚ğo—Í
             nt = getNoteTrack selection[1] 1
             WriteLong file nt.keys.count
             for k in nt.keys do(
-                --ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã™ã‚‹æ™‚é–“ã‚’å‡ºåŠ›
+                --ƒCƒxƒ“ƒg‚ª”­¶‚·‚éŠÔ‚ğo—Í
                 if k.time >= numKey then(
                     exit
                 )
@@ -65,7 +65,7 @@ fn SaveAnimationClip=
         )
         
         fclose file
-        --ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æƒ…å ±ã‚’å‡ºåŠ›ã€‚
+        --ƒAƒjƒ[ƒVƒ‡ƒ“‚Ìî•ñ‚ğo—ÍB
         slidertime=startFrame
 
         file = fopen filepath "ab"
@@ -77,11 +77,11 @@ fn SaveAnimationClip=
             for o in g_objectParams do (
                 n = o.n
 
-                --å‡ºåŠ›
-                WriteLong file boneId -- éª¨ID
-                WriteFloat file keyTime -- æ™‚é–“
+                --o—Í
+                WriteLong file boneId -- œID
+                WriteFloat file keyTime -- ŠÔ
                 
-                --ãƒœãƒ¼ãƒ³ãƒ­ãƒ¼ã‚«ãƒ«è¡Œåˆ—ã«å¤‰æ›ã™ã‚‹ã€‚
+                --ƒ{[ƒ“ƒ[ƒJƒ‹s—ñ‚É•ÏŠ·‚·‚éB
                 
                 transformMatrix = Matrix3 1
                 if n.parent == undefined then(

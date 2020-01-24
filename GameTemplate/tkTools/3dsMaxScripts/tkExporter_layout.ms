@@ -1,4 +1,4 @@
-rollout tkExporter "ƒ^ƒCƒgƒ‹‚È‚µ" width:182 height:597
+rollout tkExporter "?^?C?g?????" width:182 height:597
 (
 	editText 'animClipStartFrame' "" pos:[90,462] width:58 height:21 align:#left
 	label 'lbl1' "start frame" pos:[22,465] width:60 height:16 align:#left

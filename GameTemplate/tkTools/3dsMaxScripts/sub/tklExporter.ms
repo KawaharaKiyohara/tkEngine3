@@ -1,8 +1,3 @@
---ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ã‚¿ã€‚
-
-/*
-* ãƒ¬ãƒ™ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã€‚
-*/
 fn SaveLevel = 
 (
     filepath = getSaveFileName caption:"" types: "level (*.tkl)|*.tkl|All Files (*.*)|*.*|"
@@ -13,7 +8,7 @@ fn SaveLevel =
         file = fopen filepath "wb"
         
         try(
-            --ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
+            --?¿½w?¿½b?¿½_?¿½[?¿½?¿½o?¿½?¿½
             WriteLong file g_objectParams.count
             
             for o in g_objectParams do (
@@ -21,13 +16,13 @@ fn SaveLevel =
                 WriteByte file o.objName.count
                 WriteString file o.objName
                 WriteLong file o.parentId
-                --ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’å‡ºåŠ›ã€‚
+                --?¿½o?¿½C?¿½?¿½?¿½h?¿½|?¿½[?¿½Y?¿½?¿½o?¿½ÍB
                 for i = 1 to 4 do(
                     WriteFloat file o.bindPose[i].x
                     WriteFloat file o.bindPose[i].y
                     WriteFloat file o.bindPose[i].z
                 )
-                --ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®é€†æ•°ã‚’å‡ºåŠ›ã€‚
+                --?¿½o?¿½C?¿½?¿½?¿½h?¿½|?¿½[?¿½Y?¿½Ì‹t?¿½?¿½?¿½?¿½o?¿½ÍB
                 for i = 1 to 4 do(
                     WriteFloat file o.invBindPose[i].x
                     WriteFloat file o.invBindPose[i].y
@@ -35,7 +30,7 @@ fn SaveLevel =
                 )
             )
         )catch(
-            Messagebox "ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸ"
+            Messagebox "?¿½t?¿½@?¿½C?¿½?¿½?¿½Ì•Û‘ï¿½?¿½Éï¿½?¿½s?¿½?¿½?¿½Ü‚ï¿½?¿½?¿½"
         )
         FClose file
     )

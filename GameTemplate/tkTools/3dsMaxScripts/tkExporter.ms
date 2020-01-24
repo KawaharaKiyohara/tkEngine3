@@ -1,5 +1,5 @@
 /*!
- * @brief	tkEngine関係のエクスポーター。
+ * @brief	tkEngine�֌W�̃G�N�X�|�[�^�[�B
  */
  
 pluginManager.loadClass FBXIMPORTER 
@@ -41,78 +41,79 @@ rollout tkExporter "tkExporter" width:194 height:248
 	)
 
 	/*
-	 *  スケルトンの出力のボタンが押されたときの処理。
+	 *  �X�P���g���̏o�͂̃{�^���������ꂽ�Ƃ��̏����B
 	 */
 	on btn_saveSkeleton pressed do
 	(
 		if selection[1] == undefined then(
-			Messagebox "出力するスケルトンのルートのオブジェクトを選択して下さい。。。"
+			Messagebox "�o�͂���X�P���g���̃��[�g�̃I�u�W�F�N�g��I��ĉ������B�B�B"
 		)else(
 			g_objectParams = #()
-			--アニメーション時間を0にする。
+			--�A�j���[�V�������Ԃ�0�ɂ���B
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--アニメーション進行中の処理。
+				--�A�j���[�V�����i�s���̏����B
 				BuildOutputNodeInfo selection[1] -1
 				SaveSkeleton()
 			)
 		)
 	)
 	/*
-	* Levelを保存。
+	* Level��ۑ��B
 	*/
 	on SaveLoc pressed do
 	(
-		--現在編集中のルートのレベルを取得。
+		--���ݕҏW���̃��[�g�̃��x����擾�B
 		editLevelObj = getNodeByName levelName.text
 		if editLevelObj == undefined then(
-			Messagebox "保存するレベルが存在しません。"
+			Messagebox "�ۑ����郌�x�������݂��܂���B"
 		)else(
 			select editLevelObj
 		
-			--スケルトンとして保存。
+			--�X�P���g���Ƃ��ĕۑ��B
 			g_objectParams = #()
-			--アニメーション時間を0にする。
+			--�A�j���[�V�������Ԃ�0�ɂ���B
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--アニメーション進行中の処理。
+				--�A�j���[�V�����i�s���̏����B
 				BuildOutputNodeInfo selection[1] -1
 				SaveLevel()
+				print "save level"
 			)
 		)
 	)
 	
 	/*
-	 *  アニメーションクリップの保存のボタンが押されたときの処理。
+	 *  �A�j���[�V�����N���b�v�̕ۑ��̃{�^���������ꂽ�Ƃ��̏����B
 	 */
 	on btn_saveAnimationClip pressed do
 	(
-		--とりあえず全クリップ出力する。
+		--�Ƃ肠�����S�N���b�v�o�͂���B
 		skeletonRoot = GetSkeletonRoot objects
 		
 		if skeletonRoot == undefined  then(
-			--シーンにスキンモディファイアが見つからなかった。
+			--�V�[���ɃX�L�����f�B�t�@�C�A��������Ȃ������B
 			if selection[1] == undefined  then(
-				Messagebox "スケルトンのルートのオブジェクトの自動判別ができませんでした。\nスケルトンのルートのオブジェクトを選択してアニメーションクリップを保存してください。\n"
+				Messagebox "�X�P���g���̃��[�g�̃I�u�W�F�N�g�̎������ʂ��ł��܂���ł����B\n�X�P���g���̃��[�g�̃I�u�W�F�N�g��I��ăA�j���[�V�����N���b�v��ۑ����Ă��������B\n"
 				return 0
 			)
 			skeletonRoot = selection[1]
 		)
 		g_objectParams = #()
-		--アニメーション時間を0にする。
+		--�A�j���[�V�������Ԃ�0�ɂ���B
 		startFrame = animClipStartFrame.text as integer
 		endFrame = animClipEndFrame.text as integer
 		animationRange = interval startFrame endFrame
 		slidertimer = 0
 		animate on(
-			--アニメーション進行中の処理。
+			--�A�j���[�V�����i�s���̏����B
 			BuildOutputNodeInfo skeletonRoot -1
 			try(
 				SaveAnimationClip()
 			)catch(
-				messageBox "ファイルの保存に失敗しました"
+				messageBox "�t�@�C���̕ۑ��Ɏ��s���܂���"
 			)
 		)
 	)
@@ -129,12 +130,12 @@ rollout tkExporter "tkExporter" width:194 height:248
     )
     
 	/*
-	 *　配置するオブジェクトをコピー
+	 *�@�z�u����I�u�W�F�N�g��R�s�[
 	 */
 	on btn_copy_locObject pressed do
 	(
 		if selection.count == 0  then(
-			Messagebox "コピーするオブジェクトを選択してください。"
+			Messagebox "�R�s�[����I�u�W�F�N�g��I��Ă��������B"
 		)else(
 			selectHierarchy()
 			parentObj = copy selection[1]
@@ -150,19 +151,19 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 * 配置するオブジェクトのロード。
+	 * �z�u����I�u�W�F�N�g�̃��[�h�B
 	 */
 	on btn_load_locObject pressed do
 	(
 		
 		if  levelName.text == "" then(
-			Messagebox "編集するレベルの名前を入力して下さい。"
+			Messagebox "�ҏW���郌�x���̖��O����͂��ĉ������B"
 		)else(
 			filepath = getOpenFileName caption:"" types: "fbx (*fbx)|*.fbx|All Files (*.*)|*.*|"
 			if filepath != undefined then(
 				editLevelObj = getNodeByName levelName.text
 				if editLevelObj == undefined then(
-					--ダミーを作る。
+					--�_�~�[����B
 					editLevelObj = Dummy()
 					editLevelObj.name = levelName.text
 				)
@@ -174,19 +175,17 @@ rollout tkExporter "tkExporter" width:194 height:248
 		
 				filename = getFilenameFile filepath
 				
-				--全てを編集可能ポリゴンに変換する。
+				--�S�Ă�ҏW�\�|���S���ɕϊ�����B
 				delObjArray = #()
 				for i=1 to $selection.count do
 				(
 					p = convertToMesh($selection[i]);
-					--編集可能ポリゴンに変換できなかった場合は、削除リストに積む。
+					--�ҏW�\�|���S���ɕϊ��ł��Ȃ������ꍇ�́A�폜���X�g�ɐςށB
 					if p == undefined then(
 						append delObjArray $selection[i]
 					)
-					addmodifier selection[i] (maxPlugin name:"MapChip")
-					messageBox("Test")
 				)
-				--編集可能ポリゴンに変換できなかったオブジェクトを削除。
+				--�ҏW�\�|���S���ɕϊ��ł��Ȃ������I�u�W�F�N�g��폜�B
 				for i=1 to delObjArray.count do
 				(
 					delete delObjArray[i]
@@ -196,25 +195,26 @@ rollout tkExporter "tkExporter" width:194 height:248
 				importObj.parent = parentBox
 				select p
 				selectMore $.children
-				--結合。
+				--�����B
 				while  $selection.count>1 do
 				(
 					attach p $selection[$selection.count];
 				)
 
-				--ダミーをレベルの下にぽいっとな。
+				--�_�~�[��x���̉��ɂۂ����ƂȁB
 				$selection[1].pivot = Point3 0 0 0
 				selection[1].name = filename
+				--addModifier selection[1] (maxPlugin())	
 				$selection[1].parent = editLevelObj
 			)
 		)
 	)
 	/*
-	 *  FBX出力用の設定を行う。
+	 *  FBX�o�͗p�̐ݒ��s���B
 	 */
 	fn SetupFbxExportSettings = 
 	(
-		--他にもオプションが必要なら追加していってください。
+		--���ɂ�I�v�V�������K�v�Ȃ�ǉ����Ă����Ă��������B
 		FBXExporterSetParam "ResetExport"
 		FBXExporterSetParam "ScaleFactor" 1.0
 		FBXExporterSetParam "UpAxis" "Z"
@@ -225,21 +225,21 @@ rollout tkExporter "tkExporter" width:194 height:248
 	
 	
 	/*!
-	 * @brief	FBXのSaveのボタンが押されたときの処理。
+	 * @brief	FBX��Save�̃{�^���������ꂽ�Ƃ��̏����B
 	 */
 	on btn_save_fbx pressed do
 	(
-		--全オブジェクトをtkmファイルとして出力する。
+		--�S�I�u�W�F�N�g��tkm�t�@�C���Ƃ��ďo�͂���B
 		expoter = TkmExporter()
 		expoter.SaveTkm objects filepath flat_shading.checked
 	)
 	
 	/*!
-	 * @brief	FBXのSave Selectedのボタンが押されたときの処理。
+	 * @brief	FBX��Save Selected�̃{�^���������ꂽ�Ƃ��̏����B
 	 */
 	on btn_save_selected_fbx pressed do
 	(
-		--選択されているオブジェクトをtkmファイルとして出力する。
+		--�I���Ă���I�u�W�F�N�g��tkm�t�@�C���Ƃ��ďo�͂���B
 		expoter = TkmExporter()
 		expoter.SaveTkm selection filepath flat_shading.checked
 	)
