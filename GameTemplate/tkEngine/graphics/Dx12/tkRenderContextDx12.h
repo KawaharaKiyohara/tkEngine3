@@ -40,6 +40,16 @@ namespace tkEngine {
 			m_commandList->RSSetViewports(1, &viewport);
 		}
 		/// <summary>
+	/// 定数バッファを設定。
+	/// </summary>
+	/// <param name="registerNo">設定するレジスタの番号。</param>
+	/// <param name="cb">定数バッファ。</param>
+		void SetConstantBuffer(int registerNo, CConstantBufferDx12& cb)
+		{
+			TK_ASSERT(registerNo >= 0 && registerNo < MAX_CONSTANT_BUFFER, "レジスタ番号が範囲外です\n");
+			m_constantBuffers[registerNo] = &cb;
+		}
+		/// <summary>
 		/// シザリング矩形を設定
 		/// </summary>
 		/// <param name="rect"></param>
@@ -111,6 +121,7 @@ namespace tkEngine {
 		/// <param name="indexCount">インデックスの数。</param>
 		void DrawIndexed(UINT indexCount)
 		{
+			DrawCommon();
 			m_commandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
 		}
 		/// <summary>
@@ -292,9 +303,18 @@ namespace tkEngine {
 			m_commandList->Reset(commandAllocator.Get(), pipelineState.Get());
 		}
 	private:
+		/// <summary>
+		/// 描画の共通処理
+		/// </summary>
+		void DrawCommon();
+	private:
 		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
+		enum { MAX_CONSTANT_BUFFER = 8 };	//定数バッファの最大数。足りなくなったら増やしてね。
+		enum { MAX_SHADER_RESOURCE = 16 };	//シェーダーリソースの最大数。足りなくなったら増やしてね。
 		ComPtr<ID3D12GraphicsCommandList> m_commandList;	//コマンドリスト。
 		ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];
+		CConstantBufferDx12* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };
+		IShaderResourceDx12* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };
 	};
 }
 
