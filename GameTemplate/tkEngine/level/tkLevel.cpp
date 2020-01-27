@@ -34,24 +34,28 @@ namespace tkEngine{
 		pMapChipRender->AddRenderObject(objData);
 		return pMapChipRender;
 	}
+
+
 	void CLevel::Init( 
-		const wchar_t* filePath, 
+		const char* filePath, 
 		std::function<bool(LevelObjectData& objData)> hookFunc
 	)
 	{
-		//スケルトンをロードする。
-		size_t origsize = wcslen(filePath) + 1;
-		size_t convertedChars = 0;
-		char strConcat[] = "";
-		size_t strConcatsize = (strlen(strConcat) + 1) * 2;
-		const size_t newsize = origsize * 2;
-		char* nstring = new char[newsize + strConcatsize];
-		wcstombs_s(&convertedChars, nstring, newsize, filePath, _TRUNCATE);
-		_mbscat_s((unsigned char*)nstring, newsize + strConcatsize, (unsigned char*)strConcat);
-
 		//レベルをロードする
-		m_tklFile.Load(nstring);
+		m_tklFile.Load(filePath);
 		BuildBoneMatrices();
+		//レベルのデータを取得。
+		struct SParams {
+			bool isShadowCaster;
+			bool isShadowReceiver;
+		};
+		vector<SParams> Params;
+		m_tklFile.QueryObject([&](CTklFile::SObject& tklObj) {
+			SParams objParam;
+			objParam.isShadowCaster = tklObj.isShadowCaster;
+			objParam.isShadowReceiver = tklObj.isShadowReceiver;
+			Params.push_back(objParam);
+			});
 
 		for (int i = 1; i < m_bones.size(); i++) {
 			auto bone = m_bones[i].get();
@@ -69,6 +73,8 @@ namespace tkEngine{
 				objData.rotation.z = -t;
 				objData.name = bone->GetName();
 				std::swap(objData.scale.y, objData.scale.z);
+				objData.isShadowCaster = Params.at(i).isShadowCaster;
+				objData.isShadowReceiver = Params.at(i).isShadowReceiver;
 
 				auto isHook = false;
 				if (hookFunc != nullptr) {
@@ -140,6 +146,8 @@ namespace tkEngine{
 #endif
 			m_bones.push_back(std::move(bone));
 			});
+
+
 		for (auto& bone : m_bones) {
 			if (bone->GetParentId() != -1) {
 				m_bones.at(bone->GetParentId())->AddChild(bone.get());

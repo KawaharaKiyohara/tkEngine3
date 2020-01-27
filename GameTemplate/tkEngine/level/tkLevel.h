@@ -62,7 +62,7 @@ namespace tkEngine{
 		 * 例えば、フック関数の中で、渡されたオブジェクトデータの名前のモデルを描画するクラスのインスタンスを
 		 * 生成したときに、falseを返してしまうと、同じモデルが二つ描画されることになります。
 		 */
-		void Init( const wchar_t* filePath,  std::function<bool(LevelObjectData& objData)> hookFunc);
+		void Init( const char* filePath,  std::function<bool(LevelObjectData& objData)> hookFunc);
 	private:
 		/// <summary>
 		/// マップチップレンダラーを作成出来たら作成するor描画すべきオブジェクトの数をインクリメントする。
