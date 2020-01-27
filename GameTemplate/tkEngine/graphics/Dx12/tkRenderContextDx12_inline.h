@@ -45,6 +45,7 @@ namespace tkEngine {
 		);
 
 	}
+#if 0
 	inline void CRenderContextDx12::SetCBR_SRV_UAV(
 		CConstantBufferDx12* constantBufferArray[],
 		IShaderResourceDx12* shaderResourceArray[],
@@ -94,6 +95,7 @@ namespace tkEngine {
 			);
 		}
 	}
+#endif
 }
 
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

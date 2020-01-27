@@ -360,6 +360,7 @@ namespace tkEngine {
 	{
 
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+
 		//バックバッファにテクスチャをコピー。
 		{
 			//メインレンダリングターゲットへの書き込み待ち。
@@ -386,7 +387,7 @@ namespace tkEngine {
 			// レンダリングターゲットへの描き込み完了待ち
 			rcDx12.WaitUntilFinishDrawingToRenderTarget(m_renderTargets[m_frameIndex]);
 		}
-		
+
 		//レンダリングコンテキストを閉じる。
 		rcDx12.Close();
 

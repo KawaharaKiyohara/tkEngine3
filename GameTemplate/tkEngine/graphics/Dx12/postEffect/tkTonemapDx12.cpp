@@ -159,15 +159,8 @@ namespace tkEngine {
 			m_cbCalcLuminance[curRtNo].Update(m_avSampleOffsets);
 			rc.SetPipelineState(m_calcLuminanceLogAvaragePipelineState);
 			//シェーダーリソースビューと定数バッファをセットする。
-			CConstantBufferDx12* cbrTbl[] = {
-				nullptr,
-				&m_cbCalcLuminance[curRtNo]
-			};
-			IShaderResourceDx12* srvTbl[] = {
-				&ge12.GetMainRenderTarget().GetRenderTargetTexture()
-			};
-			rc.SetCBR_SRV_UAV( cbrTbl,srvTbl, 2, 1);
-
+			rc.SetConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
+			rc.SetShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
 			
 			rc.DrawIndexed(4);
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
@@ -181,14 +174,9 @@ namespace tkEngine {
 				GetSampleOffsets_DownScale4x4(m_calcAvgRT[curRtNo].GetWidth(), m_calcAvgRT[curRtNo].GetHeight(), m_avSampleOffsets);
 				m_cbCalcLuminance[curRtNo].Update(&m_avSampleOffsets);
 				//シェーダーリソースビューと定数バッファをセットする。
-				CConstantBufferDx12* cbrTbl[] = {
-					nullptr,
-					&m_cbCalcLuminance[curRtNo]
-				};
-				IShaderResourceDx12* srvTbl[] = {
-					&m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture()
-				};
-				rc.SetCBR_SRV_UAV(cbrTbl, srvTbl, 2, 1);
+				rc.SetConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
+				rc.SetShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture());
+			
 				rc.SetPipelineState(m_calsLuminanceAvaragePipelineState);
 				rc.DrawIndexed(4);
 				rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
@@ -202,14 +190,9 @@ namespace tkEngine {
 			GetSampleOffsets_DownScale4x4(m_calcAvgRT[curRtNo].GetWidth(), m_calcAvgRT[curRtNo].GetHeight(), m_avSampleOffsets);
 			m_cbCalcLuminance[curRtNo].Update(&m_avSampleOffsets);
 			//シェーダーリソースビューと定数バッファをセットする。
-			CConstantBufferDx12* cbrTbl[] = {
-				nullptr,
-				&m_cbCalcLuminance[curRtNo]
-			};
-			IShaderResourceDx12* srvTbl[] = {
-				&m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture()
-			};
-			rc.SetCBR_SRV_UAV( cbrTbl, srvTbl, 2, 1 );
+			rc.SetConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
+			rc.SetShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture());
+
 			//パイプラインステートを設定。
 			rc.SetPipelineState(m_calsLuminanceExpAvaragePipelineState);
 			rc.DrawIndexed(4);
@@ -223,11 +206,9 @@ namespace tkEngine {
 				m_currentAvgRt = 1 ^ m_currentAvgRt;
 				rc.WaitUntilToPossibleSetRenderTarget(m_avgRT[m_currentAvgRt]);
 				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);
-				IShaderResourceDx12* srvTbl[] = { 
-					&m_calcAvgRT[0].GetRenderTargetTexture() 
-				};
-				
-				rc.SetCBR_SRV_UAV( nullptr, srvTbl, 0, 1);
+			
+				rc.SetShaderResource(0, m_calcAvgRT[0].GetRenderTargetTexture());
+			
 				//パイプラインステートを設定する。
 				rc.SetPipelineState(m_psCalcAdaptedLuminanceFirstPipelineState);
 				rc.DrawIndexed(4);
@@ -241,15 +222,10 @@ namespace tkEngine {
 				rc.WaitUntilToPossibleSetRenderTarget(m_avgRT[m_currentAvgRt]);
 				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);
 
-				IShaderResourceDx12* srvTbl[] = {
-					nullptr,
-					&m_calcAvgRT[0].GetRenderTargetTexture(),
-					&lastRT.GetRenderTargetTexture()
-				};
-				CConstantBufferDx12* cbrTbl[] = {
-					&m_cbTonemapCommon
-				};
-				rc.SetCBR_SRV_UAV(cbrTbl,srvTbl, 1, 3);
+				rc.SetShaderResource(1, m_calcAvgRT[0].GetRenderTargetTexture());
+				rc.SetShaderResource(2, lastRT.GetRenderTargetTexture());
+				rc.SetConstantBuffer(0, m_cbTonemapCommon);
+
 				rc.SetPipelineState(m_psCalcAdaptedLuminancePipelineState);
 				rc.DrawIndexed(4);
 			}
@@ -273,14 +249,11 @@ namespace tkEngine {
 		//平均輝度からトーンマップを行う。
 		rc12.WaitUntilToPossibleSetRenderTarget(ge12.GetMainRenderTarget());
 		rc12.SetRenderTargetAndViewport(ge12.GetMainRenderTarget());
-		CConstantBufferDx12* cbrTbl[] = {
-					&m_cbTonemapCommon
-		};
-		IShaderResourceDx12* srvTbl[] = {
-			&ge12.GetMainRenderTarget().GetRenderTargetTexture(),
-			& m_avgRT[m_currentAvgRt].GetRenderTargetTexture()
-		};
-		rc12.SetCBR_SRV_UAV(cbrTbl, srvTbl, 1, 2 );
+		
+		rc12.SetConstantBuffer(0, m_cbTonemapCommon);
+		rc12.SetShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
+		rc12.SetShaderResource(1, m_avgRT[m_currentAvgRt].GetRenderTargetTexture());
+		
 		rc12.SetPipelineState(m_finalPipelineState);
 		rc12.DrawIndexed(4);
 

@@ -166,10 +166,7 @@ namespace tkEngine {
 		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		rc12.ClearRenderTargetView(m_luminanceRT, clearColor);
 		//シェーダーリソースビューと定数バッファをセットする。
-		IShaderResourceDx12* srvTbl[] = {
-			&ge12.GetMainRenderTarget().GetRenderTargetTexture()
-		};
-		rc12.SetCBR_SRV_UAV(nullptr,srvTbl,0,1);
+		rc12.SetShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
 		//ドロドロ。
 		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_luminanceRT);	
@@ -191,13 +188,9 @@ namespace tkEngine {
 				rc12.SetRenderTargetAndViewport(m_downSamplingRT[rtIndex]);
 				
 				//シェーダーリソースビューと定数バッファをセットする。
-				IShaderResourceDx12* srvTbl[] = {
-					&prevRt->GetRenderTargetTexture()
-				};
-				CConstantBufferDx12* cbrTbl[] = {
-					&m_blurParamCB[rtIndex]
-				};
-				rc12.SetCBR_SRV_UAV(cbrTbl,srvTbl,1,1);
+				rc12.SetShaderResource(0, prevRt->GetRenderTargetTexture());
+				rc12.SetConstantBuffer(0, m_blurParamCB[rtIndex]);
+
 				rc12.DrawIndexed(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
@@ -214,13 +207,10 @@ namespace tkEngine {
 				rc12.SetPipelineState(m_yblurLuminancePipelineState);
 
 				//シェーダーリソースビューと定数バッファをセットする。
-				IShaderResourceDx12* srvTbl[] = {
-					&prevRt->GetRenderTargetTexture()
-				};
-				CConstantBufferDx12* cbrTbl[] = {
-					&m_blurParamCB[rtIndex]
-				};
-				rc12.SetCBR_SRV_UAV(cbrTbl,	srvTbl, 1, 1 );
+				
+				rc12.SetConstantBuffer(0, m_blurParamCB[rtIndex]);
+				rc12.SetShaderResource(0, prevRt->GetRenderTargetTexture());
+				
 				rc12.DrawIndexed(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
@@ -235,15 +225,12 @@ namespace tkEngine {
 		rc12.SetRenderTargetAndViewport(m_combineRT);
 
 		//シェーダーリソースビューと定数バッファをセットする。
-		IShaderResourceDx12* srvTbl[] = {
-			&m_downSamplingRT[3].GetRenderTargetTexture(),
-			&m_downSamplingRT[5].GetRenderTargetTexture(),
-			&m_downSamplingRT[7].GetRenderTargetTexture(),
-			&m_downSamplingRT[9].GetRenderTargetTexture(),
-		};
-	
-		rc12.SetCBR_SRV_UAV(nullptr, srvTbl, 0, 4);
-
+		
+		rc12.SetShaderResource(0, m_downSamplingRT[3].GetRenderTargetTexture());
+		rc12.SetShaderResource(1, m_downSamplingRT[3].GetRenderTargetTexture());
+		rc12.SetShaderResource(2, m_downSamplingRT[3].GetRenderTargetTexture());
+		rc12.SetShaderResource(3, m_downSamplingRT[3].GetRenderTargetTexture());
+		
 		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);
 
@@ -255,9 +242,7 @@ namespace tkEngine {
 		rc12.SetRenderTargetAndViewport(ge12.GetMainRenderTarget());
 
 		//シェーダーリソースビューと定数バッファをセットする。
-		IShaderResourceDx12* srvTbl[] = {&m_combineRT.GetRenderTargetTexture()};
-
-		rc12.SetCBR_SRV_UAV(nullptr,srvTbl, 0, 1);
+		rc12.SetShaderResource(0, m_combineRT.GetRenderTargetTexture());
 		rc12.DrawIndexed(4);
 	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}
