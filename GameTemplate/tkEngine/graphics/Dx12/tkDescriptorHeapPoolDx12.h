@@ -39,11 +39,11 @@ namespace tkEngine {
 				m_useDescriptor8Count++;
 			}
 			else if (numDescriptor <= 16) {
-				heap = &m_cbvSrvUavBufferDescriptor8.at(m_useDescriptor16Count);
+				heap = &m_cbvSrvUavBufferDescriptor16.at(m_useDescriptor16Count);
 				m_useDescriptor16Count++;
 			}
 			else if (numDescriptor <= 32) {
-				heap = &m_cbvSrvUavBufferDescriptor8.at(m_useDescriptor32Count);
+				heap = &m_cbvSrvUavBufferDescriptor32.at(m_useDescriptor32Count);
 				m_useDescriptor32Count++;
 			}
 			else {

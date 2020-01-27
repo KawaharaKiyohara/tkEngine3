@@ -38,14 +38,11 @@ namespace tkEngine {
 
 		//定数バッファとシェーダーリソースを設定。
 		auto& texture = m_texture->As<CTextureDx12 >();
-		IShaderResourceDx12* srvTbl[] = {
-			&texture
-		};
-		CConstantBufferDx12* cbrTbl[] = {
-			&m_constantBufferGPU
-		};
-		rc12.SetCBR_SRV_UAV(cbrTbl,srvTbl,ARRAYSIZE(cbrTbl),ARRAYSIZE(srvTbl));
-
+	
+		rc12.SetShaderResource(0, texture);
+	
+		rc12.SetConstantBuffer(0, m_constantBufferGPU);
+	
 		//ドロー。
 		rc12.DrawIndexed(m_indexBuffer->GetCount());
 	}

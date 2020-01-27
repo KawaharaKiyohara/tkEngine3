@@ -124,20 +124,15 @@ namespace tkEngine {
 				//このマテリアルが貼られているメッシュの描画開始。
 				mesh->m_materials[matNo]->BeginRender(rc, mesh->skinFlags[matNo]);
 
-				IShaderResourceDx12* srvTbl[] = {
-					&mesh->m_materials[matNo]->GetAlbedoMap(),
-					&mesh->m_materials[matNo]->GetNormalMap(),
-					&mesh->m_materials[matNo]->GetSpecularMap(),
-					&m_boneMatricesStructureBuffer,
-					&lightMgr.GetDirectionLightStructuredBuffer()
-				};
-				CConstantBufferDx12* cbrTbl[] = {
-					&m_commonConstantBuffer,
-					&lightMgr.GetLightParamConstantBuffer(),
-					&mesh->m_materials[matNo]->GetConstantBuffer(),
-				};
-				auto& albedoMap = mesh->m_materials[matNo]->GetAlbedoMap();
-				rc12.SetCBR_SRV_UAV(cbrTbl, srvTbl,	ARRAYSIZE(cbrTbl),ARRAYSIZE(srvTbl));
+				rc12.SetShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());
+				rc12.SetShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());
+				rc12.SetShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());
+				rc12.SetShaderResource(3, m_boneMatricesStructureBuffer);
+				rc12.SetShaderResource(4, lightMgr.GetDirectionLightStructuredBuffer());
+
+				rc12.SetConstantBuffer(0, m_commonConstantBuffer);
+				rc12.SetConstantBuffer(1, lightMgr.GetLightParamConstantBuffer());
+				rc12.SetConstantBuffer(2, mesh->m_materials[matNo]->GetConstantBuffer());
 
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];
