@@ -1,51 +1,51 @@
 /*!
- * @brief	tkmƒGƒNƒXƒ|[ƒ^[B
+ * @brief	tkmã‚¨ã‚¯ã‚¹ãƒãƒ¼ã‚¿ãƒ¼ã€‚
  */
  
 
---tkmƒtƒ@ƒCƒ‹‚Ìƒo[ƒWƒ‡ƒ“
+--tkmãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 TKM_VERSION = 100
 
 struct Vertex(
-	pos = Point3,		--’¸“_À•W
-	normal = Point3,	--–@ü
-	uv = Point2,		--UVÀ•W
-	weights = #(),		--ƒXƒLƒ“ƒEƒFƒCƒg
-	indices = #(),		--ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒX
+	pos = Point3,		--é ‚ç‚¹åº§æ¨™
+	normal = Point3,	--æ³•ç·š
+	uv = Point2,		--UVåº§æ¨™
+	weights = #(),		--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆ
+	indices = #(),		--ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	texVertNo
 )
---ƒ}ƒeƒŠƒAƒ‹B
+--ãƒãƒ†ãƒªã‚¢ãƒ«ã€‚
 struct tkMaterial(
-	id,					--ƒ}ƒeƒŠƒAƒ‹ID
-	albedoMap = string,	--ƒAƒ‹ƒxƒhƒ}ƒbƒv
-	normalMap = string, --–@üƒ}ƒbƒv
-	specMap = string	--ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒv
+	id,					--ãƒãƒ†ãƒªã‚¢ãƒ«ID
+	albedoMap = string,	--ã‚¢ãƒ«ãƒ™ãƒ‰ãƒãƒƒãƒ—
+	normalMap = string, --æ³•ç·šãƒãƒƒãƒ—
+	specMap = string	--ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒãƒƒãƒ—
 )
 struct IndexBuffer(
 	indices = #()
 )
---ƒƒbƒVƒ…ƒp[ƒcB
+--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã€‚
 struct MeshParts(
-	materials = #(),		--ƒ}ƒeƒŠƒAƒ‹B
-	vertexBuffer = #(),		--’¸“_ƒoƒbƒtƒ@B
-	indexBufferArray = #()	--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ì”z—ñ(ƒ}ƒeƒŠƒAƒ‹‚Ì”•ª‚¾‚¯‚ ‚è‚Ü‚·B)
+	materials = #(),		--ãƒãƒ†ãƒªã‚¢ãƒ«ã€‚
+	vertexBuffer = #(),		--é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã€‚
+	indexBufferArray = #()	--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®é…åˆ—(ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°åˆ†ã ã‘ã‚ã‚Šã¾ã™ã€‚)
 )
 
---ƒ‚ƒfƒ‹ƒf[ƒ^B
+--ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã€‚
 struct ModelData(
-	meshParts = #()		--ƒƒbƒVƒ…ƒp[ƒcB
+	meshParts = #()		--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã€‚
 )
 
 struct TkmExporter(
 private
-	outputFolder,		--o—Íæ‚ÌƒtƒHƒ‹ƒ_B
-	md = ModelData,		--ƒƒbƒVƒ…ƒf[ƒ^B
-	ms = Meshparts,		--ƒƒbƒVƒ…ƒp[ƒcB
+	outputFolder,		--å‡ºåŠ›å…ˆã®ãƒ•ã‚©ãƒ«ãƒ€ã€‚
+	md = ModelData,		--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿ã€‚
+	ms = Meshparts,		--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã€‚
 	newVertNosInFace = #(),	--
-	textureFilePaths = #(),	--ƒeƒNƒXƒ`ƒƒ‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ÌƒŠƒXƒgB
-	cloneMeshObj,		--ƒNƒ[ƒ“‚³‚ê‚½ƒƒbƒVƒ…
-	m_isFlatShading,	--ƒtƒ‰ƒbƒgƒVƒF[ƒfƒBƒ“ƒO‚ğs‚¤H
-	--ƒtƒ@ƒCƒ‹ƒpƒX‚©‚çƒtƒ@ƒCƒ‹–¼‚ğ’Šo‚µ‚ÄAƒtƒ@ƒCƒ‹‚Éo—Í‚·‚éB
+	textureFilePaths = #(),	--ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®ãƒªã‚¹ãƒˆã€‚
+	cloneMeshObj,		--ã‚¯ãƒ­ãƒ¼ãƒ³ã•ã‚ŒãŸãƒ¡ãƒƒã‚·ãƒ¥
+	m_isFlatShading,	--ãƒ•ãƒ©ãƒƒãƒˆã‚·ã‚§ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã‚’è¡Œã†ï¼Ÿ
+	--ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŠ½å‡ºã—ã¦ã€ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›ã™ã‚‹ã€‚
 	fn WriteFileToFileNameFromFilePath file filePath = 
 	(
 		hoge = filePath as string
@@ -53,41 +53,41 @@ private
 		nameLen = 0
 		if tokens.count != 0 then( 
 			nameLen = tokens[tokens.count].count
-			WriteLong file nameLen --ƒtƒ@ƒCƒ‹–¼‚Ì’·‚³‚ğo—ÍB
+			WriteLong file nameLen --ãƒ•ã‚¡ã‚¤ãƒ«åã®é•·ã•ã‚’å‡ºåŠ›ã€‚
 			WriteString file tokens[tokens.count]
 			
 		)else(
-			WriteLong file 0 --ƒtƒ@ƒCƒ‹–¼‚Ì’·‚³‚ğo—ÍB
+			WriteLong file 0 --ãƒ•ã‚¡ã‚¤ãƒ«åã®é•·ã•ã‚’å‡ºåŠ›ã€‚
 		)
 
 	),
-	--’¸“_ƒoƒbƒtƒ@‚Ì\’zB
+	--é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®æ§‹ç¯‰ã€‚
 	fn BuildMeshPatrs_VertexBuffer c_node meshObj numFace =(
-		--max‚Å‚ÍAƒeƒNƒXƒ`ƒƒ’¸“_‚Æ‚¢‚¤ŠT”O‚ª‚ ‚èA
-		--UVÀ•W‚Ì‚İ•Ê‚Ì’¸“_ƒoƒbƒtƒ@‚É‚È‚Á‚Ä‚¢‚éB
-		--tkEngine2‚Å‚Í•Ê‚Ì’¸“_ƒoƒbƒtƒ@‚É‚È‚Á‚Ä‚¢‚é‚Æ”ñŒø—¦‚È‚½‚ßA
-		--“ñ‚Â‚Ì’¸“_ƒoƒbƒtƒ@‚ğŒ‹‡‚µ‚Äˆê‚Â‚É‚·‚éB
+		--maxã§ã¯ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£é ‚ç‚¹ã¨ã„ã†æ¦‚å¿µãŒã‚ã‚Šã€
+		--UVåº§æ¨™ã®ã¿åˆ¥ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã«ãªã£ã¦ã„ã‚‹ã€‚
+		--tkEngine2ã§ã¯åˆ¥ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã«ãªã£ã¦ã„ã‚‹ã¨éåŠ¹ç‡ãªãŸã‚ã€
+		--äºŒã¤ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’çµåˆã—ã¦ä¸€ã¤ã«ã™ã‚‹ã€‚
 
-		--3DSMAXã‚Å‚Ì’¸“_ƒoƒbƒtƒ@‚ğ\’z‚·‚éB
+		--3DSMAXä¸Šã§ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		skinMod = c_node.modifiers[skin]
 		if skinMod != undefined then(
-			--ƒXƒLƒ“‚ ‚èB
+			--ã‚¹ã‚­ãƒ³ã‚ã‚Šã€‚
 			max modify mode
 			modPanel.setCurrentObject skinMod
 		)
 		maxVertexBuffer = #()
 		numVert = getNumVerts meshObj
 		for vertNo = 1 to numVert do(
-			--’¸“_À•W
+			--é ‚ç‚¹åº§æ¨™
 			pos = getVert meshObj vertNo
-			--–@ü
+			--æ³•ç·š
 			normal = getNormal meshObj vertNo
-			--³‹K‰»‚³‚ê‚Ä‚È‚¢‚ËB
+			--æ­£è¦åŒ–ã•ã‚Œã¦ãªã„ã­ã€‚
 			normal = normalize normal
 			
 			if skinMod != undefined then(
-				--ƒXƒLƒ“‚ª‚ ‚é‚Æ‚«‚ÍAœ‚Å“®‚©‚³‚ê‚Ä‚¢‚é‚Ì‚Åƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚Å‚Ì“®‚«‚ğœ‹‚·‚éH
-				--ƒzƒ“ƒ}‚©H—vŠm”FB
+				--ã‚¹ã‚­ãƒ³ãŒã‚ã‚‹ã¨ãã¯ã€éª¨ã§å‹•ã‹ã•ã‚Œã¦ã„ã‚‹ã®ã§ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã§ã®å‹•ãã‚’é™¤å»ã™ã‚‹ï¼Ÿ
+				--ãƒ›ãƒ³ãƒã‹ï¼Ÿè¦ç¢ºèªã€‚
 				invTrans = inverse c_node.transform
 				pos = pos * invTrans
 				invRot = c_node.rotation as Matrix3
@@ -96,45 +96,45 @@ private
 			)
 			
 		
-			--UVÀ•W
+			--UVåº§æ¨™
 		--	uvw = gettvert meshObj vertNo
 		--	uv = Point2 uvw.x uvw.y
-			--ƒXƒLƒ“ƒEƒFƒCƒg
+			--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆ
 			skinWeight = #(0.0, 0.0, 0.0, 0.0)
 			indices = #(-1, -1, -1, -1)
 			
 			if skinMod != undefined then(
-				--ƒXƒLƒ“‚ ‚èB
+				--ã‚¹ã‚­ãƒ³ã‚ã‚Šã€‚
 				numWeight = skinOps.GetVertexWeightCount skinMod vertNo
 				if numWeight > 4 then (
-					--ƒXƒLƒ“ƒEƒFƒCƒg‚Ì”‚ª4‚ğ’´‚¦‚Ä‚¢‚Ü‚·B
+					--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã®æ•°ãŒ4ã‚’è¶…ãˆã¦ã„ã¾ã™ã€‚
 					numWeight = 4
 				)
 				for skinIndex = 1 to numWeight do (
 					skinWeight[skinIndex] = skinOps.GetVertexWeight skinMod vertNo skinIndex
 					sysytemBoneIndex = skinOps.GetVertexWeightBoneID skinMod vertNo skinIndex
-					--‘æOˆø”‚Í0‚Å‚¢‚¢‚Ì‚©‚Ç‚¤‚©‚©•s–¾B
-					--‚È‚É‚©–â‘è‚ª‹N‚«‚½‚ç1‚É‚µ‚Ä‚İ‚æ‚¤B
+					--ç¬¬ä¸‰å¼•æ•°ã¯0ã§ã„ã„ã®ã‹ã©ã†ã‹ã‹ä¸æ˜ã€‚
+					--ãªã«ã‹å•é¡ŒãŒèµ·ããŸã‚‰1ã«ã—ã¦ã¿ã‚ˆã†ã€‚
 					boneName = skinOps.GetBoneName skinMod sysytemBoneIndex 0
 					boneNo = GetBoneIndex boneName
 					indices[skinIndex] = boneNo
 				)
-				--ƒXƒLƒ“ƒEƒFƒCƒg‚ª4ˆÈã‚È‚ç³‹K‰»‚·‚éH
+				--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆãŒ4ä»¥ä¸Šãªã‚‰æ­£è¦åŒ–ã™ã‚‹ï¼Ÿ
 			)	
-			--’¸“_ì¬
+			--é ‚ç‚¹ä½œæˆ
 			v = vertex pos:pos normal:normal weights:skinWeight indices:indices
 			append maxVertexBuffer v
 		)
-		--‘±‚¢‚ÄƒeƒNƒXƒ`ƒƒ’¸“_ƒoƒbƒtƒ@‚ğì¬‚·‚éB
+		--ç¶šã„ã¦ãƒ†ã‚¯ã‚¹ãƒãƒ£é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã™ã‚‹ã€‚
 		maxTVertexBuffer = #()
 		numTVert = getNumTVerts meshObj
 		for vertNo = 1 to numTVert do(
-			--UVÀ•W
+			--UVåº§æ¨™
 			uvw = gettvert meshObj vertNo
 			uv = Point2 uvw.x uvw.y
 			append maxTVertexBuffer uv
 		)
-		--tkEngine‚Å—˜—p‚·‚é’¸“_ƒoƒbƒtƒ@‚ğ\’z‚·‚éB
+		--tkEngineã§åˆ©ç”¨ã™ã‚‹é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		newVertNo = numVert + 1
 		
 		for faceNo = 1 to numFace do (
@@ -144,19 +144,19 @@ private
 				maxVertex = maxVertexBuffer[vertNos[i]]
 				maxTVertex = maxTVertexBuffer[tvertNos[i]]
 				v = vertex pos:maxVertex.pos normal:maxVertex.normal weights:maxVertex.weights indices:maxVertex.indices uv:maxTVertex texVertNo:tvertNos[i]
-				--‚·‚Å‚É‰½‚©‚Ìƒ|ƒŠƒSƒ“‚Åg—p‚³‚ê‚Ä‚¢‚é’¸“_@‚©‚Â@ƒeƒNƒXƒ`ƒƒ’¸“_”Ô†‚ªˆá‚¤B
-				--V‚µ‚¢’¸“_‚Æ‚µ‚Ä’Ç‰Á‚·‚éB
+				--ã™ã§ã«ä½•ã‹ã®ãƒãƒªã‚´ãƒ³ã§ä½¿ç”¨ã•ã‚Œã¦ã„ã‚‹é ‚ç‚¹ã€€ã‹ã¤ã€€ãƒ†ã‚¯ã‚¹ãƒãƒ£é ‚ç‚¹ç•ªå·ãŒé•ã†ã€‚
+				--æ–°ã—ã„é ‚ç‚¹ã¨ã—ã¦è¿½åŠ ã™ã‚‹ã€‚
 				vertNoInFace = vertNos[i]
 				if ms.vertexBuffer[vertNos[i]] == undefined then(
-					--–¢“o˜^‚Ì’¸“_
+					--æœªç™»éŒ²ã®é ‚ç‚¹
 					ms.vertexBuffer[vertNos[i]] = v
 				)else if m_isFlatShading == true then(
-					--ƒtƒ‰ƒbƒgƒVƒF[ƒfƒBƒ“ƒO‚Ìê‡‚Íd•¡’¸“_‚Í‹–‚³‚È‚¢‚Ì‚ÅA’¸“_‚ğ‘‚â‚·B
+					--ãƒ•ãƒ©ãƒƒãƒˆã‚·ã‚§ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã®å ´åˆã¯é‡è¤‡é ‚ç‚¹ã¯è¨±ã•ãªã„ã®ã§ã€é ‚ç‚¹ã‚’å¢—ã‚„ã™ã€‚
 					ms.vertexBuffer[newVertNo] = v
 					vertNoInFace = newVertNo
 					newVertNo = newVertNo + 1
 				)else if ms.vertexBuffer[vertNos[i]].texVertNo != tvertNos[i] then(
-					--“o˜^Ï‚İ‚¾‚¯‚ÇAƒeƒNƒXƒ`ƒƒ”Ô†‚ªˆÙ‚È‚Á‚Ä‚¢‚é‚Ì‚Å’¸“_‚ğ‘‚â‚·B
+					--ç™»éŒ²æ¸ˆã¿ã ã‘ã©ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·ãŒç•°ãªã£ã¦ã„ã‚‹ã®ã§é ‚ç‚¹ã‚’å¢—ã‚„ã™ã€‚
 					ms.vertexBuffer[newVertNo] = v
 					vertNoInFace = newVertNo
 					newVertNo = newVertNo + 1
@@ -165,13 +165,13 @@ private
 			)
 		)
 	),
-	--ƒ}ƒeƒŠƒAƒ‹î•ñ‚ğ\’z‚·‚éB
+	--ãƒãƒ†ãƒªã‚¢ãƒ«æƒ…å ±ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 	fn BuildMeshParts_Material c_node meshObj numFace  =
 	(
 		if c_node.material != undefined then(
 			numSubMaterial = getNumSubMtls c_node.material
 			if numSubMaterial == 0 then(
-				--ƒTƒuƒ}ƒeƒŠƒAƒ‹‚Í‚È‚¢B
+				--ã‚µãƒ–ãƒãƒ†ãƒªã‚¢ãƒ«ã¯ãªã„ã€‚
 				diffMap = c_node.material.diffuseMap
 				normalMap = c_node.material.bumpMap 
 				specMap = c_node.material.specularMap
@@ -190,23 +190,23 @@ private
 				newMat = tkMaterial albedoMap:albedoFileName normalMap:normalMapFileName specMap:specMapFileName id:-1
 				append ms.materials newMat
 			)else(
-				--ƒ}ƒ‹ƒ`ƒ}ƒeƒŠƒAƒ‹B
-				--–Ê‚²‚Æ‚ÉˆÙ‚È‚éƒ}ƒeƒŠƒAƒ‹‚ª“\‚è•t‚¯‚ç‚ê‚Ä‚¢‚éB
+				--ãƒãƒ«ãƒãƒãƒ†ãƒªã‚¢ãƒ«ã€‚
+				--é¢ã”ã¨ã«ç•°ãªã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ãŒè²¼ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹ã€‚
 				matIds = #()
 				for faceNo = 1 to numFace do (
 					matId  = getFaceMatID meshObj faceNo
 					
 					if numSubMaterial > 0 then(
 						regist = 0
-						--“o˜^Ï‚İ‚Ìƒ}ƒeƒŠƒAƒ‹‚©‚Ç‚¤‚©’²‚×‚éB
+						--ç™»éŒ²æ¸ˆã¿ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã‹ã©ã†ã‹èª¿ã¹ã‚‹ã€‚
 						for tkMat in ms.materials do (
 							if matId == tkMat.id then(
-								--“o˜^Ï‚İ
+								--ç™»éŒ²æ¸ˆã¿
 								regist = 1
 							)
 						)
 						if regist == 0 then(
-							--–¢“o˜^‚Ìƒ}ƒeƒŠƒAƒ‹‚È‚Ì‚ÅA’Ç‰Á‚·‚éB
+							--æœªç™»éŒ²ã®ãƒãƒ†ãƒªã‚¢ãƒ«ãªã®ã§ã€è¿½åŠ ã™ã‚‹ã€‚
 							mat = getSubMtl c_node.material matId
 							diffMap = mat.diffuseMap
 							normalMap = mat.bumpMap 
@@ -232,12 +232,12 @@ private
 			)
 		)
 	),
-	--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğ\’z‚·‚éB
-	--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ì”‚Íƒ}ƒeƒŠƒAƒ‹‚Ì”•ª‚¾‚¯\’z‚³‚ê‚Ü‚·B
+	--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
+	--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®æ•°ã¯ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°åˆ†ã ã‘æ§‹ç¯‰ã•ã‚Œã¾ã™ã€‚
 	
 	fn BuildMeshParts_IndexBuffer c_node meshObj numFace = 
 	(
-		--ƒ}ƒeƒŠƒAƒ‹‚Ì”•ª‚¾‚¯ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğì¬‚·‚éB
+		--ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°åˆ†ã ã‘ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆã™ã‚‹ã€‚
 		for tkMat in ms.materials do (
 			indices = #()
 			no = 1
@@ -245,50 +245,50 @@ private
 			for faceNo = 1 to numFace do (
 				matId  = getFaceMatID meshObj faceNo
 				if tkMat.id == matId then(
-					--Œ»İ’²¸’†‚Ìƒ}ƒeƒŠƒAƒ‹ID‚Æ“¯‚¶H
-					--OŠpŒ`‚ğ\¬‚·‚éƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚éB
+					--ç¾åœ¨èª¿æŸ»ä¸­ã®ãƒãƒ†ãƒªã‚¢ãƒ«IDã¨åŒã˜ï¼Ÿ
+					--ä¸‰è§’å½¢ã‚’æ§‹æˆã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
 					append indices newVertNosInFace[ no ]
 					append indices newVertNosInFace[ no + 1 ]
 					append indices newVertNosInFace[ no + 2 ]
 				)else if tkMat.id == -1 then(
-					--OŠpŒ`‚ğ\¬‚·‚éƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚éB
+					--ä¸‰è§’å½¢ã‚’æ§‹æˆã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
 					append indices newVertNosInFace[ no ]
 					append indices newVertNosInFace[ no + 1 ]
 					append indices newVertNosInFace[ no + 2 ]
 				)
 				no = no + 3
 			)	
-			--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğ’Ç‰ÁO|O
+			--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¿½åŠ ï¼¾ï¼ï¼¾
 			append ms.indexBufferArray indices
 		)
 	),
-	--ƒƒbƒVƒ…ƒp[ƒc‚ğƒrƒ‹ƒh‚·‚éB
+	--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã‚’ãƒ“ãƒ«ãƒ‰ã™ã‚‹ã€‚
 	fn BuildMeshParts c_node = 
 	(
 		newVertNosInFace = #()
-		--ƒƒbƒVƒ…\ƒp[ƒc‚ğì¬B
+		--ãƒ¡ãƒƒã‚·ãƒ¥â€•ãƒ‘ãƒ¼ãƒ„ã‚’ä½œæˆã€‚
 		ms = Meshparts materials:#() indexBufferArray:#() vertexBuffer:#()	
-		--W–ñ‚µ‚È‚¢‚ÆƒTƒuƒ}ƒeƒŠƒAƒ‹‚h‚c‚ªæ‚ê‚È‚¢‚¼‚¢‚¼‚¢B
+		--é›†ç´„ã—ãªã„ã¨ã‚µãƒ–ãƒãƒ†ãƒªã‚¢ãƒ«ï¼©ï¼¤ãŒå–ã‚Œãªã„ãã„ãã„ã€‚
 		cloneMeshObj = copy c_node 
 		cloneMeshObj = convertToMesh cloneMeshObj
 		numFace = getNumFaces cloneMeshObj
 		
-		--ƒ}ƒeƒŠƒAƒ‹î•ñ‚©‚ç\’z‚·‚éB
+		--ãƒãƒ†ãƒªã‚¢ãƒ«æƒ…å ±ã‹ã‚‰æ§‹ç¯‰ã™ã‚‹ã€‚
 		BuildMeshParts_Material c_node cloneMeshObj numFace
 
-		--’¸“_ƒoƒbƒtƒ@‚ğ\’z‚·‚éB
+		--é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		BuildMeshPatrs_VertexBuffer c_node cloneMeshObj numFace
 
-		--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğ\’z‚·‚éB
+		--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’æ§‹ç¯‰ã™ã‚‹ã€‚
 		BuildMeshParts_IndexBuffer c_node cloneMeshObj numFace
 
-		--ƒƒbƒVƒ…ƒp[ƒc‚ğ’Ç‰ÁB
+		--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã‚’è¿½åŠ ã€‚
 		append md.meshParts ms
 
 		delete cloneMeshObj
 		cloneMeshObj=undefined
 	),
-	--ƒeƒNƒXƒ`ƒƒ‚ğDDSƒtƒ@ƒCƒ‹‚ÉƒRƒ“ƒo[ƒg‚µ‚Ä‚¢‚­B
+	--ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’DDSãƒ•ã‚¡ã‚¤ãƒ«ã«ã‚³ãƒ³ãƒãƒ¼ãƒˆã—ã¦ã„ãã€‚
 	fn ConvertTextureToDDS srcTexFilePath =(
 		if srcTexFilePath != "" then(
 			currentDir = pathConfig.GetDir(#scripts)
@@ -298,29 +298,29 @@ private
 		)
 	),
 	fn InternalSave filePath = (
-		--•Û‘¶‚¾‚æ
+		--ä¿å­˜ã ã‚ˆ
 		file = fopen filePath "wb"
 		--try(
-			--ƒwƒbƒ_[‚ğo—Í
+			--ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
 			WriteByte file TKM_VERSION
 			if m_isFlatShading == true then(
 				WriteByte file 1 
 			)else(
 				WriteByte file 0
 			)
-			--ƒƒbƒVƒ…ƒp[ƒc‚Ì”‚ğo—Í
+			--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã®æ•°ã‚’å‡ºåŠ›
 			WriteShort file md.meshParts.count
-			--ƒƒbƒVƒ…ƒp[ƒc‚ğo—Í‚µ‚Ä‚¢‚­B
+			--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã‚’å‡ºåŠ›ã—ã¦ã„ãã€‚
 			for meshNo = 1 to md.meshParts.count do(
-				--ƒ}ƒeƒŠƒAƒ‹‚Ì”‚ğo—Í‚·‚éB
+				--ãƒãƒ†ãƒªã‚¢ãƒ«ã®æ•°ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 				numMat = md.meshParts[meshNo].materials.count
 				WriteLong file numMat
 				
-				--’¸“_”‚ğo—ÍB
+				--é ‚ç‚¹æ•°ã‚’å‡ºåŠ›ã€‚
 				numVertex = md.meshParts[meshNo].vertexBuffer.count
 				WriteLong file numVertex
 
-				--ƒCƒ“ƒfƒbƒNƒX‚ÌƒTƒCƒY‚ğo—Í
+				--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã®ã‚µã‚¤ã‚ºã‚’å‡ºåŠ›
 				indexSize = 0
 				if numVertex < 65536  then (
 					--2byte
@@ -330,60 +330,60 @@ private
 					indexSize = 4
 				)
 				WriteByte file indexSize
-				--ƒpƒfƒBƒ“ƒO
+				--ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
 				WriteByte file 0
 				WriteByte file 0
 				WriteByte file 0
 
-				--ƒ}ƒeƒŠƒAƒ‹‚Ìî•ñ‚ğo—Í‚·‚éB
+				--ãƒãƒ†ãƒªã‚¢ãƒ«ã®æƒ…å ±ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 				for tkMat in md.meshParts[meshNo].materials do (
-					--ƒtƒ@ƒCƒ‹–¼‚¾‚¯‚ğ’Šo‚·‚éB
-					--ƒAƒ‹ƒxƒhB
+					--ãƒ•ã‚¡ã‚¤ãƒ«åã ã‘ã‚’æŠ½å‡ºã™ã‚‹ã€‚
+					--ã‚¢ãƒ«ãƒ™ãƒ‰ã€‚
 					WriteFileToFileNameFromFilePath file tkMat.albedoMap
-					--–@üƒ}ƒbƒv
+					--æ³•ç·šãƒãƒƒãƒ—
 					WriteFileToFileNameFromFilePath file tkMat.normalMap
-					--ƒXƒyƒLƒ…ƒ‰ƒ}ƒbƒvB
+					--ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒãƒƒãƒ—ã€‚
 					WriteFileToFileNameFromFilePath file tkMat.specMap
-					--ƒeƒNƒXƒ`ƒƒ‚ğƒRƒ“ƒo[ƒgƒŠƒXƒg‚ÉÏ‚ñ‚Å‚¢‚­
+					--ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚³ãƒ³ãƒãƒ¼ãƒˆãƒªã‚¹ãƒˆã«ç©ã‚“ã§ã„ã
 					appendIfUnique textureFilePaths tkMat.albedoMap
 					appendIfUnique textureFilePaths tkMat.normalMap
 					appendIfUnique textureFilePaths tkMat.specMap
 				)
 
-				--’¸“_ƒoƒbƒtƒ@‚ğo—Í
+				--é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’å‡ºåŠ›
 				for v in md.meshParts[meshNo].vertexBuffer do (
-					--’¸“_À•W‚ğo—ÍB
+					--é ‚ç‚¹åº§æ¨™ã‚’å‡ºåŠ›ã€‚
 					WriteFloat file v.pos.x
 					WriteFloat file v.pos.y
 					WriteFloat file v.pos.z
-					--’¸“_–@ü‚ğo—ÍB
+					--é ‚ç‚¹æ³•ç·šã‚’å‡ºåŠ›ã€‚
 					WriteFloat file v.normal.x
 					WriteFloat file v.normal.y
 					WriteFloat file v.normal.Z
-					--UVÀ•W‚ğo—Í
+					--UVåº§æ¨™ã‚’å‡ºåŠ›
 					WriteFloat file v.uv.x
 					WriteFloat file v.uv.y
-					--ƒXƒLƒ“ƒEƒFƒCƒg‚ğo—Í
+					--ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã‚’å‡ºåŠ›
 					WriteFloat file v.weights[1]
 					WriteFloat file v.weights[2]
 					WriteFloat file v.weights[3]
 					WriteFloat file v.weights[4]
-					--ƒ{[ƒ“ƒCƒ“ƒfƒbƒNƒX‚ğo—ÍB
+					--ãƒœãƒ¼ãƒ³ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å‡ºåŠ›ã€‚
 					WriteShort file v.indices[1]
 					WriteShort file v.indices[2]
 					WriteShort file v.indices[3]
 					WriteShort file v.indices[4]
 				)
 
-				--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğo—Í‚·‚éB
+				--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 				for indexBuffer in md.meshParts[meshNo].indexBufferArray do (
-					--ƒ|ƒŠƒSƒ“‚Ì”‚ğo—Í‚·‚éB
+					--ãƒãƒªã‚´ãƒ³ã®æ•°ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 					numPoly = indexBuffer.count / 3
 					WriteLong file numPoly
 					
 					
 					
-					--ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğo—ÍB
+					--ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚’å‡ºåŠ›ã€‚
 					for index in indexBuffer do (
 						if indexSize == 2 then (
 							WriteShort file index
@@ -395,10 +395,10 @@ private
 				)
 			)			
 	/*	)catch(
-			messageBox "tkmƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½B"
+			messageBox "tkmãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸã€‚"
 		)*/
 		fclose file
-		--ƒeƒNƒXƒ`ƒƒ‚ÌƒRƒ“ƒo[ƒh
+		--ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚³ãƒ³ãƒãƒ¼ãƒ‰
 		for texFilePath in textureFilePaths do(
 			ConvertTextureToDDS texFilePath
 		)
@@ -407,7 +407,7 @@ public
 	fn SaveTkm nodes filePath isFlatShading=
 	(
 		m_isFlatShading = isFlatShading
-		--‘I‘ğ‚µ‚Ä‚¢‚éƒm[ƒh‚ğ‘Ş”ğ‚³‚¹‚éB
+		--é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’é€€é¿ã•ã›ã‚‹ã€‚
 		nodesTmp = #()
 		for p in nodes do (
 			append nodesTmp p
@@ -417,28 +417,28 @@ public
 		filePath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		if filePath != undefined then(
 			try(
-				--o—Íæ‚ÌƒtƒHƒ‹ƒ_‚ğæ“¾B
+				--å‡ºåŠ›å…ˆã®ãƒ•ã‚©ãƒ«ãƒ€ã‚’å–å¾—ã€‚
 				outputFolder = pathConfig.removePathLeaf filePath
-				--ƒXƒPƒ‹ƒgƒ“‚ªæ“¾‚Å‚«‚éH
+				--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ãŒå–å¾—ã§ãã‚‹ï¼Ÿ
 				TrySaveSkeleton nodesTmp filePath
 
 				md = ModelData meshParts:#()
 
 				for p in nodesTmp do (
-					--•ÒW‰Â”\’¸“_‚É•ÏŠ·‚Å‚«‚é‚©’²‚×‚éB
+					--ç·¨é›†å¯èƒ½é ‚ç‚¹ã«å¤‰æ›ã§ãã‚‹ã‹èª¿ã¹ã‚‹ã€‚
 					if canConvertTo p Mesh then(
-						--ƒƒbƒVƒ…ƒp[ƒc‚ğƒrƒ‹ƒh				
+						--ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‘ãƒ¼ãƒ„ã‚’ãƒ“ãƒ«ãƒ‰				
 						BUildMeshParts p
 					)
 				) 
-				--•Û‘¶B
+				--ä¿å­˜ã€‚
 				InternalSave filePath
-				messageBox "o—Í¬Œ÷‚µ‚Ü‚µ‚½B" beep:false
+				messageBox "å‡ºåŠ›æˆåŠŸã—ã¾ã—ãŸã€‚" beep:false
 			)catch(
 				if cloneMeshObj != undefined then(
 					delete cloneMeshObj
 				)
-				messageBox "o—Í‚É¸”s‚µ‚Ü‚µ‚½B" beep:false
+				messageBox "å‡ºåŠ›ã«å¤±æ•—ã—ã¾ã—ãŸã€‚" beep:false
 			)
 		)
 	)
