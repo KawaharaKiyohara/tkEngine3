@@ -87,14 +87,69 @@ rollout tkExporter "tkExporter" width:194 height:248
 			)
 		)
 
+		fn LoadFbxFile filepath= 
+		(
+				if filepath != undefined then(
+					print filepath
+					editLevelObj = getNodeByName levelName.text
+					if editLevelObj == undefined then(
+						--ダミーを作る。
+						editLevelObj = Dummy()
+						editLevelObj.name = levelName.text
+					)
+					
+					FBXImporterSetParam "ScaleConversion" false
+					FBXImporterSetParam "UpAxis" "Z"
+					ImportFile filepath #noPrompt
+					importObj = $
+			
+					filename = getFilenameFile filepath
+					
+					--全てを編集可能ポリゴンに変換する。
+					delObjArray = #()
+					for i=1 to $selection.count do
+					(
+						p = convertToMesh($selection[i]);
+						--編集可能ポリゴンに変換できなかった場合は、削除リストに積む。
+						if p == undefined then(
+							append delObjArray $selection[i]
+						)
+					)
+					--編集可能ポリゴンに変換できなかったオブジェクトを削除。
+					for i=1 to delObjArray.count do
+					(
+						delete delObjArray[i]
+					)
+					parentBox = box length:1 width:1 height:1
+					p = convertToMesh(parentBox)
+					importObj.parent = parentBox
+					select p
+					selectMore $.children
+					--結合。
+					while  $selection.count>1 do
+					(
+						attach p $selection[$selection.count];
+					)
+	
+					--ダミーをレベルの下にぽいっとな。
+					$selection[1].pivot = Point3 0 0 0
+					selection[1].name = filename
+					addModifier selection[1] (maxPlugin())	
+					$selection[1].parent = editLevelObj
+				)
+
+		)
+
 		/*
 		* Levelを読み込み。
 		*/
 		on LoadLoc pressed do
 		(
 			filepath = getOpenFileName caption:"" types: "tkl (*tkl)|*.tkl|All Files (*.*)|*.*|"
-			print filepath
-			print (filterstring filepath "level")[1]
+			pos = findString filepath "level"
+			modelPath = substring filepath 1 (pos-1)
+			modelPath = modelPath + "modelData\\"
+
 			if filepath != undefined then
 			(
 				file = fopen filepath "rb"
@@ -105,6 +160,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 						nameCount = ReadByte file
 						objectName = ReadString file
 						parentId = ReadLong file
+
 						--バインドポーズを読み込み。
 						for i = 1 to 4 do(
 							bindPos = ReadFloat file 
@@ -119,10 +175,15 @@ rollout tkExporter "tkExporter" width:194 height:248
 						)
 						caster = ReadByte file
 						receiver = ReadByte file
-						print objectName
-					)
+						if parentId != -1 then(
+							fbxPath = modelPath + objectName  + ".FBX"
+							print fbxPath	
+							LoadFbxFile(fbxPath)
+						)
+					)	
 				)catch(
 					Messagebox "ファイルの読み込みに失敗しました"
+					format "*** % ***\n" (getCurrentException())
 				)
 				FClose file
 			)
@@ -192,58 +253,6 @@ rollout tkExporter "tkExporter" width:194 height:248
 				)
 				select parentObj
 			)
-		)
-
-		fn LoadFbxFile filepath= 
-		(
-				if filepath != undefined then(
-					editLevelObj = getNodeByName levelName.text
-					if editLevelObj == undefined then(
-						--ダミーを作る。
-						editLevelObj = Dummy()
-						editLevelObj.name = levelName.text
-					)
-					
-					FBXImporterSetParam "ScaleConversion" false
-					FBXImporterSetParam "UpAxis" "Z"
-					ImportFile filepath #noPrompt
-					importObj = $
-			
-					filename = getFilenameFile filepath
-					
-					--全てを編集可能ポリゴンに変換する。
-					delObjArray = #()
-					for i=1 to $selection.count do
-					(
-						p = convertToMesh($selection[i]);
-						--編集可能ポリゴンに変換できなかった場合は、削除リストに積む。
-						if p == undefined then(
-							append delObjArray $selection[i]
-						)
-					)
-					--編集可能ポリゴンに変換できなかったオブジェクトを削除。
-					for i=1 to delObjArray.count do
-					(
-						delete delObjArray[i]
-					)
-					parentBox = box length:1 width:1 height:1
-					p = convertToMesh(parentBox)
-					importObj.parent = parentBox
-					select p
-					selectMore $.children
-					--結合。
-					while  $selection.count>1 do
-					(
-						attach p $selection[$selection.count];
-					)
-	
-					--ダミーをレベルの下にぽいっとな。
-					$selection[1].pivot = Point3 0 0 0
-					selection[1].name = filename
-					addModifier selection[1] (maxPlugin())	
-					$selection[1].parent = editLevelObj
-				)
-
 		)
 
 
