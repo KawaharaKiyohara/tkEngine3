@@ -41,7 +41,6 @@ namespace tkEngine{
 			m_currentKeyFrameNo = 0;
 			m_time = 0.0f;
 			m_isPlaying = true;
-			m_freezeBoneTranslate = CVector3::Zero;
 			//アニメーションイベントの発生フラグをすべてfalseにする。
 			auto& animEventArray = m_animationClip->GetAnimationEvent();
 			for (auto i = 0; i < m_animationClip->GetNumAnimationEvent(); i++) {
@@ -89,12 +88,13 @@ namespace tkEngine{
 		{
 			return m_isPlaying;
 		}
-		/*!
-		 *@brief	フリーズしているボーンの平行移動量を取得する。
-		 */
-		CVector3 GetFreezeBoneTranslate() const
+		/// <summary>
+		/// Update関数を呼び出したときの、footstepボーンの移動量を取得。
+		/// </summary>
+		/// <returns></returns>
+		CVector3 GetFootStepDeltaValueOnUpdate() const
 		{
-			return m_freezeBoneTranslate;
+			return m_footstepDeltaValue;
 		}
 	private:
 		/*!
@@ -105,14 +105,6 @@ namespace tkEngine{
 		*@brief	ループ再生開始する時の処理。
 		*/
 		void StartLoop();
-		/*!
-		 *@brief	指定されたボーンのアニメーションをフリーズする。
-		 */
-		void ExecuteFreezeBone();
-		/*!
-		 *@brief	フリーズさせるボーンのワールド行列を求める。
-		 */
-		void CalcFreezeBoneWorldMatrix(CBone& bone, const CMatrix& parentMatrix, CMatrix& freezeBoneMatrix);
 	private:
 		CAnimationClip*			m_animationClip = nullptr;		//!<アニメーションクリップ。
 		int						m_currentKeyFrameNo = 0;	//!<現在再生中のキーフレーム番号。
@@ -122,6 +114,6 @@ namespace tkEngine{
 		float					m_interpolateEndTime;	//!<補完終了時間
 		bool					m_isPlaying = false;	//!<再生中？
 		CSkeleton*				m_skeleton = nullptr;	//!<スケルトン。
-		CVector3				m_freezeBoneTranslate = CVector3::Zero;	//!<フリーズしているボーンの平行移動量。
+		CVector3				m_footstepDeltaValue = g_vec3Zero;	//フットステップの移動ベクトル。
 	};
 }

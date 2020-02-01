@@ -71,16 +71,7 @@ namespace tkEngine{
 			int lastIndex = GetLastAnimationControllerIndex();
 			return m_animationPlayController[lastIndex].IsPlaying();
 		}
-		/*!
-		 *@brief	フリーズさせているボーンの平行移動量を取得。
-		 *@details
-		 * 最終ポーズのアニメーションだけ。
-		 */
-		CVector3 GetFreezeBoneTranslate() const
-		{
-			int lastIndex = GetLastAnimationControllerIndex();
-			return m_animationPlayController[lastIndex].GetFreezeBoneTranslate();
-		}
+		
 		/*!
 		*@brief	アニメーションのポスト処理を実行。
 		*@details

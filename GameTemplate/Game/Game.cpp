@@ -6,8 +6,8 @@
 #include "tkEngine/graphics/Dx12/tkRenderTargetDx12.h"
 #include "tkEngine/graphics/Dx12/tkSpriteDx12.h"
 
-//#define USE_KIYOHARA
-#define USE_WATANABE
+#define USE_KIYOHARA
+//#define USE_WATANABE
 
 Game::Game()
 {

@@ -86,61 +86,6 @@ namespace tkEngine{
 			KeyFrame* keyframe = keyFrameList.at(m_currentKeyFrameNo);
 			m_boneMatrix[keyframe->boneIndex] = keyframe->transform;
 		}
-		//ボーンをフリーズさせる処理を行う。
-		ExecuteFreezeBone();
-	}
-	void CAnimationPlayController::ExecuteFreezeBone()
-	{
-		//フリーズさせるボーン番号を取得。
-		const CAnimationClip::SFreezeBoneInfo& freezeBoneInfo = m_animationClip->GetFreezeBoneInfo();
-		
-		if (freezeBoneInfo.boneNo == -1) {
-			//フリーズさせるボーンがない。
-			return;
-		}
-		
-		for (int boneNo = 0; boneNo < m_skeleton->GetNumBones(); boneNo++) {
-			//目的のボーンのワールド行列を求める。
-			CBone* bone = m_skeleton->GetBone(boneNo);
-			if (bone->GetParentId() == -1) {
-				//ルートボーンを見つけた。
-				CMatrix freezeBoneWorldMatrix;
-				CalcFreezeBoneWorldMatrix(*bone, CMatrix::Identity, freezeBoneWorldMatrix);
-				m_freezeBoneTranslate = CVector3::Zero;
-				if (freezeBoneInfo.freezeX) {
-					//X軸の移動をフリーズ。
-					m_freezeBoneTranslate.x = freezeBoneWorldMatrix.m[3][0];
-					m_boneMatrix[bone->GetNo()].m[3][0] -= freezeBoneWorldMatrix.m[3][0];
-				}
-				if (freezeBoneInfo.freezeY) {
-					//Y軸の移動をフリーズ。
-					m_freezeBoneTranslate.y = freezeBoneWorldMatrix.m[3][1];
-					m_boneMatrix[bone->GetNo()].m[3][1] -= freezeBoneWorldMatrix.m[3][1];
-				}
-				if (freezeBoneInfo.freezeZ) {
-					//Z軸の移動をフリーズ。
-					m_freezeBoneTranslate.z = freezeBoneWorldMatrix.m[3][2];
-					m_boneMatrix[bone->GetNo()].m[3][2] -= freezeBoneWorldMatrix.m[3][2];
-				}
-				break;
-			}
-		}
-	}
-	
-	void CAnimationPlayController::CalcFreezeBoneWorldMatrix(CBone& bone, const CMatrix& parentMatrix, CMatrix& freezeBoneMatrix)
-	{
-		const CAnimationClip::SFreezeBoneInfo& freezeBoneInfo = m_animationClip->GetFreezeBoneInfo();
-		CMatrix mBoneWorld;
-		CMatrix localMatrix = m_boneMatrix[bone.GetNo()];
-		mBoneWorld = localMatrix * parentMatrix;
-		if (bone.GetNo() == freezeBoneInfo.boneNo) {
-			//見つかった。
-			freezeBoneMatrix = mBoneWorld;
-			return;
-		}
-		for (auto childBone : bone.GetChildren()) {
-			CalcFreezeBoneWorldMatrix(*childBone, mBoneWorld, freezeBoneMatrix);
-		}
 	}
 	
 }
