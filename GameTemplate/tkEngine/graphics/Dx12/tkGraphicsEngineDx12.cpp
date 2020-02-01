@@ -35,7 +35,7 @@ namespace tkEngine {
 			return false;
 		}
 		//D3Dデバイスの作成。
-		if (!CreateD3DDevice()) {
+		if (!CreateD3DDevice(dxGiFactory)) {
 			//デバイスの作成に失敗した。
 			TK_ASSERT(false, "D3Dデバイスの作成に失敗しました。");
 			return false;
@@ -154,30 +154,39 @@ namespace tkEngine {
 		CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory));
 		return factory;
 	}
-	bool CGraphicsEngineDx12::CreateD3DDevice()
+	bool CGraphicsEngineDx12::CreateD3DDevice(ComPtr<IDXGIFactory4> dxgiFactory)
 	{
 		D3D_FEATURE_LEVEL fuatureLevel[] = {
 			D3D_FEATURE_LEVEL_12_1,
 			D3D_FEATURE_LEVEL_12_0
 		};
-
-		for(auto fuatureLevel : fuatureLevel) {
-
-			auto hr = D3D12CreateDevice(
-				nullptr,
-				fuatureLevel,
-				IID_PPV_ARGS(&m_d3dDevice)
-			);
-			if (SUCCEEDED(hr)) {
-				//D3Dデバイスの作成に成功した。
-				break;
+		IDXGIAdapter* adapter = nullptr;
+		for (int i = 0; dxgiFactory->EnumAdapters(i, &adapter) != DXGI_ERROR_NOT_FOUND; i++) {
+			DXGI_ADAPTER_DESC desc;
+			adapter->GetDesc(&desc);
+			if (desc.DedicatedVideoMemory < 1 * 1024 * 1024 * 1024) {
+				//ビデオメモリが1GB以下はムリ。
+				continue;
+			}
+			for (auto fuatureLevel : fuatureLevel) {
+				
+				auto hr = D3D12CreateDevice(
+					adapter,
+					fuatureLevel,
+					IID_PPV_ARGS(&m_d3dDevice)
+				);
+				if (SUCCEEDED(hr)) {
+					//D3Dデバイスの作成に成功した。
+					break;
+				}
+			}
+			if (m_d3dDevice != nullptr) {
+				//D3Dデバイスの作成に失敗した。
+				break;;
 			}
 		}
-		if (m_d3dDevice == false) {
-			//D3Dデバイスの作成に失敗した。
-			return false;
-		}
-		return true;
+
+		return m_d3dDevice != nullptr;
 	}
 	bool CGraphicsEngineDx12::CreateCommandQueue()
 	{
