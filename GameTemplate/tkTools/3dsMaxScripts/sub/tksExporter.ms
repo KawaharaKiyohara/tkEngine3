@@ -1,15 +1,15 @@
---ƒXƒPƒ‹ƒgƒ“‚ÌƒGƒNƒXƒ|[ƒ^[
+--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ã‚¿ãƒ¼
 
 /*
-*  ƒXƒPƒ‹ƒgƒ“‚Ì•Û‘¶B
-*@param[in]  filepath		•Û‘¶‚·‚éƒtƒ@ƒCƒ‹ƒpƒXB
+*  ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ä¿å­˜ã€‚
+*@param[in]  filepath		ä¿å­˜ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚
 */
 fn SaveSkeletonFilePath filepath = 
 (
     file = fopen filepath "wb"
         
     try(
-        --ƒwƒbƒ_[‚ğo—Í
+        --ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’å‡ºåŠ›
         WriteLong file g_objectParams.count
         
         for o in g_objectParams do (
@@ -17,13 +17,13 @@ fn SaveSkeletonFilePath filepath =
             WriteByte file o.objName.count
             WriteString file o.objName
             WriteLong file o.parentId
-            --ƒoƒCƒ“ƒhƒ|[ƒY‚ğo—ÍB
+            --ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’å‡ºåŠ›ã€‚
             for i = 1 to 4 do(
                 WriteFloat file o.bindPose[i].x
                 WriteFloat file o.bindPose[i].y
                 WriteFloat file o.bindPose[i].z
             )
-            --ƒoƒCƒ“ƒhƒ|[ƒY‚Ì‹t”‚ğo—ÍB
+            --ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®é€†æ•°ã‚’å‡ºåŠ›ã€‚
             for i = 1 to 4 do(
                 WriteFloat file o.invBindPose[i].x
                 WriteFloat file o.invBindPose[i].y
@@ -31,13 +31,13 @@ fn SaveSkeletonFilePath filepath =
             )
         )
     )catch(
-        Messagebox "ƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½"
+        Messagebox "ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸ"
     )
     FClose file
 )
 
 /*
-*  ƒXƒPƒ‹ƒgƒ“‚Ì•Û‘¶B
+*  ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ä¿å­˜ã€‚
 */
 fn SaveSkeleton = 
 (
@@ -49,26 +49,26 @@ fn SaveSkeleton =
     )
 )
 /*
-*  ƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ªİ’è‚³‚ê‚Ä‚¢‚éƒm[ƒh‚ª‚ ‚Á‚½‚çAƒXƒPƒ‹ƒgƒ“‚ğo—Í‚·‚éB
+*  ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ãŒã‚ã£ãŸã‚‰ã€ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 */
 fn TrySaveSkeleton nodes filePath = 
 (
-    --ƒXƒPƒ‹ƒgƒ“‚ğ‘I‘ğo—ˆ‚½‚çæ“¾‚·‚éB
+    --ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’é¸æŠå‡ºæ¥ãŸã‚‰å–å¾—ã™ã‚‹ã€‚
     skeletonRoot = GetSkeletonRoot nodes
     if skeletonRoot != undefined  then(
         
-        --ƒXƒPƒ‹ƒgƒ“‚ğ•Û‘¶‚·‚éB
+        --ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’ä¿å­˜ã™ã‚‹ã€‚
         g_objectParams = #()
-        --ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
+        --ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
         animationRange = interval 0 animationRange.end
         slidertime = 0
         at time 0(
-            --ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
+            --ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
             BuildOutputNodeInfo skeletonRoot -1
-            --ƒtƒ@ƒCƒ‹ƒpƒX‚ÌŠg’£q‚ğtks‚É•ÏX‚·‚éB
+            --ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®æ‹¡å¼µå­ã‚’tksã«å¤‰æ›´ã™ã‚‹ã€‚
             extPos = findString filepath "."
             filepath = replace filepath extPos 4 ".tks"
-            --•Û‘¶‚¾\B
+            --ä¿å­˜ã â€•ã€‚
             SaveSkeletonFilePath filepath
         )
     )

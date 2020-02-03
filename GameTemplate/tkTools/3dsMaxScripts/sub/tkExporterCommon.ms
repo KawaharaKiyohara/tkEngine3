@@ -21,7 +21,7 @@ g_objectParams = #()
 */
 fn BuildOutputNodeInfo n parentId= 
 (
-	objParam = ObjectParam "" Matrix3 Matrix3 -1 Node
+	objParam = ObjectParam "" true true Matrix3 Matrix3 -1 Node
 	objParam.objName = n.name
 	objParam.bindPose = n.transform
 	if n.modifiers[maxPlugin] != undefined then(
