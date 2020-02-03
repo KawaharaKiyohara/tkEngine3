@@ -86,12 +86,14 @@ namespace tkEngine {
 		}
 		void CModelRender::Update()
 		{
-			//モデルを更新。
-			m_model.Update(m_position, m_rotation, m_scale);
 			if (m_animation.IsInited()) {
 				//アニメーションを再生。
 				m_animation.Update(g_gameTime->GetFrameDeltaTime());
 			}
+
+			//モデルを更新。
+			m_model.Update(m_position, m_rotation, m_scale);
+
 			if (m_skeleton.IsInited()) {
 				//スケルトンを更新。
 				m_skeleton.Update(m_model.GetWorldMatrix());

@@ -5,8 +5,11 @@
 #include "tkEngine/graphics/tkAnimation.h"
 #include "tkEngine/graphics/tkModel.h"
 
-namespace tkEngine{
-
+namespace tkEngine {
+	namespace {
+		//DCCツールでのアニメーション上での1フレームの経過時間(単位は秒)
+		const float DELTA_SEC_PER_FRAME_ON_DCC_TOOL = 1.0f / 30.0f;
+	}
 
 	void CAnimation::Init(CSkeleton& skeleton, const vector<unique_ptr<CAnimationClip>>& animClips)	
 	{
@@ -15,8 +18,20 @@ namespace tkEngine{
 		for (auto& animClip : animClips) {
 			m_animationClips.push_back(animClip.get());
 		}
+		//footstepボーンの番号を調べる。
+		int footstepBoneNo = -1;
+		int numBone = m_skeleton->GetNumBones();
+		for (int boneNo = 0; boneNo < numBone; boneNo++) {
+			auto bone = m_skeleton->GetBone(boneNo);
+			if (wcscmp(bone->GetName(), L"footstep") == 0) {
+				//footstepボーンが見つかった。
+				footstepBoneNo = boneNo;
+				break;
+			}
+		}
+
 		for (auto& ctr : m_animationPlayController) {
-			ctr.Init(m_skeleton);
+			ctr.Init(m_skeleton, footstepBoneNo);
 		}
 
 		Play(0);
@@ -44,9 +59,28 @@ namespace tkEngine{
 		m_animationPlayController[lastIndex].Update(deltaTime, this);
 		
 	}
-	/*!
-	 * @brief	グローバルポーズの更新。
-	 */
+	CVector3 CAnimation::CalcFootstepDeltaValueInWorldSpace(CQuaternion rotation, CVector3 scale) const
+	{
+
+		auto footstepDeltaValueInWorldSpace = m_footstepDeltaValue;
+
+
+		CMatrix mBias = CMatrix::Identity;
+		mBias.MakeRotationX(CMath::PI * -0.5f);
+		mBias.Apply(footstepDeltaValueInWorldSpace);
+
+		//フットステップの移動量を拡大する。
+		footstepDeltaValueInWorldSpace.x *= scale.x;
+		//Yは微妙やな・・・。
+		footstepDeltaValueInWorldSpace.y *= scale.y;
+		footstepDeltaValueInWorldSpace.z *= scale.z;
+		//フットステップの移動量を回す。
+		rotation.Apply(footstepDeltaValueInWorldSpace);
+		//フットステップの移動量をオイラー積分する。
+		float t = m_deltaTimeOnUpdate / DELTA_SEC_PER_FRAME_ON_DCC_TOOL;
+		footstepDeltaValueInWorldSpace *= t;
+		return footstepDeltaValueInWorldSpace;
+	}
 	void CAnimation::UpdateGlobalPose()
 	{
 		//グローバルポーズ計算用のメモリをスタックから確保。
@@ -54,6 +88,7 @@ namespace tkEngine{
 		CQuaternion* qGlobalPose = (CQuaternion*)alloca(sizeof(CQuaternion) * numBone);
 		CVector3* vGlobalPose = (CVector3*)alloca(sizeof(CVector3) * numBone);
 		CVector3* vGlobalScale = (CVector3*)alloca(sizeof(CVector3) * numBone);
+		m_footstepDeltaValue = g_vec3Zero;
 		for (int i = 0; i < numBone; i++) {
 			qGlobalPose[i] = CQuaternion::Identity;
 			vGlobalPose[i] = CVector3::Zero;
@@ -65,9 +100,11 @@ namespace tkEngine{
 			int index = GetAnimationControllerIndex(startIndex, i);
 			float intepolateRate = m_animationPlayController[index].GetInterpolateRate();
 			const auto& localBoneMatrix = m_animationPlayController[index].GetBoneLocalMatrix();
+			auto deltaValueFootStep = m_animationPlayController[index].GetFootStepDeltaValueOnUpdate();
+			//footstepの移動量の補完
+			m_footstepDeltaValue.Lerp(intepolateRate, m_footstepDeltaValue, deltaValueFootStep);
 			for (int boneNo = 0; boneNo < numBone; boneNo++) {
 				//平行移動の補完
-
 				CMatrix m = localBoneMatrix[boneNo];
 				vGlobalPose[boneNo].Lerp(
 					intepolateRate, 
@@ -106,7 +143,7 @@ namespace tkEngine{
 				//回転の補完
 				CQuaternion qBone;
 				qBone.SetRotation(m);
-				qGlobalPose[boneNo].Slerp(intepolateRate, qGlobalPose[boneNo], qBone);
+				qGlobalPose[boneNo].Slerp(intepolateRate, qGlobalPose[boneNo], qBone);		
 			}
 		}
 		//グローバルポーズをスケルトンに反映させていく。
@@ -156,6 +193,7 @@ namespace tkEngine{
 		if (m_numAnimationPlayController == 0) {
 			return;
 		}
+		m_deltaTimeOnUpdate = deltaTime;
 		//ローカルポーズの更新をやっていく。
 		UpdateLocalPose(deltaTime);
 		

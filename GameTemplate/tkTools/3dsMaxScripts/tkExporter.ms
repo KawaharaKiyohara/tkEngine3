@@ -1,9 +1,10 @@
 /*!
- * @brief	tkEngine?ｿｽﾖ係?ｿｽﾌエ?ｿｽN?ｿｽX?ｿｽ|?ｿｽ[?ｿｽ^?ｿｽ[?ｿｽB
+ * @brief	tkEngine関係のエクスポーター。
  */
  
 pluginManager.loadClass FBXIMPORTER 
 pluginManager.loadClass FbxExporter
+
 
 include "sub/tkExporterCommon.ms"
 include "sub/tksExporter.ms"
@@ -41,43 +42,43 @@ rollout tkExporter "tkExporter" width:194 height:248
 	)
 
 	/*
-	 *  ?ｿｽX?ｿｽP?ｿｽ?ｿｽ?ｿｽg?ｿｽ?ｿｽ?ｿｽﾌ出?ｿｽﾍのボ?ｿｽ^?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ黷ｽ?ｿｽﾆゑｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+	 *  スケルトンの出力のボタンが押されたときの処理。
 	 */
 	on btn_saveSkeleton pressed do
 	(
 		if selection[1] == undefined then(
-			Messagebox "?ｿｽo?ｿｽﾍゑｿｽ?ｿｽ?ｿｽX?ｿｽP?ｿｽ?ｿｽ?ｿｽg?ｿｽ?ｿｽ?ｿｽﾌ??ｿｽ?ｿｽ[?ｿｽg?ｿｽﾌオ?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽI?ｿｽ?ｿｽﾄ会ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB?ｿｽB?ｿｽB"
+			Messagebox "出力するスケルトンのルートのオブジェクトを選択して下さい。。。"
 		)else(
 			g_objectParams = #()
-			--?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽﾔゑｿｽ0?ｿｽﾉゑｿｽ?ｿｽ?ｿｽB
+			--アニメーション時間を0にする。
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽi?ｿｽs?ｿｽ?ｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+				--アニメーション進行中の処理。
 				BuildOutputNodeInfo selection[1] -1
 				SaveSkeleton()
 			)
 		)
 	)
 	/*
-	* Level?ｿｽ?ｿｽﾛ托ｿｽ?ｿｽB
+	* Levelを保存。
 	*/
 	on SaveLoc pressed do
 	(
-		--?ｿｽ?ｿｽ?ｿｽﾝ編集?ｿｽ?ｿｽ?ｿｽﾌ??ｿｽ?ｿｽ[?ｿｽg?ｿｽﾌ??ｿｽ?ｿｽx?ｿｽ?ｿｽ?ｿｽ?ｿｽ謫ｾ?ｿｽB
+		--現在編集中のルートのレベルを取得。
 		editLevelObj = getNodeByName levelName.text
 		if editLevelObj == undefined then(
-			Messagebox "?ｿｽﾛ托ｿｽ?ｿｽ?ｿｽ?ｿｽ驛鯉ｿｽx?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽﾝゑｿｽ?ｿｽﾜゑｿｽ?ｿｽ?ｿｽB"
+			Messagebox "保存するレベルが存在しません。"
 		)else(
 			select editLevelObj
 		
-			--?ｿｽX?ｿｽP?ｿｽ?ｿｽ?ｿｽg?ｿｽ?ｿｽ?ｿｽﾆゑｿｽ?ｿｽﾄ保托ｿｽ?ｿｽB
+			--スケルトンとして保存。
 			g_objectParams = #()
-			--?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽﾔゑｿｽ0?ｿｽﾉゑｿｽ?ｿｽ?ｿｽB
+			--アニメーション時間を0にする。
 			animationRange = interval 0 animationRange.end
 			slidertime = 0
 			at time 0(
-				--?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽi?ｿｽs?ｿｽ?ｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+				--アニメーション進行中の処理。
 				BuildOutputNodeInfo selection[1] -1
 				SaveLevel()
 				print "save level"
@@ -86,34 +87,34 @@ rollout tkExporter "tkExporter" width:194 height:248
 	)
 	
 	/*
-	 *  ?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽN?ｿｽ?ｿｽ?ｿｽb?ｿｽv?ｿｽﾌ保托ｿｽ?ｿｽﾌボ?ｿｽ^?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ黷ｽ?ｿｽﾆゑｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+	 *  アニメーションクリップの保存のボタンが押されたときの処理。
 	 */
 	on btn_saveAnimationClip pressed do
 	(
-		--?ｿｽﾆりあ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽS?ｿｽN?ｿｽ?ｿｽ?ｿｽb?ｿｽv?ｿｽo?ｿｽﾍゑｿｽ?ｿｽ?ｿｽB
+		--とりあえず全クリップ出力する。
 		skeletonRoot = GetSkeletonRoot objects
 		
 		if skeletonRoot == undefined  then(
-			--?ｿｽV?ｿｽ[?ｿｽ?ｿｽ?ｿｽﾉス?ｿｽL?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽf?ｿｽB?ｿｽt?ｿｽ@?ｿｽC?ｿｽA?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽﾂゑｿｽ?ｿｽ?ｿｽﾈゑｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB
+			--シーンにスキンモディファイアが見つからなかった。
 			if selection[1] == undefined  then(
-				Messagebox "?ｿｽX?ｿｽP?ｿｽ?ｿｽ?ｿｽg?ｿｽ?ｿｽ?ｿｽﾌ??ｿｽ?ｿｽ[?ｿｽg?ｿｽﾌオ?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽﾌ趣ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽﾊゑｿｽ?ｿｽﾅゑｿｽ?ｿｽﾜゑｿｽ?ｿｽ?ｿｽﾅゑｿｽ?ｿｽ?ｿｽ?ｿｽB\n?ｿｽX?ｿｽP?ｿｽ?ｿｽ?ｿｽg?ｿｽ?ｿｽ?ｿｽﾌ??ｿｽ?ｿｽ[?ｿｽg?ｿｽﾌオ?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽI?ｿｽ?ｿｽﾄア?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽN?ｿｽ?ｿｽ?ｿｽb?ｿｽv?ｿｽ?ｿｽﾛ托ｿｽ?ｿｽ?ｿｽ?ｿｽﾄゑｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB\n"
+				Messagebox "スケルトンのルートのオブジェクトの自動判別ができませんでした。\nスケルトンのルートのオブジェクトを選択してアニメーションクリップを保存してください。\n"
 				return 0
 			)
 			skeletonRoot = selection[1]
 		)
 		g_objectParams = #()
-		--?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽﾔゑｿｽ0?ｿｽﾉゑｿｽ?ｿｽ?ｿｽB
+		--アニメーション時間を0にする。
 		startFrame = animClipStartFrame.text as integer
 		endFrame = animClipEndFrame.text as integer
 		animationRange = interval startFrame endFrame
 		slidertimer = 0
 		animate on(
-			--?ｿｽA?ｿｽj?ｿｽ?ｿｽ?ｿｽ[?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽi?ｿｽs?ｿｽ?ｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+			--アニメーション進行中の処理。
 			BuildOutputNodeInfo skeletonRoot -1
 			try(
 				SaveAnimationClip()
 			)catch(
-				messageBox "?ｿｽt?ｿｽ@?ｿｽC?ｿｽ?ｿｽ?ｿｽﾌ保托ｿｽ?ｿｽﾉ趣ｿｽ?ｿｽs?ｿｽ?ｿｽ?ｿｽﾜゑｿｽ?ｿｽ?ｿｽ"
+				messageBox "ファイルの保存に失敗しました"
 			)
 		)
 	)
@@ -130,12 +131,12 @@ rollout tkExporter "tkExporter" width:194 height:248
     )
     
 	/*
-	 *?ｿｽ@?ｿｽz?ｿｽu?ｿｽ?ｿｽ?ｿｽ?ｿｽI?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽR?ｿｽs?ｿｽ[
+	 *配置するオブジェクトをコピー
 	 */
 	on btn_copy_locObject pressed do
 	(
 		if selection.count == 0  then(
-			Messagebox "?ｿｽR?ｿｽs?ｿｽ[?ｿｽ?ｿｽ?ｿｽ?ｿｽI?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽI?ｿｽ?ｿｽﾄゑｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB"
+			Messagebox "コピーするオブジェクトを選択してください。"
 		)else(
 			selectHierarchy()
 			parentObj = copy selection[1]
@@ -151,19 +152,19 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 * ?ｿｽz?ｿｽu?ｿｽ?ｿｽ?ｿｽ?ｿｽI?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽﾌ??ｿｽ?ｿｽ[?ｿｽh?ｿｽB
+	 * 配置するオブジェクトのロード。
 	 */
 	on btn_load_locObject pressed do
 	(
 		
 		if  levelName.text == "" then(
-			Messagebox "?ｿｽﾒ集?ｿｽ?ｿｽ?ｿｽ驛鯉ｿｽx?ｿｽ?ｿｽ?ｿｽﾌ厄ｿｽ?ｿｽO?ｿｽ?ｿｽ?ｿｽ?ｿｽﾍゑｿｽ?ｿｽﾄ会ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB"
+			Messagebox "編集するレベルの名前を入力して下さい。"
 		)else(
 			filepath = getOpenFileName caption:"" types: "fbx (*fbx)|*.fbx|All Files (*.*)|*.*|"
 			if filepath != undefined then(
 				editLevelObj = getNodeByName levelName.text
 				if editLevelObj == undefined then(
-					--?ｿｽ_?ｿｽ~?ｿｽ[?ｿｽ?ｿｽ?ｿｽ?ｿｽB
+					--ダミーを作る。
 					editLevelObj = Dummy()
 					editLevelObj.name = levelName.text
 				)
@@ -175,17 +176,17 @@ rollout tkExporter "tkExporter" width:194 height:248
 		
 				filename = getFilenameFile filepath
 				
-				--?ｿｽS?ｿｽﾄゑｿｽﾒ集?ｿｽﾂ能?ｿｽ|?ｿｽ?ｿｽ?ｿｽS?ｿｽ?ｿｽ?ｿｽﾉ変奇ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB
+				--全てを編集可能ポリゴンに変換する。
 				delObjArray = #()
 				for i=1 to $selection.count do
 				(
 					p = convertToMesh($selection[i]);
-					--?ｿｽﾒ集?ｿｽﾂ能?ｿｽ|?ｿｽ?ｿｽ?ｿｽS?ｿｽ?ｿｽ?ｿｽﾉ変奇ｿｽ?ｿｽﾅゑｿｽ?ｿｽﾈゑｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ鼾??ｿｽﾍ、?ｿｽ尞懶ｿｽ?ｿｽ?ｿｽX?ｿｽg?ｿｽﾉ積む。
+					--編集可能ポリゴンに変換できなかった場合は、削除リストに積む。
 					if p == undefined then(
 						append delObjArray $selection[i]
 					)
 				)
-				--?ｿｽﾒ集?ｿｽﾂ能?ｿｽ|?ｿｽ?ｿｽ?ｿｽS?ｿｽ?ｿｽ?ｿｽﾉ変奇ｿｽ?ｿｽﾅゑｿｽ?ｿｽﾈゑｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽI?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽ尞懶ｿｽB
+				--編集可能ポリゴンに変換できなかったオブジェクトを削除。
 				for i=1 to delObjArray.count do
 				(
 					delete delObjArray[i]
@@ -195,13 +196,13 @@ rollout tkExporter "tkExporter" width:194 height:248
 				importObj.parent = parentBox
 				select p
 				selectMore $.children
-				--?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB
+				--結合。
 				while  $selection.count>1 do
 				(
 					attach p $selection[$selection.count];
 				)
 
-				--?ｿｽ_?ｿｽ~?ｿｽ[?ｿｽ?ｿｽx?ｿｽ?ｿｽ?ｿｽﾌ会ｿｽ?ｿｽﾉぽゑｿｽ?ｿｽ?ｿｽ?ｿｽﾆな。
+				--ダミーをレベルの下にぽいっとな。
 				$selection[1].pivot = Point3 0 0 0
 				selection[1].name = filename
 				addModifier selection[1] (maxPlugin())	
@@ -210,11 +211,11 @@ rollout tkExporter "tkExporter" width:194 height:248
 		)
 	)
 	/*
-	 *  FBX?ｿｽo?ｿｽﾍ用?ｿｽﾌ設抵ｿｽ?ｿｽs?ｿｽ?ｿｽ?ｿｽB
+	 *  FBX出力用の設定を行う。
 	 */
 	fn SetupFbxExportSettings = 
 	(
-		--?ｿｽ?ｿｽ?ｿｽﾉゑｿｽI?ｿｽv?ｿｽV?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽK?ｿｽv?ｿｽﾈゑｿｽﾇ会ｿｽ?ｿｽ?ｿｽ?ｿｽﾄゑｿｽ?ｿｽ?ｿｽ?ｿｽﾄゑｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽB
+		--他にもオプションが必要なら追加していってください。
 		FBXExporterSetParam "ResetExport"
 		FBXExporterSetParam "ScaleFactor" 1.0
 		FBXExporterSetParam "UpAxis" "Z"
@@ -225,21 +226,21 @@ rollout tkExporter "tkExporter" width:194 height:248
 	
 	
 	/*!
-	 * @brief	FBX?ｿｽ?ｿｽSave?ｿｽﾌボ?ｿｽ^?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ黷ｽ?ｿｽﾆゑｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+	 * @brief	FBXのSaveのボタンが押されたときの処理。
 	 */
 	on btn_save_fbx pressed do
 	(
-		--?ｿｽS?ｿｽI?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽtkm?ｿｽt?ｿｽ@?ｿｽC?ｿｽ?ｿｽ?ｿｽﾆゑｿｽ?ｿｽﾄ出?ｿｽﾍゑｿｽ?ｿｽ?ｿｽB
+		--全オブジェクトをtkmファイルとして出力する。
 		expoter = TkmExporter()
 		expoter.SaveTkm objects filepath flat_shading.checked
 	)
 	
 	/*!
-	 * @brief	FBX?ｿｽ?ｿｽSave Selected?ｿｽﾌボ?ｿｽ^?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ?ｿｽ黷ｽ?ｿｽﾆゑｿｽ?ｿｽﾌ擾ｿｽ?ｿｽ?ｿｽ?ｿｽB
+	 * @brief	FBXのSave Selectedのボタンが押されたときの処理。
 	 */
 	on btn_save_selected_fbx pressed do
 	(
-		--?ｿｽI?ｿｽ?ｿｽ?ｿｽﾄゑｿｽ?ｿｽ?ｿｽI?ｿｽu?ｿｽW?ｿｽF?ｿｽN?ｿｽg?ｿｽ?ｿｽtkm?ｿｽt?ｿｽ@?ｿｽC?ｿｽ?ｿｽ?ｿｽﾆゑｿｽ?ｿｽﾄ出?ｿｽﾍゑｿｽ?ｿｽ?ｿｽB
+		--選択されているオブジェクトをtkmファイルとして出力する。
 		expoter = TkmExporter()
 		expoter.SaveTkm selection filepath flat_shading.checked
 	)

@@ -417,11 +417,13 @@ public
 		filePath = getSaveFileName caption:"" types: " (*.tkm)|*.tkm|All Files (*.*)|*.*|"
 		if filePath != undefined then(
 			try(
+				
 				--出力先のフォルダを取得。
 				outputFolder = pathConfig.removePathLeaf filePath
+					
 				--スケルトンが取得できる？
 				TrySaveSkeleton nodesTmp filePath
-
+			
 				md = ModelData meshParts:#()
 
 				for p in nodesTmp do (
@@ -431,6 +433,7 @@ public
 						BUildMeshParts p
 					)
 				) 
+				
 				--保存。
 				InternalSave filePath
 				messageBox "出力成功しました。" beep:false
@@ -438,7 +441,7 @@ public
 				if cloneMeshObj != undefined then(
 					delete cloneMeshObj
 				)
-				messageBox "出力に失敗しました。" beep:false
+				messageBox "出力に失敗しました。hoge" beep:false
 			)
 		)
 	)

@@ -24,13 +24,13 @@ fn BuildOutputNodeInfo n parentId=
 	objParam = ObjectParam "" Matrix3 Matrix3 -1 Node
 	objParam.objName = n.name
 	objParam.bindPose = n.transform
-	if n.modifiers[maxPlugin] != undefined then(
+/*	if n.modifiers[maxPlugin] != undefined then(
 		objParam.isShadowCaster = n.modifiers[maxPlugin].caster
 		objParam.isShadowReceiver = n.modifiers[maxPlugin].receiver
 	)else(
 		objParam.isShadowCaster = false
 		objParam.isShadowReceiver = false
-	)
+	)*/
 	objParam.invBindPose = inverse n.transform
 	objParam.n = n
 	if n.parent == undefined then(

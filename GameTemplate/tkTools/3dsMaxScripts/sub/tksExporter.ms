@@ -64,10 +64,12 @@ fn TrySaveSkeleton nodes filePath =
         slidertime = 0
         at time 0(
             --アニメーション進行中の処理。
+			
             BuildOutputNodeInfo skeletonRoot -1
             --ファイルパスの拡張子をtksに変更する。
             extPos = findString filepath "."
             filepath = replace filepath extPos 4 ".tks"
+			
             --保存だ―。
             SaveSkeletonFilePath filepath
         )

@@ -106,6 +106,19 @@ namespace tkEngine{
 				listener(clipName, eventName);
 			}
 		}
+		/// <summary>
+		/// ワールド空間でのフットステップの移動量を計算する。
+		/// </summary>
+		/// <remarks>
+		/// フットステップの移動量は、モデルのルートからの相対移動量です。
+		/// そのため、ワールド空間に変換するのに平行移動量は不要です。
+		/// モデルの回転クォータニオンと拡大率のみ指定してください。
+		/// </remarks>
+		/// <param name="rotation">モデルの回転</param>
+		/// <param name="scale">モデルの拡大率</param>
+		/// <returns>ワールド空間でのフットステップの移動量。</returns>
+		CVector3 CalcFootstepDeltaValueInWorldSpace(CQuaternion rotation, CVector3 scale) const;
+
 	private:
 		void PlayCommon(CAnimationClip* nextClip, float interpolateTime)
 		{
@@ -141,7 +154,6 @@ namespace tkEngine{
 		/// グローバルポーズの更新。
 		/// </summary>
 		void UpdateGlobalPose();
-		
 	private:
 		
 		/*!
@@ -160,6 +172,7 @@ namespace tkEngine{
 		{
 			return (startIndex + localIndex) % ANIMATION_PLAY_CONTROLLER_NUM;
 		}
+		
 	private:
 		static const int ANIMATION_PLAY_CONTROLLER_NUM = 32;	//!<アニメーションコントローラの数。
 		vector<CAnimationClip*>	m_animationClips;	//!<アニメーションクリップの配列。
@@ -169,8 +182,10 @@ namespace tkEngine{
 		int m_startAnimationPlayController = 0;		//!<アニメーションコントローラの開始インデックス。
 		float m_interpolateTime = 0.0f;
 		float m_interpolateTimeEnd = 0.0f;
-		bool m_isInterpolate = false;				//!<補間中？
+		bool m_isInterpolate = false;								//!<補間中？
 		vector<AnimationEventListener>	m_animationEventListeners;	//!<アニメーションイベントリスナーのリスト。
+		CVector3 m_footstepDeltaValue = g_vec3Zero;					//footstepボーンの移動量。
 		bool m_isInited = false;
+		float m_deltaTimeOnUpdate = 0.0f;							//Update関数を実行したときのデルタタイム。
 	};
 }
