@@ -147,6 +147,8 @@ rollout tkExporter "tkExporter" width:194 height:248
 		on LoadLoc pressed do
 		(
 			filepath = getOpenFileName caption:"" types: "tkl (*tkl)|*.tkl|All Files (*.*)|*.*|"
+			if filepath != undefined then
+			(
 			pos = findString filepath "level"
 			modelPath = substring filepath 1 (pos-1)
 			modelPath = modelPath + "modelData\\"
@@ -203,6 +205,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 					format "*** % ***\n" (getCurrentException())
 				)
 				FClose file
+			)
 			)
 		)
 		
