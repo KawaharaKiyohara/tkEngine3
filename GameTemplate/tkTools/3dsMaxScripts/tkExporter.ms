@@ -136,6 +136,7 @@ rollout tkExporter "tkExporter" width:194 height:248
 					selection[1].name = filename
 					addModifier selection[1] (maxPlugin())	
 					$selection[1].parent = editLevelObj
+					return selection[1]
 				)
 
 		)
@@ -157,29 +158,45 @@ rollout tkExporter "tkExporter" width:194 height:248
 					--ヘッダーを読み込み。
 					paramCount = ReadLong file
 					for i = 1 to paramCount do(
+						objParam = ObjectParam "" true true Matrix3 Matrix3 -1 Node
+						
 						nameCount = ReadByte file
-						objectName = ReadString file
-						parentId = ReadLong file
+						objParam.objName = ReadString file
+						objParam.parentId = ReadLong file
 
 						--バインドポーズを読み込み。
+						bindx = #(0,0,0)
+						bindy = #(0,0,0)
+						bindz = #(0,0,0)
 						for i = 1 to 4 do(
-							bindPos = ReadFloat file 
-							bindPos = ReadFloat file 
-							bindPos = ReadFloat file
+							bindx[i] = ReadFloat file 
+							bindy[i] = ReadFloat file 
+							bindz[i] = ReadFloat file 
 						)
+
 						--バインドポーズの逆行列を読み込み。
 						for i = 1 to 4 do(
-							bindPos = ReadFloat file 
-							bindPos = ReadFloat file 
-							bindPos = ReadFloat file
+							x = ReadFloat file 
+							y = ReadFloat file 
+							z = ReadFloat file
 						)
-						caster = ReadByte file
-						receiver = ReadByte file
-						if parentId != -1 then(
-							fbxPath = modelPath + objectName  + ".FBX"
-							print fbxPath	
-							LoadFbxFile(fbxPath)
-						)
+						objParam.isShadowCaster = ReadByte file
+						objParam.isShadowReceiver = ReadByte file
+
+						--オブジェクトを配置
+						if objParam.parentId == -1 do continue
+						fbxPath = modelPath + objParam.objName  + ".FBX"
+						levelObj = LoadFbxFile(fbxPath)
+
+						myTransform = levelObj.transform
+						myTransform.row1 = [bindx[1],bindy[1],bindz[1]]
+						myTransform.row2 = [bindx[2],bindy[2],bindz[2]]
+						myTransform.row3 = [bindx[3],bindy[3],bindz[3]]
+						myTransform.row4 = [bindx[4],bindy[4],bindz[4]]
+						levelObj.transform = myTransform
+
+						levelObj.modifiers[maxPlugin].caster = objParam.isShadowCaster
+						levelObj.modifiers[maxPlugin].receiver = objParam.isShadowReceiver	
 					)	
 				)catch(
 					Messagebox "ファイルの読み込みに失敗しました"
