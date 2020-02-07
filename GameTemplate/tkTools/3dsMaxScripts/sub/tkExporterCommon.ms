@@ -15,7 +15,6 @@ struct ObjectParam(
 
 --オブジェクトパラメータの配列。
 g_objectParams = #()
-
 /*
 *  出力するノードの情報を構築。
 */
@@ -31,6 +30,12 @@ fn BuildOutputNodeInfo n parentId=
 		objParam.isShadowCaster = false
 		objParam.isShadowReceiver = false
 	)
+	--int型のカスタムパラメータ出力
+	objParam.numIntParam = n.modifiers[maxPlugin].numIntParam
+	for i = 1 to objParam.numIntParam do (
+		objParam.intParam[i] = n.modifiers[maxPlugin].intParam[i]	
+	)
+
 	objParam.invBindPose = inverse n.transform
 	objParam.n = n
 	if n.parent == undefined then(

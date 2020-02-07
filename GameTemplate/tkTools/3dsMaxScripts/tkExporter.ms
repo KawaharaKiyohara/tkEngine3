@@ -157,6 +157,13 @@ rollout tkExporter "tkExporter" width:194 height:248
 			(
 				file = fopen filepath "rb"
 				try(
+					--tklバージョンを読み込み。
+					fileTklVersion = ReadLong file
+					if tkl_version != fileTklVersion do (
+						messageBox "tkExporterとtklファイルのバージョンが異なります。"
+						--tklに機能追加があった時に旧バージョンの読み込み処理は別の何処かでやるとか？
+						--if文で読み込みスキップとかするかぁ～。
+					)
 					--ヘッダーを読み込み。
 					paramCount = ReadLong file
 					for i = 1 to paramCount do(

@@ -1,5 +1,5 @@
 --レベルデータのエクスポータ。
-
+global tkl_version = 3.0
 /*
 	 * レベルデータを保存。
 	 */
@@ -13,6 +13,8 @@
              file = fopen filepath "wb"
              
              try(
+                 --バージョンを出力
+                 WriteLong file tkl_version
                  --ヘッダーを出力
                  WriteLong file g_objectParams.count
                  
