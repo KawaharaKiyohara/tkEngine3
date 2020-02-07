@@ -11,6 +11,7 @@
 #define IDS_INTLIST                     7
 #define IDS_RECEIVER                    8
 #define IDS_STRINGLIST                  9
+#define IDS_VEC3LIST                    10
 #define IDD_PANEL                       101
 #define IDC_CLOSEBUTTON                 1000
 #define IDC_DOSTUFF                     1000
@@ -27,7 +28,17 @@
 #define IDC_CUST_STR_REPLACE            1018
 #define IDC_CUST_STR_DELETE             1019
 #define IDC_CUST_STR_NEWVAL             1020
-#define IDCS_CUST_STR_NEWVAL            1021
+#define IDC_VEC3LIST                    1027
+#define IDC_CUST_VEC3_ADD               1028
+#define IDC_CUST_VEC3_REPLACE           1029
+#define IDC_CUST_VEC3_DELETE            1030
+#define IDC_CUST_VEC3_X                 1031
+#define IDCS_CUST_VEC3_X                1032
+#define IDC_CUST_VEC3_Y                 1033
+#define IDCS_CUST_VEC3_Y                1034
+#define IDC_CUST_VEC3_Z                 1035
+#define IDCS_CUST_VEC3_NEWVAL3          1036
+#define IDCS_CUST_VEC3_Z                1036
 #define IDC_COLOR                       1456
 #define IDC_EDIT                        1490
 #define IDC_EDIT2                       1491

@@ -150,7 +150,8 @@ enum {
 	p_caster,
 	p_receiver,
 	p_intList,
-	p_strList
+	p_strList,
+	p_vec3List
 };
 
 
@@ -179,6 +180,15 @@ static ParamBlockDesc2 maxplugin_param_blk ( maxplugin_params, _T("params"),  0,
 	p_strList, _T("strList"), TYPE_STRING_TAB, 0, P_ANIMATABLE | P_VARIABLE_SIZE, IDS_STRINGLIST,
 	p_ui, TYPE_STRINGLISTBOX, IDC_STR_LIST, IDC_CUST_STR_ADD, IDC_CUST_STR_REPLACE,
 	IDC_CUST_STR_DELETE, IDC_CUST_STR_NEWVAL,
+	p_end,
+
+
+	p_vec3List, _T("vec3List"), TYPE_POINT3_TAB, 0, P_ANIMATABLE | P_VARIABLE_SIZE, IDS_VEC3LIST,
+	p_range, -99999999.0, 99999999.0,
+	p_ui, TYPE_POINT3LISTBOX, IDC_VEC3LIST, IDC_CUST_VEC3_ADD, IDC_CUST_VEC3_REPLACE, IDC_CUST_VEC3_DELETE, EDITTYPE_FLOAT, IDC_CUST_VEC3_X, IDCS_CUST_VEC3_X,
+	 IDC_CUST_VEC3_Y, IDCS_CUST_VEC3_Y,
+	 IDC_CUST_VEC3_Z, IDCS_CUST_VEC3_Z,
+	SPIN_AUTOSCALE,
 	p_end,
 
 	p_end
