@@ -149,6 +149,7 @@ enum {
 	pb_spin,
 	p_caster,
 	p_receiver,
+	p_intList
 };
 
 
@@ -167,6 +168,13 @@ static ParamBlockDesc2 maxplugin_param_blk ( maxplugin_params, _T("params"),  0,
 		p_default, TRUE,
 		p_ui, TYPE_SINGLECHECKBOX, IDC_CHECK2,
 	p_end,
+
+
+	p_intList, _T("intList"), TYPE_INT_TAB, 0, P_ANIMATABLE | P_VARIABLE_SIZE, 7,
+	p_range, 0, USHRT_MAX,
+	p_ui, TYPE_INTLISTBOX, IDC_LIST1, IDC_CUST_INT_ADD, IDC_CUST_INT_REPLACE, IDC_CUST_INT_DELETE, EDITTYPE_INT, IDC_CUST_INT_NEWVAL, IDCS_CUST_INT_NEWVAL, SPIN_AUTOSCALE,
+	p_end,
+
 	p_end
 	);
 
