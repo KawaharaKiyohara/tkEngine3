@@ -69,13 +69,38 @@ END
 // Dialog
 //
 
-IDD_PANEL DIALOGEX 0, 0, 108, 118
+IDD_PANEL DIALOGEX 0, 0, 108, 703
 STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    CTEXT           "Shadow Params",IDC_STATIC,7,23,94,16
-    CONTROL         "ShadowCaster",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,51,61,10
-    CONTROL         "ShadowReceiver",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,76,68,10
+    CTEXT           "Shadow Params",IDC_STATIC,0,46,101,16
+    CONTROL         "ShadowCaster",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,63,61,10
+    CONTROL         "ShadowReceiver",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,81,68,10
+    LISTBOX         IDC_FLOAT_LIST,19,138,68,62,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Add value",IDC_CUST_FLOAT_ADD,"CustButton",WS_TABSTOP,26,208,50,14
+    CONTROL         "Replace",IDC_CUST_FLOAT_REPLACE,"CustButton",WS_TABSTOP,26,225,50,14
+    CONTROL         "Delete",IDC_CUST_FLOAT_DELETE,"CustButton",WS_TABSTOP,26,242,50,14
+    CONTROL         "Value",IDC_CUST_FLOAT_NEWVAL,"CustEdit",WS_TABSTOP,26,261,40,14
+    CONTROL         "????1",IDCS_CUST_FLOAT_NEWVAL,"SpinnerControl",WS_TABSTOP,67,261,9,14
+    LTEXT           "MapChip Params",IDC_STATIC,22,17,57,11
+    LTEXT           "Float List",IDC_STATIC,34,119,41,11
+    LISTBOX         IDC_STR_LIST,27,329,48,62,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Add value",IDC_CUST_STR_ADD,"CustButton",WS_TABSTOP,27,400,50,14
+    CONTROL         "Replace",IDC_CUST_STR_REPLACE,"CustButton",WS_TABSTOP,27,417,50,14
+    CONTROL         "Delete",IDC_CUST_STR_DELETE,"CustButton",WS_TABSTOP,27,434,50,14
+    CONTROL         "Value",IDC_CUST_STR_NEWVAL,"CustEdit",WS_TABSTOP,14,453,77,14
+    LTEXT           "String List",IDC_STATIC,35,311,48,11
+    LISTBOX         IDC_VEC3LIST,12,500,79,62,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Add value",IDC_CUST_VEC3_ADD,"CustButton",WS_TABSTOP,27,571,50,14
+    CONTROL         "Replace",IDC_CUST_VEC3_REPLACE,"CustButton",WS_TABSTOP,27,588,50,14
+    CONTROL         "Delete",IDC_CUST_VEC3_DELETE,"CustButton",WS_TABSTOP,27,605,50,14
+    CONTROL         "Value",IDC_CUST_VEC3_X,"CustEdit",WS_TABSTOP,27,624,40,14
+    CONTROL         "????1",IDCS_CUST_VEC3_X,"SpinnerControl",WS_TABSTOP,67,624,9,14
+    LTEXT           "Vec3 List",IDC_STATIC,35,482,40,11
+    CONTROL         "Value",IDC_CUST_VEC3_Y,"CustEdit",WS_TABSTOP,27,643,40,14
+    CONTROL         "????1",IDCS_CUST_VEC3_Y,"SpinnerControl",WS_TABSTOP,67,643,9,14
+    CONTROL         "Value",IDC_CUST_VEC3_Z,"CustEdit",WS_TABSTOP,27,660,40,14
+    CONTROL         "????1",IDCS_CUST_VEC3_Z,"SpinnerControl",WS_TABSTOP,67,660,9,14
 END
 
 
@@ -89,10 +114,9 @@ GUIDELINES DESIGNINFO
 BEGIN
     IDD_PANEL, DIALOG
     BEGIN
-        LEFTMARGIN, 7
         RIGHTMARGIN, 101
         TOPMARGIN, 7
-        BOTTOMMARGIN, 111
+        BOTTOMMARGIN, 696
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -122,7 +146,10 @@ BEGIN
     IDS_PARAMS              "Parameters"
     IDS_SPIN                "Spin"
     IDS_CASTER              "Caster"
+    IDS_FLOATLIST           "FloatList"
     IDS_RECEIVER            "Receiver"
+    IDS_STRINGLIST          "StringList"
+    IDS_VEC3LIST            "Vector3List"
 END
 
 #endif    // âpåÍ (ïƒçë) resources

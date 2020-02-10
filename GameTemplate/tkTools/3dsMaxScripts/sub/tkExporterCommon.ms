@@ -7,6 +7,17 @@ struct ObjectParam(
 	objName,
 	isShadowCaster,
 	isShadowReceiver,
+
+	numFloatParam,
+	floatParams,
+
+	numStringParam,
+	stringParamLength,
+	stringParams,
+
+	numVec3Param,
+	vec3Params,
+	
 	bindPose,	
 	invBindPose,
 	parentId,
@@ -15,22 +26,42 @@ struct ObjectParam(
 
 --オブジェクトパラメータの配列。
 g_objectParams = #()
-
 /*
 *  出力するノードの情報を構築。
 */
 fn BuildOutputNodeInfo n parentId= 
 (
-	objParam = ObjectParam "" true true Matrix3 Matrix3 -1 Node
+	objParam = ObjectParam "" true true 0 #() 0 #() #() 0 #() Matrix3 Matrix3 -1 Node
 	objParam.objName = n.name
 	objParam.bindPose = n.transform
 /*	if n.modifiers[maxPlugin] != undefined then(
 		objParam.isShadowCaster = n.modifiers[maxPlugin].caster
 		objParam.isShadowReceiver = n.modifiers[maxPlugin].receiver
+
+		--float型のカスタムパラメータ出力
+		objParam.numFloatParam = n.modifiers[maxPlugin].floatList.count
+		for i = 1 to objParam.numFloatParam do (
+			append objParam.floatParams n.modifiers[maxPlugin].floatList[i]	
+		)
+
+		--string型のカスタムパラメータ出力
+		objParam.numStringParam = n.modifiers[maxPlugin].strList.count
+		for i = 1 to objParam.numStringParam do (
+			append objParam.stringParamLength n.modifiers[maxPlugin].strList[i].count
+			append objParam.stringParams n.modifiers[maxPlugin].strList[i]	
+		)
+
+		--Vector3型のカスタムパラメータ出力
+		objParam.numVec3Param = n.modifiers[maxPlugin].vec3List.count
+		for i = 1 to objParam.numVec3Param do (
+			append objParam.Vec3Params n.modifiers[maxPlugin].vec3List[i]	
+		)
+
 	)else(
 		objParam.isShadowCaster = false
 		objParam.isShadowReceiver = false
-	)*/
+	)
+
 	objParam.invBindPose = inverse n.transform
 	objParam.n = n
 	if n.parent == undefined then(

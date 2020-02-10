@@ -8,6 +8,8 @@ namespace tkEngine {
 		if (fp == nullptr) {
 			return;
 		}
+		//tklファイルのバージョンを読み込み。
+		fread(&m_tklVersion, sizeof(m_tklVersion), 1, fp);
 		//オブジェクトの数を取得。
 		fread(&m_numObject, sizeof(m_numObject), 1, fp);
 		m_objects.resize(m_numObject);
@@ -30,6 +32,37 @@ namespace tkEngine {
 			fread(&obj.isShadowCaster, sizeof(obj.isShadowCaster), 1, fp);
 			//シャドウレシーバーのフラグ。
 			fread(&obj.isShadowReceiver, sizeof(obj.isShadowReceiver), 1, fp);
+			//floatパメーターの数。
+			int numFloatData;
+			fread(&numFloatData, sizeof(numFloatData), 1, fp);
+			for (int i = 0; i < numFloatData; i++) {
+				float val = 0;
+				fread(&val, sizeof(val), 1, fp);
+				obj.floatDatas.push_back(val);
+			}
+			//stringパラメータの数。
+			int numStringData;
+			fread(&numStringData, sizeof(numStringData), 1, fp);
+			obj.charsDatas.resize(numStringData);
+			for (int i = 0; i < numStringData; i++) {
+				//stringパラメータの長さ。
+				int numChara;
+				fread(&numChara, sizeof(numChara), 1, fp);
+				//stringパラメータ。
+				obj.charsDatas[i] = std::make_unique<char[]>(numChara + 1);
+				fread(obj.charsDatas[i].get(),numChara + 1, 1, fp);
+			}
+			//vector3パラメータの数。
+			int numVec3Data;
+			fread(&numVec3Data, sizeof(numVec3Data), 1, fp);
+			//vector3パラメータ。
+			for (int i = 0; i < numVec3Data; i++) {
+				float x, y, z;
+				fread(&x, sizeof(x), 1, fp);
+				fread(&y, sizeof(y), 1, fp);
+				fread(&z, sizeof(z), 1, fp);
+				obj.vec3Datas.push_back(CVector3(x,y,z));
+			}
 		}
 
 		fclose(fp);
