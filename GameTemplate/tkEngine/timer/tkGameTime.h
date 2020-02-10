@@ -20,8 +20,8 @@ namespace tkEngine{
 		const float GetFrameDeltaTime() const
 		{
 			//ŒÅ’èFPS‚É‚·‚éB‰Â•Ï‚Í—vŒŸ“¢B
-			//return 1.0f / 60.0f;
-			return m_frameDeltaTime;
+			return 1.0f / 60.0f;
+		//	return m_frameDeltaTime;
 		}
 		void PushFrameDeltaTime(float deltaTime)
 		{

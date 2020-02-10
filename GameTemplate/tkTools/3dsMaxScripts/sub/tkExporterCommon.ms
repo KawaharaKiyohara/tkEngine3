@@ -34,7 +34,7 @@ fn BuildOutputNodeInfo n parentId=
 	objParam = ObjectParam "" true true 0 #() 0 #() #() 0 #() Matrix3 Matrix3 -1 Node
 	objParam.objName = n.name
 	objParam.bindPose = n.transform
-	if n.modifiers[maxPlugin] != undefined then(
+/*	if n.modifiers[maxPlugin] != undefined then(
 		objParam.isShadowCaster = n.modifiers[maxPlugin].caster
 		objParam.isShadowReceiver = n.modifiers[maxPlugin].receiver
 

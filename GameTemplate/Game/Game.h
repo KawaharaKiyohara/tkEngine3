@@ -22,8 +22,6 @@ private:
 		enInitStep_Loaded,		//“Ç‚İ‚İI—¹B
 	};
 	enum EnModel {
-		enRobo,
-		enUnity,
 		enNinja,
 		enNumModel,
 	};

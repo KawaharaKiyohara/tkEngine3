@@ -63,6 +63,13 @@ namespace tkEngine {
 				m_position += move;
 			}
 			/// <summary>
+			/// 座標を取得。
+			/// </summary>
+			CVector3 GetPosition() const
+			{
+				return m_position;
+			}
+			/// <summary>
 			/// モデルを回転させる。
 			/// </summary>
 			/// <param name="rot">回転量</param>
@@ -141,6 +148,14 @@ namespace tkEngine {
 			void SetShadowReceiverFlag(bool flag)
 			{
 				m_isShadowReceiver = flag;
+			}
+			/// <summary>
+			/// footstepボーンの変化量を取得。
+			/// </summary>
+			/// <returns>footstepボーンの変化量</returns>
+			CVector3 GetFootstepBoneDeltaValue() const
+			{
+				return m_animation.CalcFootstepDeltaValueInWorldSpace(m_rotation, m_scale);
 			}
 		private:
 			/// <summary>

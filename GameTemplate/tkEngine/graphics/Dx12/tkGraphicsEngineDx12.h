@@ -113,7 +113,7 @@ namespace tkEngine {
 		/// D3Dデバイスの作成。
 		/// </summary>
 		/// <returns>falseが返ってきたら作成に失敗。</returns>
-		bool CreateD3DDevice();
+		bool CreateD3DDevice(ComPtr<IDXGIFactory4> dxgiFactory);
 		/// <summary>
 		/// コマンドキューの作成。
 		/// </summary>

@@ -75,25 +75,13 @@ namespace tkEngine{
 	 */
 	class CAnimationClip : Noncopyable {
 	public:
-		/*!
-		 *@brief	ボーンのフリーズ情報。
-		 */
-		struct SFreezeBoneInfo {
-			int boneNo;		//!<フリーズさせるボーン番号。
-			bool freezeX;	//!<X方向の移動をフリーズさせる？
-			bool freezeY;	//!<Y方向の移動をフリーズさせる？
-			bool freezeZ;	//!<Z方向の移動をフリーズさせる？
-		};
+		
 		using keyFramePtrList = vector<KeyFrame*>;
 		/*!
 		* @brief	コンストラクタ
 		*/
 		CAnimationClip()
 		{
-			m_freezeBoneInfo.boneNo = -1;
-			m_freezeBoneInfo.freezeX = false;
-			m_freezeBoneInfo.freezeY = false;
-			m_freezeBoneInfo.freezeZ = false;
 		}
 		/*!
 		 *@brief	デストラクタ。
@@ -161,27 +149,6 @@ namespace tkEngine{
 			return m_clipName.c_str();
 		}
 		/*!
-		*@brief	アニメーションをフリーズするボーンの情報を設定。
-		*@details
-		* フリーズされたボーンのY方向の移動量はすべてのボーンから打ち消されます。
-		*  →なにで使える？
-		*		→アニメーションに移動量が入っているジャンプモーションとかで使える。
-		*/
-		void SetFreezeBoneInfo(int boneNo, bool freezeX, bool freezeY, bool freezeZ)
-		{
-			m_freezeBoneInfo.boneNo = boneNo;
-			m_freezeBoneInfo.freezeX = freezeX;
-			m_freezeBoneInfo.freezeY = freezeY;
-			m_freezeBoneInfo.freezeZ = freezeZ;
-		}
-		/*!
-		*@brief	X方向のアニメーションをフリーズしているボーンの番号を取得。
-		*/
-		const SFreezeBoneInfo& GetFreezeBoneInfo() const
-		{
-			return m_freezeBoneInfo;
-		}
-		/*!
 		*@brief	アニメーションイベントを取得。
 		*/
 		std::unique_ptr<CAnimationEvent[]>& GetAnimationEvent()
@@ -206,7 +173,6 @@ namespace tkEngine{
 		unique_ptr<CAnimationEvent[]>		m_animationEvent;			//アニメーションイベント。
 		int									m_numAnimationEvent = 0;	//アニメーションイベントの数。
 		keyFramePtrList*					m_topBoneKeyFramList = nullptr;
-		SFreezeBoneInfo						m_freezeBoneInfo;	//!<フリーズさせるボーン情報。
 		CTkaFile							m_tkaFile;			//tkaファイル
 	};
 	using CAnimationClipPtr = std::unique_ptr<CAnimationClip>;
