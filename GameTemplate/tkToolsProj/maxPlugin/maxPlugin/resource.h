@@ -9,6 +9,7 @@
 #define IDS_SPIN                        5
 #define IDS_CASTER                      6
 #define IDS_INTLIST                     7
+#define IDS_FLOATLIST                   7
 #define IDS_RECEIVER                    8
 #define IDS_STRINGLIST                  9
 #define IDS_VEC3LIST                    10
@@ -18,12 +19,18 @@
 #define IDC_CHECK1                      1001
 #define IDC_CHECK2                      1003
 #define IDC_LIST1                       1010
+#define IDC_FLOAT_LIST                  1010
 #define IDC_STR_LIST                    1011
 #define IDC_CUST_INT_ADD                1012
+#define IDC_CUST_FLOAT_ADD              1012
 #define IDC_CUST_INT_REPLACE            1013
+#define IDC_CUST_FLOAT_REPLACE          1013
 #define IDC_CUST_INT_DELETE             1014
+#define IDC_CUST_FLOAT_DELETE           1014
 #define IDC_CUST_INT_NEWVAL             1015
+#define IDC_CUST_FLOAT_NEWVAL           1015
 #define IDCS_CUST_INT_NEWVAL            1016
+#define IDCS_CUST_FLOAT_NEWVAL          1016
 #define IDC_CUST_STR_ADD                1017
 #define IDC_CUST_STR_REPLACE            1018
 #define IDC_CUST_STR_DELETE             1019

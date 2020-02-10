@@ -76,14 +76,14 @@ BEGIN
     CTEXT           "Shadow Params",IDC_STATIC,0,46,101,16
     CONTROL         "ShadowCaster",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,63,61,10
     CONTROL         "ShadowReceiver",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,19,81,68,10
-    LISTBOX         IDC_LIST1,19,138,68,62,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Add value",IDC_CUST_INT_ADD,"CustButton",WS_TABSTOP,26,208,50,14
-    CONTROL         "Replace",IDC_CUST_INT_REPLACE,"CustButton",WS_TABSTOP,26,225,50,14
-    CONTROL         "Delete",IDC_CUST_INT_DELETE,"CustButton",WS_TABSTOP,26,242,50,14
-    CONTROL         "Value",IDC_CUST_INT_NEWVAL,"CustEdit",WS_TABSTOP,26,261,40,14
-    CONTROL         "????1",IDCS_CUST_INT_NEWVAL,"SpinnerControl",WS_TABSTOP,67,261,9,14
+    LISTBOX         IDC_FLOAT_LIST,19,138,68,62,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Add value",IDC_CUST_FLOAT_ADD,"CustButton",WS_TABSTOP,26,208,50,14
+    CONTROL         "Replace",IDC_CUST_FLOAT_REPLACE,"CustButton",WS_TABSTOP,26,225,50,14
+    CONTROL         "Delete",IDC_CUST_FLOAT_DELETE,"CustButton",WS_TABSTOP,26,242,50,14
+    CONTROL         "Value",IDC_CUST_FLOAT_NEWVAL,"CustEdit",WS_TABSTOP,26,261,40,14
+    CONTROL         "????1",IDCS_CUST_FLOAT_NEWVAL,"SpinnerControl",WS_TABSTOP,67,261,9,14
     LTEXT           "MapChip Params",IDC_STATIC,22,17,57,11
-    LTEXT           "INT_LIST",IDC_STATIC,34,119,29,11
+    LTEXT           "Float List",IDC_STATIC,34,119,41,11
     LISTBOX         IDC_STR_LIST,27,329,48,62,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "Add value",IDC_CUST_STR_ADD,"CustButton",WS_TABSTOP,27,400,50,14
     CONTROL         "Replace",IDC_CUST_STR_REPLACE,"CustButton",WS_TABSTOP,27,417,50,14
@@ -146,7 +146,7 @@ BEGIN
     IDS_PARAMS              "Parameters"
     IDS_SPIN                "Spin"
     IDS_CASTER              "Caster"
-    IDS_INTLIST             "IntList"
+    IDS_FLOATLIST           "FloatList"
     IDS_RECEIVER            "Receiver"
     IDS_STRINGLIST          "StringList"
     IDS_VEC3LIST            "Vector3List"

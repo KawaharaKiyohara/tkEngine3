@@ -1,6 +1,6 @@
 --レベルデータのエクスポータ。
-global tkl_version = 3.0
-/*
+TKL_VERSION = 100
+     /*
 	 * レベルデータを保存。
 	 */
      fn SaveLevel = 
@@ -14,7 +14,7 @@ global tkl_version = 3.0
              
              try(
                  --バージョンを出力
-                 WriteLong file tkl_version
+                 WriteByte file tkl_version
                  --ヘッダーを出力
                  WriteLong file g_objectParams.count
                  
@@ -44,9 +44,34 @@ global tkl_version = 3.0
                         WriteByte file 1
                     else
                         WriteByte file 0
+                    --floatパラメータの数を出力。
+                    WriteLong file o.numFloatParam
+                    --floatパラメータを出力。
+                    for i = 1 to o.numFloatParam do (
+                        WriteFloat file o.floatParams[i]
+                    )
+                    --stringパラメータの数を出力。
+                    WriteLong file o.numStringParam
+                    for i = 1 to o.numStringParam do (
+                      --stringパラメータの長さ。
+                      WriteLong file o.stringParamLength[i]
+                      --stringパラメータ。
+                      WriteString file o.stringParams[i]
+                    )
+                    --vector3パラメータの数。
+                    WriteLong file o.numVec3Param
+                    print o.numVec3Param
+                    --vector3パラメータ。
+                    for i = 1 to o.numVec3Param do (
+                        WriteFloat file o.vec3Params[i].x
+                        WriteFloat file o.vec3Params[i].y
+                        WriteFloat file o.vec3Params[i].z
+                    )
+
                  )
              )catch(
                  Messagebox "ファイルの保存に失敗しました"
+                 format "*** % ***\n" (getCurrentException())
              )
              FClose file
          )
