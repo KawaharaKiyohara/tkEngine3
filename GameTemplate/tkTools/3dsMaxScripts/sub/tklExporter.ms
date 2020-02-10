@@ -14,7 +14,7 @@ TKL_VERSION = 100
              
              try(
                  --バージョンを出力
-                 WriteByte file tkl_version
+                 WriteLong file TKL_VERSION
                  --ヘッダーを出力
                  WriteLong file g_objectParams.count
                  
@@ -60,7 +60,6 @@ TKL_VERSION = 100
                     )
                     --vector3パラメータの数。
                     WriteLong file o.numVec3Param
-                    print o.numVec3Param
                     --vector3パラメータ。
                     for i = 1 to o.numVec3Param do (
                         WriteFloat file o.vec3Params[i].x

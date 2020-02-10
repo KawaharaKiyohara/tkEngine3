@@ -7,13 +7,17 @@ struct ObjectParam(
 	objName,
 	isShadowCaster,
 	isShadowReceiver,
+
 	numFloatParam,
 	floatParams,
+
 	numStringParam,
 	stringParamLength,
 	stringParams,
+
 	numVec3Param,
 	vec3Params,
+	
 	bindPose,	
 	invBindPose,
 	parentId,

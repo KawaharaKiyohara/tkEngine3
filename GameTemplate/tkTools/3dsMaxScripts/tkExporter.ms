@@ -157,18 +157,20 @@ rollout tkExporter "tkExporter" width:194 height:248
 			(
 				file = fopen filepath "rb"
 				try(
+					--ヘッダーを読み込み。
 					--tklバージョンを読み込み。
-					fileTklVersion = ReadByte file
+					fileTklVersion = ReadLong file
 					if TKL_VERSION != fileTklVersion do (
 						messageBox "tkExporterとtklファイルのバージョンが異なります。"
 						--tklに機能追加があった時に旧バージョンの読み込み処理は別の何処かでやるとか？
 						--if文で読み込みスキップとかするかぁ～。
 					)
-					--ヘッダーを読み込み。
 					paramCount = ReadLong file
+
+					print paramCount
 					for i = 1 to paramCount do(
-						objParam = ObjectParam "" true true Matrix3 Matrix3 -1 Node
-						
+						objParam = ObjectParam "" true true 0 #() 0 #() #() 0 #() Matrix3 Matrix3 -1 Node
+
 						nameCount = ReadByte file
 						objParam.objName = ReadString file
 						objParam.parentId = ReadLong file
@@ -191,7 +193,31 @@ rollout tkExporter "tkExporter" width:194 height:248
 						)
 						objParam.isShadowCaster = ReadByte file
 						objParam.isShadowReceiver = ReadByte file
-
+						--floatパラメータの数
+						objParam.numFloatParam = ReadLong file
+						--floatパラメータ
+						for i = 1 to objParam.numFloatParam do (
+							floatParam = ReadFloat file
+							append objParam.floatParams  floatParam
+						)
+						 --stringパラメータ
+						objParam.numStringParam = ReadLong file
+						for i = 1 to objParam.numStringParam do (
+							--stringパラメータの長さ。
+							strlength = ReadLong file 
+							append objParam.stringParamLength strlength
+							--stringパラメータ。
+							str = ReadString file
+							append objParam.stringParams str
+						)
+						--vector3パラメータ
+						objParam.numVec3Param = ReadLong file
+						for i = 1 to objParam.numVec3Param do (
+							x = ReadFloat file 
+							y = ReadFloat file 
+							z = ReadFloat file
+							append objParam.vec3Params [x,y,z]
+						)
 						--オブジェクトを配置
 						if objParam.parentId == -1 do continue
 						fbxPath = modelPath + objParam.objName  + ".FBX"
@@ -206,6 +232,11 @@ rollout tkExporter "tkExporter" width:194 height:248
 
 						levelObj.modifiers[maxPlugin].caster = objParam.isShadowCaster
 						levelObj.modifiers[maxPlugin].receiver = objParam.isShadowReceiver	
+						
+						levelObj.modifiers[maxPlugin].floatList = objParam.floatParams
+						levelObj.modifiers[maxPlugin].strList = objParam.stringParams
+						levelObj.modifiers[maxPlugin].vec3List = objParam.vec3Params
+
 					)	
 				)catch(
 					Messagebox "ファイルの読み込みに失敗しました"

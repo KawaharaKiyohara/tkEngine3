@@ -42,7 +42,7 @@ namespace tkEngine {
 			}
 		}
 	private:
-		uint8_t m_tklVersion = 100; //tklファイルのバージョン
+		int m_tklVersion = 100; //tklファイルのバージョン
 		int m_numObject = 0;			//オブジェクトの数。
 		std::vector<SObject> m_objects;		//オブジェクトのリスト。
 	};
