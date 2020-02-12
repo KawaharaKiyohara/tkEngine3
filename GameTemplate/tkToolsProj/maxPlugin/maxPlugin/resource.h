@@ -46,6 +46,13 @@
 #define IDC_CUST_VEC3_Z                 1035
 #define IDCS_CUST_VEC3_NEWVAL3          1036
 #define IDCS_CUST_VEC3_Z                1036
+#define IDC_INT_LIST                    1037
+#define IDC_CUST_INT_ADD2               1038
+#define IDC_CUST_INT_REPLACE2           1039
+#define IDC_CUST_INT_DELETE2            1040
+#define IDC_CUST_INT_NEWVAL2            1041
+#define IDCS_CUST_FLOAT_NEWVAL2         1042
+#define IDCS_CUST_INT_NEWVAL2           1042
 #define IDC_COLOR                       1456
 #define IDC_EDIT                        1490
 #define IDC_EDIT2                       1491

@@ -22,6 +22,7 @@ namespace tkEngine {
 			bool isShadowCaster; //シャドウキャスターフラグ。
 			bool isShadowReceiver; //シャドウレシーバーフラグ。
 			//この辺にライトの数、種類、座標などのデータも持たせるかも
+			std::vector<int> intDatas; //intパラメータ。
 			std::vector<float> floatDatas; //floatパラメータ。
 			std::vector<std::unique_ptr<char[]>> charsDatas;	//文字列。
 			std::vector<CVector3> vec3Datas; //vector3のパラメータ。

@@ -44,6 +44,12 @@ TKL_VERSION = 100
                         WriteByte file 1
                     else
                         WriteByte file 0
+                    --intパラメータの数を出力。
+                    WriteLong file o.numIntParam
+                    --intパラメータを出力。
+                    for i = 1 to o.numIntParam do (
+                        WriteLong file o.intParams[i]
+                    )
                     --floatパラメータの数を出力。
                     WriteLong file o.numFloatParam
                     --floatパラメータを出力。

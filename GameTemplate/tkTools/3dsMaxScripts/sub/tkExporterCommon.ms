@@ -8,6 +8,9 @@ struct ObjectParam(
 	isShadowCaster,
 	isShadowReceiver,
 
+	numIntParam,
+	intParams,
+
 	numFloatParam,
 	floatParams,
 
@@ -31,12 +34,18 @@ g_objectParams = #()
 */
 fn BuildOutputNodeInfo n parentId= 
 (
-	objParam = ObjectParam "" true true 0 #() 0 #() #() 0 #() Matrix3 Matrix3 -1 Node
+	objParam = ObjectParam "" true true 0 #() 0 #() 0 #() #() 0 #() Matrix3 Matrix3 -1 Node
 	objParam.objName = n.name
 	objParam.bindPose = n.transform
-/*	if n.modifiers[maxPlugin] != undefined then(
+	if n.modifiers[maxPlugin] != undefined then(
 		objParam.isShadowCaster = n.modifiers[maxPlugin].caster
 		objParam.isShadowReceiver = n.modifiers[maxPlugin].receiver
+
+		--int型のカスタムパラメータ出力
+		objParam.numIntParam = n.modifiers[maxPlugin].intList.count
+		for i = 1 to objParam.numIntParam do (
+			append objParam.intParams n.modifiers[maxPlugin].intList[i]	
+		)
 
 		--float型のカスタムパラメータ出力
 		objParam.numFloatParam = n.modifiers[maxPlugin].floatList.count

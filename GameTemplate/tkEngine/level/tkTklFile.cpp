@@ -32,6 +32,14 @@ namespace tkEngine {
 			fread(&obj.isShadowCaster, sizeof(obj.isShadowCaster), 1, fp);
 			//シャドウレシーバーのフラグ。
 			fread(&obj.isShadowReceiver, sizeof(obj.isShadowReceiver), 1, fp);
+			//intパメーターの数。
+			int numIntData;
+			fread(&numIntData, sizeof(numIntData), 1, fp);
+			for (int i = 0; i < numIntData; i++) {
+				int val = 0;
+				fread(&val, sizeof(val), 1, fp);
+				obj.intDatas.push_back(val);
+			}
 			//floatパメーターの数。
 			int numFloatData;
 			fread(&numFloatData, sizeof(numFloatData), 1, fp);
