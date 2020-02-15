@@ -108,5 +108,6 @@ namespace tkEngine {
 		CCamera m_cameraPostEffect;			//ポストエフェクト用のカメラ。
 		UPIRenderContext m_renderContext;	//レンダリングコンテキスト。今は一本。
 		UPILightManager m_lightManager;		//ライトマネージャ。
+		UPIDirectionalShadowMap m_directionalShadowMap;	//指向性シャドウマップ。
 	};
 }

@@ -6,6 +6,7 @@
 #include "tkTriangleShapeDx12.h"
 #include "tkMeshPartsDx12.h"
 #include "tkLightManagerDx12.h"
+#include "tkDirectionalShadowMapDx12.h"
 
 namespace tkEngine {
 	UPIGraphicsEngine CGraphicsInstanceFactoryDx12::CreateGraphicsEngine()
@@ -45,6 +46,10 @@ namespace tkEngine {
 	UPILightManager CGraphicsInstanceFactoryDx12::CreateLightManager()
 	{
 		return make_unique<CLightManagerDx12>();
+	}
+	UPIDirectionalShadowMap CGraphicsInstanceFactoryDx12::CreateDirectionalShadowMap()
+	{
+		return make_unique<CDirectionalShadowMapDx12>();
 	}
 }
 

@@ -67,5 +67,10 @@ namespace tkEngine {
 		/// </summary>
 		/// <returns>作成されたライトマネージャ。</returns>
 		virtual UPILightManager CreateLightManager() = 0;
+		/// <summary>
+		/// 指向性シャドウマップのインスタンスを作成。
+		/// </summary>
+		/// <returns></returns>
+		virtual UPIDirectionalShadowMap CreateDirectionalShadowMap() = 0;
 	};
 }

@@ -47,6 +47,7 @@ namespace tkEngine{
 
 	void CGameObjectManager::ForwardRender(IRenderContext& rc)
 	{
+		rc.SetRenderStep(enRenderStep_ForwardRender);
 		for (GameObjectList objList : m_gameObjectListArray) {
 			for (IGameObject* obj : objList) {
 				obj->ForwardRenderWrapper(rc);

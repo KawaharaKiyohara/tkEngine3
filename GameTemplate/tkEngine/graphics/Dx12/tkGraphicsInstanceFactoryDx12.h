@@ -65,6 +65,12 @@ namespace tkEngine {
 		/// </summary>
 		/// <returns>作成されたライトマネージャ。</returns>
 		UPILightManager CreateLightManager() override final;
+		/// <summary>
+		/// 指向性シャドウマップのインスタンスを作成。
+		/// </summary>
+		/// <returns></returns>
+		UPIDirectionalShadowMap CreateDirectionalShadowMap() override final;
+
 	};
 }
 

@@ -144,4 +144,5 @@ using namespace std;
 #include "tkEngine/graphics/tkAnimationPlayController.h"
 #include "tkEngine/graphics/tkAnimation.h"
 #include "tkEngine/graphics/tkLightManager.h"
+#include "tkEngine/graphics/tkDirectionalShadowMap.h"
 

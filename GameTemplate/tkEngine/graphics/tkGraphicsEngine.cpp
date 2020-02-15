@@ -1,6 +1,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/tkGraphicsEngine.h"
 #include "tkEngine/graphics/tkLightManager.h"
+#include "tkEngine/graphics/tkDirectionalShadowMap.h"
 
 namespace tkEngine {
 
@@ -15,6 +16,9 @@ namespace tkEngine {
 		//ライトマネージャを作成。
 		m_lightManager = g_engine->GetGraphicsInstanceFactory()->CreateLightManager();
 		m_lightManager->Init();
+
+		//ディレクショナルシャドウマップを作成。
+		m_directionalShadowMap = g_engine->GetGraphicsInstanceFactory()->CreateDirectionalShadowMap();
 		//2Dカメラの初期化。
 		m_camera2D.SetTarget(CVector3::Zero);
 		m_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });
@@ -49,10 +53,15 @@ namespace tkEngine {
 		m_camera3D.Update();
 		//2Dカメラの更新。
 		m_camera2D.Update();
+		//指向性シャドウマップの更新。
+		m_directionalShadowMap->Update();
 	}
 	void IGraphicsEngine::Render(CGameObjectManager* goMgr)
 	{
 		m_lightManager->Render(*m_renderContext);
+		//指向性シャドウマップのレンダリング。
+		m_directionalShadowMap->RenderToShadowMap(*m_renderContext);
+
 		OnRender(goMgr);
 	}
 }

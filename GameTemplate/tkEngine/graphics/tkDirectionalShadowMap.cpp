@@ -3,12 +3,7 @@
 #include "tkModel.h"
 
 namespace tkEngine {
-	void CDirectionalShadowMap::RenderToShadowMap(IRenderContext& rc)
+	void IDirectionalShadowMap::Update()
 	{
-		for (int i = 0; i < NUN_SHADOW_MAP; i++) {
-			for (auto& caster : m_shadowCasters) {
-				caster->Draw(rc, m_LVPMatrix[i], g_matIdentity);
-			}
-		}
 	}
 }
