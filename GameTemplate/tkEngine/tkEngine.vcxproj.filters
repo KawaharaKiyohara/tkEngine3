@@ -335,6 +335,9 @@
     <ClInclude Include="level\tkTklFile.h">
       <Filter>Source Files\level</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\Dx12\tkDirectionalShadowMapDx12.h">
+      <Filter>Source Files\graphics\Dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gameObject\tkTransform.cpp">
@@ -537,6 +540,9 @@
     </ClCompile>
     <ClCompile Include="level\tkTklFile.cpp">
       <Filter>Source Files\level</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\Dx12\tkDirectionalShadowMapDx12.cpp">
+      <Filter>Source Files\graphics\Dx12</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

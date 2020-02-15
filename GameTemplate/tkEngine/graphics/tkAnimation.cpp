@@ -184,11 +184,7 @@ namespace tkEngine {
 		m_numAnimationPlayController = numAnimationPlayController;
 	}
 	
-	void CAnimation::PostProcess()
-	{
-	}
-	
-	void CAnimation::Update(float deltaTime)
+	void CAnimation::Progress(float deltaTime)
 	{
 		if (m_numAnimationPlayController == 0) {
 			return;

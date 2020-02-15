@@ -13,9 +13,22 @@ namespace tkEngine{
 	}
 	class CSkeleton;
 	using AnimationEventListener = std::function<void(const wchar_t* clipName, const wchar_t* eventName)>;
-	/*!
-	 * @brief	アニメーションクラス。
-	 */
+
+	/// <summary>
+	/// アニメーションクラス。
+	/// </summary>
+	/// <remarks>
+	/// 提供する機能
+	/// １. シンプルなアニメーション再生。
+	/// ２. アニメーション補間。
+	/// ３. footstepボーンを活用したアニメーション移動量の計算。
+	///		スケルトンにfootstepボーンを追加すると、全体のボーンから、
+	///		footstepボーンの平行移動量を除外したアニメーション再生が行われます。
+	///		除外された移動量はCalcFootstepDeltaValueInWorldSpace関数を利用することで
+	///		計算することができます。
+	///		この機能を活用することで、アニメータが作成した歩きアニメーションなどに移動量を
+	///		含むことができ、アニメータが意図した移動を行うことができます。
+	/// </remarks>
 	class CAnimation {
 	public:
 
@@ -45,11 +58,11 @@ namespace tkEngine{
 				PlayCommon(m_animationClips[clipNo], interpolateTime);
 			}
 		}
-		/*!
-		*@brief	アニメーションクリップのループフラグを設定します。
-		*@param[in]	clipName	アニメーションクリップの名前。
-		*@param[in]	flag		フラグ。
-		*/
+		/// <summary>
+		/// アニメーションクリップのループフラグを設定します。
+		/// </summary>
+		/// <param name="clipName">アニメーションクリップの名前</param>
+		/// <param name="flag">フラグ</param>
 		void SetAnimationClipLoopFlag(const wchar_t* clipName, bool flag)
 		{
 			auto it = std::find_if(
@@ -63,30 +76,25 @@ namespace tkEngine{
 			}
 			(*it)->SetLoopFlag(flag);
 		}
-		/*!
-		* @brief	アニメーションの再生中？
-		*/
+		/// <summary>
+		/// アニメーションの再生中？
+		/// </summary>
+		/// <returns></returns>
 		bool IsPlaying() const
 		{
 			int lastIndex = GetLastAnimationControllerIndex();
 			return m_animationPlayController[lastIndex].IsPlaying();
 		}
-		
-		/*!
-		*@brief	アニメーションのポスト処理を実行。
-		*@details
-		* CSkeleton::Updateから呼ばれている。ユーザーが呼び出す必要はないので、使用しないでください。
-		*/
-		void PostProcess();
-	
-		/*!
-		* @brief	アニメーションを進める。
-		*@details
-		* エンジン内部から呼ばれます。
-		* ユーザーは使用しないでください。
-		*@param[in]	deltaTime		アニメーションを進める時間(単位：秒)。
-		*/
-		void Update(float deltaTime);
+
+		/// <summary>
+		/// アニメーションを進める。
+		/// </summary>
+		/// <remarks>
+		/// エンジン内部から呼ばれます。
+		/// ユーザーは使用しないでください。
+		/// </remarks>
+		/// <param name="deltaTime">アニメーションを進める時間(単位：秒)</param>
+		void Progress(float deltaTime);
 		/*!
 		*@brief	アニメーションイベントリスナーを登録。
 		*@return

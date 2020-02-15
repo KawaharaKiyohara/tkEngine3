@@ -88,7 +88,7 @@ namespace tkEngine {
 		{
 			if (m_animation.IsInited()) {
 				//アニメーションを再生。
-				m_animation.Update(g_gameTime->GetFrameDeltaTime());
+				m_animation.Progress(g_gameTime->GetFrameDeltaTime());
 			}
 
 			//モデルを更新。

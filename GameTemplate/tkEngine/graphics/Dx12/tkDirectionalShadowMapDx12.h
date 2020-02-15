@@ -1,5 +1,7 @@
 #pragma once
 
+#include "dx12/tkDirectionalShadowMapDx12.h"
+
 namespace tkEngine {
 	class CModel;
 	/// <summary>
@@ -8,7 +10,7 @@ namespace tkEngine {
 	/// <remarks>
 	/// カスケードシャドウマップを採用。
 	/// </remarks>
-	class CDirectionalShadowMap : Noncopyable {
+	class CDirectionalShadowMapDx12 : Noncopyable {
 	public:
 		/// <summary>
 		/// シャドウマップへのレンダリング。
