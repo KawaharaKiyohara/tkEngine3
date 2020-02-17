@@ -11,6 +11,13 @@ namespace tkEngine {
 	class IDirectionalShadowMap : Noncopyable {
 	public:
 		/// <summary>
+		/// 初期化。
+		/// </summary>
+		void Init(const SShadowRenderConfig& cfg)
+		{
+			OnInit(cfg);
+		}
+		/// <summary>
 		/// シャドウマップへのレンダリング。
 		/// </summary>
 		/// <param name="rc"></param>
@@ -19,6 +26,11 @@ namespace tkEngine {
 		/// 更新処理。
 		/// </summary>
 		void Update();
+	private:
+		/// <summary>
+		/// 初期化時に呼ばれる処理。
+		/// </summary>
+		virtual void OnInit(const SShadowRenderConfig& cfg) = 0;
 	private:
 		enum { NUN_SHADOW_MAP = 3 };								//シャドウマップの数。
 		std::vector<CModel*>	m_shadowCasters;					//シャドウキャスターのリスト。
