@@ -405,7 +405,7 @@ namespace tkEngine {
 		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
 		// Present the frame.
-		m_swapChain->Present(2, 0);
+		m_swapChain->Present(1, 0);
 
 		//•`‰æŠ®—¹‘Ò‚¿B
 		WaitDraw();

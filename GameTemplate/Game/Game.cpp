@@ -58,7 +58,7 @@ bool Game::Start()
 	
 #endif
 #ifdef USE_WATANABE
-	m_level.Init("level/test.tkl", [&](LevelObjectData& objData) {
+	m_level.Init("level/tkl3.0.tkl", [&](LevelObjectData& objData) {
 		return false;
 	});
 #endif

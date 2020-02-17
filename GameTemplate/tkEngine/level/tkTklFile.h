@@ -22,8 +22,10 @@ namespace tkEngine {
 			bool isShadowCaster; //シャドウキャスターフラグ。
 			bool isShadowReceiver; //シャドウレシーバーフラグ。
 			//この辺にライトの数、種類、座標などのデータも持たせるかも
-			int numIntData;	//整数型データのパラメータ数。
-			std::vector<int> IntDatas; //整数パラメータ。
+			std::vector<int> intDatas; //intパラメータ。
+			std::vector<float> floatDatas; //floatパラメータ。
+			std::vector<std::unique_ptr<char[]>> charsDatas;	//文字列。
+			std::vector<CVector3> vec3Datas; //vector3のパラメータ。
 		};
 		/// <summary>
 		/// 読み込み処理。
@@ -41,6 +43,7 @@ namespace tkEngine {
 			}
 		}
 	private:
+		int m_tklVersion = 100; //tklファイルのバージョン
 		int m_numObject = 0;			//オブジェクトの数。
 		std::vector<SObject> m_objects;		//オブジェクトのリスト。
 	};
