@@ -6,12 +6,18 @@ namespace tkEngine {
 	CShaderDx12 CPipelineStatesDx12::m_skinModelVS;    //スキンモデル用の頂点シェーダー。
 	CShaderDx12 CPipelineStatesDx12::m_skinModelPS;    //スキンモデル用の頂点シェーダー。
 	CShaderDx12 CPipelineStatesDx12::m_nonSkinModelVS; //ノンスキンモデル用の頂点シェーダー。
+	CShaderDx12 CPipelineStatesDx12::m_skinModelShadowMapVS;		//スキンモデルのシャドウマップ書き込み用の頂点シェーダー。
+	CShaderDx12 CPipelineStatesDx12::m_nonSkinModelShadowMapVS;	//ノンスキンモデルのシャドウマップ書き込み用の頂点シェーダー。
+	CShaderDx12 CPipelineStatesDx12::m_modelShadowMapPS;			//モデルのシャドウマップ書き込み用のピクセルシェーダー。
 	CShaderDx12 CPipelineStatesDx12::m_spriteVS;			//スプライト描画用の頂点シェーダー。
 	CShaderDx12 CPipelineStatesDx12::m_spritePS;			//スプライト描画用のピクセルシェーダー。
 	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_skinModelPipeline;    //スキンモデル描画用のパイプライン。
 	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_nonSkinModelPipeline; //ノンスキンモデル用の場イプライン。
 	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_spritePipeline;
+	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_skinModelShadowMapPipeline;		//スキンモデルのシャドウマップ書き込み用のパイプライン。
+	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_nonSkinModelShadowMapPipeline;	//ノンスキンモデルのシャドウマップ書き込み用のパイプライン。
 	CRootSignatureDx12 CPipelineStatesDx12::m_modelDrawRootSignature;
+
 	ComPtr<ID3D12PipelineState> CPipelineStatesDx12::m_copyMainTargetToFrameBufferPipeline;
 
 	void CPipelineStatesDx12::Init()
@@ -26,6 +32,10 @@ namespace tkEngine {
 		m_skinModelVS.Load(L"shader/ModelPBR.fx", "VSMain", g_vsShaderModelName);
 		m_nonSkinModelVS.Load(L"shader/ModelPBR.fx", "VSMainNonSkin", g_vsShaderModelName);
 		m_skinModelPS.Load(L"shader/ModelPBR.fx", "PSMain", g_psShaderModelName);
+
+		m_skinModelShadowMapVS.Load(L"shader/ModelPBR.fx", "VSMainSkinShadowMap", g_vsShaderModelName);
+		m_nonSkinModelShadowMapVS.Load(L"shader/ModelPBR.fx", "VSMainNonSkinShadowMap", g_vsShaderModelName);
+		m_modelShadowMapPS.Load(L"shader/ModelPBR.fx", "PSMainShadowMap", g_psShaderModelName);
 #else
 		m_skinModelVS.Load(L"shader/ModelSimple.fx", "VSMain", g_vsShaderModelName);
 		m_nonSkinModelVS.Load(L"shader/ModelSimple.fx", "VSMainNonSkin", g_vsShaderModelName);
@@ -86,6 +96,16 @@ namespace tkEngine {
 			//続いてスキンなしモデル用を作成。
 			psoDesc.VS = CD3DX12_SHADER_BYTECODE(CPipelineStatesDx12::m_nonSkinModelVS.GetCompiledBlob().Get());
 			d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_nonSkinModelPipeline));
+			
+			//シャドウマップ用のパイプラインステートを作成。
+			//まずはスキンあり。
+			psoDesc.VS = CD3DX12_SHADER_BYTECODE(CPipelineStatesDx12::m_skinModelShadowMapVS.GetCompiledBlob().Get());
+			psoDesc.PS = CD3DX12_SHADER_BYTECODE(CPipelineStatesDx12::m_modelShadowMapPS.GetCompiledBlob().Get());
+			psoDesc.RTVFormats[0] = DXGI_FORMAT_R32_FLOAT;
+			d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_skinModelShadowMapPipeline));
+			//続いてスキンなし。
+			psoDesc.VS = CD3DX12_SHADER_BYTECODE(CPipelineStatesDx12::m_nonSkinModelShadowMapVS.GetCompiledBlob().Get());
+			d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_nonSkinModelShadowMapPipeline));
 		}
 		//スプライト描画用のパイプラインステートを初期化。
 		{

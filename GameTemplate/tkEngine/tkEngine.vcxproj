@@ -326,7 +326,6 @@
     <ClInclude Include="graphics\tkGraphics.h" />
     <ClInclude Include="graphics\tkGraphicsEngine.h" />
     <ClInclude Include="graphics\tkGraphicsInstanceFactory.h" />
-    <ClInclude Include="graphics\tkIModelImp.h" />
     <ClInclude Include="graphics\tkIndexBuffer.h" />
     <ClInclude Include="graphics\tkLight.h" />
     <ClInclude Include="graphics\tkLightManager.h" />
