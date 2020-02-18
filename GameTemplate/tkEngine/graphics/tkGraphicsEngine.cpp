@@ -19,6 +19,8 @@ namespace tkEngine {
 
 		//ディレクショナルシャドウマップを作成。
 		m_directionalShadowMap = g_engine->GetGraphicsInstanceFactory()->CreateDirectionalShadowMap();
+		m_directionalShadowMap->Init(initParam.graphicsConfing.shadowRenderConfig);
+
 		//2Dカメラの初期化。
 		m_camera2D.SetTarget(CVector3::Zero);
 		m_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });

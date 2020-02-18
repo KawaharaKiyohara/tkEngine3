@@ -4,7 +4,7 @@
 #include "tkEngine/graphics/tkModel.h"
 
 namespace tkEngine {
-	void CDirectionalShadowMapDx12::RenderToShadowMap(IRenderContext& rc)
+	void CDirectionalShadowMapDx12::OnRenderToShadowMap(IRenderContext& rc)
 	{
 		//レンダリングステップをシャドウマップ作成に変更する。
 		rc.SetRenderStep(enRenderStep_CreateDirectionalShadowMap);

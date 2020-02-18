@@ -14,16 +14,17 @@ namespace tkEngine {
 	/// </remarks>
 	class CDirectionalShadowMapDx12 : public IDirectionalShadowMap {
 	public:
-		/// <summary>
-		/// シャドウマップへのレンダリング。
-		/// </summary>
-		/// <param name="rc"></param>
-		virtual void RenderToShadowMap(IRenderContext& rc);
+		
 	private:
 		/// <summary>
-		/// 初期化時に呼ばれる処理。
+		/// 初期化処理。
 		/// </summary>
 		void OnInit(const SShadowRenderConfig& cfg) override final;
+		/// <summary>
+		/// シャドウマップへのレンダリング処理。
+		/// </summary>
+		/// <param name="rc"></param>
+		void OnRenderToShadowMap(IRenderContext& rc) override final;
 	private:
 		enum { NUN_SHADOW_MAP = 3 };								//シャドウマップの数。
 		std::vector<CModel*>	m_shadowCasters;					//シャドウキャスターのリスト。
