@@ -1,10 +1,9 @@
 /*!
- * @brief	tkEngineŠÖŒW‚ÌƒGƒNƒXƒ|[ƒ^[B
+ * @brief	tkEngineé–¢ä¿‚ã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ã‚¿ãƒ¼ã€‚
  */
- 
+
 pluginManager.loadClass FBXIMPORTER 
 pluginManager.loadClass FbxExporter
-
 
 include "sub/tkExporterCommon.ms"
 include "sub/tksExporter.ms"
@@ -16,233 +15,358 @@ include "sub/tklExporter.ms"
 
 rollout tkExporter "tkExporter" width:194 height:248
 (
-	editText 'animClipStartFrame' "" pos:[90,462] width:58 height:21 align:#left
-	label 'lbl1' "start frame" pos:[22,465] width:60 height:16 align:#left
-	groupBox 'grp1' "Animation clip" pos:[14,436] width:147 height:134 align:#left
-	button 'btn_saveAnimationClip' "Save" pos:[27,531] width:120 height:28 align:#left
-	label 'lbl2' "end frame" pos:[22,496] width:60 height:16 align:#left
-	editText 'animClipEndFrame' "" pos:[90,494] width:58 height:21 align:#left
-	button 'btn_saveSkeleton' "Save Skeleton" pos:[22,399] width:120 height:28 align:#left
-	label 'lbl3' "Label" pos:[33,458] width:0 height:0 align:#left
 	groupBox 'grp5' "Model" pos:[3,13] width:164 height:138 align:#left
 	button 'btn_save_fbx' "Save(*.tkm)" pos:[27,33] width:120 height:28 align:#left
-	groupBox 'grp10' "Level" pos:[3,159] width:164 height:211 align:#left
-	button 'btn_load_locObject' "Load Object" pos:[26,250] width:120 height:28 align:#left
-	editText 'levelName' "" pos:[23,216] width:120 height:24 align:#left
-	label 'lbl4' "edit level name" pos:[23,195] width:121 height:16 align:#left
-	button 'SaveLoc' "Save Level" pos:[26,320] width:120 height:28 align:#left
-	groupBox 'grp6' "Animation" pos:[3,373] width:164 height:200 align:#left
-	button 'btn_copy_locObject' "Copy Object" pos:[26,284] width:120 height:28 align:#left
 	button 'btn_save_selected_fbx' "Save Selected(*.tkm)" pos:[27,79] width:120 height:28 align:#left
 	checkbox 'flat_shading' "flat shading" pos:[27,116] width:128 height:29 align:#left
-	
+
+	groupBox 'grp10' "Level" pos:[3,159] width:164 height:211 align:#left
+	label 'lbl4' "edit level name" pos:[23,195] width:121 height:16 align:#left
+	editText 'levelName' "" pos:[23,216] width:120 height:24 align:#left
+	button 'btn_load_locObject' "Load Object" pos:[26,250] width:120 height:28 align:#left
+	button 'btn_copy_locObject' "Copy Object" pos:[26,284] width:120 height:28 align:#left
+	button 'SaveLoc' "Save Level" pos:[26,320] width:120 height:28 align:#left
+	button 'LoadLoc' "Load Level" pos:[26,355] width:120 height:28 align:#left
+
+	groupBox 'grp6' "Animation" pos:[3,393] width:164 height:200 align:#left
+	button 'btn_saveSkeleton' "Save Skeleton" pos:[22,425] width:120 height:28 align:#left
+	groupBox 'grp1' "Animation clip" pos:[14,471] width:147 height:134 align:#left
+	label 'lbl3' "Label" pos:[33,493] width:0 height:0 align:#left
+	label 'lbl1' "start frame" pos:[22,500] width:60 height:16 align:#left
+	editText 'animClipStartFrame' "" pos:[90,497] width:58 height:21 align:#left
+	label 'lbl2' "end frame" pos:[22,531] width:60 height:16 align:#left
+	editText 'animClipEndFrame' "" pos:[90,529] width:58 height:21 align:#left
+	button 'btn_saveAnimationClip' "Save" pos:[27,566] width:120 height:28 align:#left
+
 	on  tkExporter open do
-	(
-		levelName.text = "level00"
-	)
-
-	/*
-	 *  ƒXƒPƒ‹ƒgƒ“‚Ìo—Í‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
-	 */
-	on btn_saveSkeleton pressed do
-	(
-		if selection[1] == undefined then(
-			Messagebox "o—Í‚·‚éƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚µ‚Ä‰º‚³‚¢BBB"
-		)else(
-			g_objectParams = #()
-			--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
-			animationRange = interval 0 animationRange.end
-			slidertime = 0
-			at time 0(
-				--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
-				BuildOutputNodeInfo selection[1] -1
-				SaveSkeleton()
-			)
-		)
-	)
-	/*
-	* Level‚ğ•Û‘¶B
-	*/
-	on SaveLoc pressed do
-	(
-		--Œ»İ•ÒW’†‚Ìƒ‹[ƒg‚ÌƒŒƒxƒ‹‚ğæ“¾B
-		editLevelObj = getNodeByName levelName.text
-		if editLevelObj == undefined then(
-			Messagebox "•Û‘¶‚·‚éƒŒƒxƒ‹‚ª‘¶İ‚µ‚Ü‚¹‚ñB"
-		)else(
-			select editLevelObj
-		
-			--ƒXƒPƒ‹ƒgƒ“‚Æ‚µ‚Ä•Û‘¶B
-			g_objectParams = #()
-			--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
-			animationRange = interval 0 animationRange.end
-			slidertime = 0
-			at time 0(
-				--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
-				BuildOutputNodeInfo selection[1] -1
-				SaveLevel()
-				print "save level"
-			)
-		)
-	)
-	
-	/*
-	 *  ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì•Û‘¶‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
-	 */
-	on btn_saveAnimationClip pressed do
-	(
-		--‚Æ‚è‚ ‚¦‚¸‘SƒNƒŠƒbƒvo—Í‚·‚éB
-		skeletonRoot = GetSkeletonRoot objects
-		
-		if skeletonRoot == undefined  then(
-			--ƒV[ƒ“‚ÉƒXƒLƒ“ƒ‚ƒfƒBƒtƒ@ƒCƒA‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½B
-			if selection[1] == undefined  then(
-				Messagebox "ƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚Ì©“®”»•Ê‚ª‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B\nƒXƒPƒ‹ƒgƒ“‚Ìƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚µ‚ÄƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚ğ•Û‘¶‚µ‚Ä‚­‚¾‚³‚¢B\n"
-				return 0
-			)
-			skeletonRoot = selection[1]
-		)
-		g_objectParams = #()
-		--ƒAƒjƒ[ƒVƒ‡ƒ“ŠÔ‚ğ0‚É‚·‚éB
-		startFrame = animClipStartFrame.text as integer
-		endFrame = animClipEndFrame.text as integer
-		animationRange = interval startFrame endFrame
-		slidertimer = 0
-		animate on(
-			--ƒAƒjƒ[ƒVƒ‡ƒ“is’†‚Ìˆ—B
-			BuildOutputNodeInfo skeletonRoot -1
-			try(
-				SaveAnimationClip()
-			)catch(
-				messageBox "ƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½"
-			)
-		)
-	)
-	
-	function selectHierarchy =
-    (
-		for p in selection do
 		(
-			if p.children != undefined do
-			(
-				selectmore p.children
-			)
+			levelName.text = "level00"
 		)
-    )
-    
-	/*
-	 *”z’u‚·‚éƒIƒuƒWƒFƒNƒg‚ğƒRƒs[
-	 */
-	on btn_copy_locObject pressed do
-	(
-		if selection.count == 0  then(
-			Messagebox "ƒRƒs[‚·‚éƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢B"
-		)else(
-			selectHierarchy()
-			parentObj = copy selection[1]
-			parentObj.name = selection[1].name
-			for obj in 2 to selection.count do (
-				cloneObj = copy selection[obj]
-				cloneObj.name = selection[obj].name
-				cloneObj.parent = parentObj
-				parentObj = merge( parentObj cloneObj )
-				deselect cloneObj
-			)
-			select parentObj
-		)
-	)
-	/*
-	 * ”z’u‚·‚éƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒhB
-	 */
-	on btn_load_locObject pressed do
-	(
-		
-		if  levelName.text == "" then(
-			Messagebox "•ÒW‚·‚éƒŒƒxƒ‹‚Ì–¼‘O‚ğ“ü—Í‚µ‚Ä‰º‚³‚¢B"
-		)else(
-			filepath = getOpenFileName caption:"" types: "fbx (*fbx)|*.fbx|All Files (*.*)|*.*|"
-			if filepath != undefined then(
-				editLevelObj = getNodeByName levelName.text
-				if editLevelObj == undefined then(
-					--ƒ_ƒ~[‚ğì‚éB
-					editLevelObj = Dummy()
-					editLevelObj.name = levelName.text
+	
+		/*
+		 *  ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®å‡ºåŠ›ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
+		 */
+		on btn_saveSkeleton pressed do
+		(
+			if selection[1] == undefined then(
+				Messagebox "å‡ºåŠ›ã™ã‚‹ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚ã€‚ã€‚"
+			)else(
+				g_objectParams = #()
+				--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
+				animationRange = interval 0 animationRange.end
+				slidertime = 0
+				at time 0(
+					--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
+					BuildOutputNodeInfo selection[1] -1
+					SaveSkeleton()
 				)
-				
-				FBXImporterSetParam "ScaleConversion" false
-				FBXImporterSetParam "UpAxis" "Z"
-				ImportFile filepath #noPrompt
-				importObj = $
-		
-				filename = getFilenameFile filepath
-				
-				--‘S‚Ä‚ğ•ÒW‰Â”\ƒ|ƒŠƒSƒ“‚É•ÏŠ·‚·‚éB
-				delObjArray = #()
-				for i=1 to $selection.count do
-				(
-					p = convertToMesh($selection[i]);
-					--•ÒW‰Â”\ƒ|ƒŠƒSƒ“‚É•ÏŠ·‚Å‚«‚È‚©‚Á‚½ê‡‚ÍAíœƒŠƒXƒg‚ÉÏ‚ŞB
-					if p == undefined then(
-						append delObjArray $selection[i]
+			)
+		)
+		/*
+		* Levelã‚’ä¿å­˜ã€‚
+		*/
+		on SaveLoc pressed do
+		(
+			--ç¾åœ¨ç·¨é›†ä¸­ã®ãƒ«ãƒ¼ãƒˆã®ãƒ¬ãƒ™ãƒ«ã‚’å–å¾—ã€‚
+			editLevelObj = getNodeByName levelName.text
+			if editLevelObj == undefined then(
+				Messagebox "ä¿å­˜ã™ã‚‹ãƒ¬ãƒ™ãƒ«ãŒå­˜åœ¨ã—ã¾ã›ã‚“ã€‚"
+			)else(
+				select editLevelObj
+			
+				--ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã¨ã—ã¦ä¿å­˜ã€‚
+				g_objectParams = #()
+				--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
+				animationRange = interval 0 animationRange.end
+				slidertime = 0
+				at time 0(
+					--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
+					BuildOutputNodeInfo selection[1] -1
+					SaveLevel()
+				)
+			)
+		)
+
+		fn LoadFbxFile filepath= 
+		(
+				if filepath != undefined then(
+					print filepath
+					editLevelObj = getNodeByName levelName.text
+					if editLevelObj == undefined then(
+						--ãƒ€ãƒŸãƒ¼ã‚’ä½œã‚‹ã€‚
+						editLevelObj = Dummy()
+						editLevelObj.name = levelName.text
 					)
-				)
-				--•ÒW‰Â”\ƒ|ƒŠƒSƒ“‚É•ÏŠ·‚Å‚«‚È‚©‚Á‚½ƒIƒuƒWƒFƒNƒg‚ğíœB
-				for i=1 to delObjArray.count do
-				(
-					delete delObjArray[i]
-				)
-				parentBox = box length:1 width:1 height:1
-				p = convertToMesh(parentBox)
-				importObj.parent = parentBox
-				select p
-				selectMore $.children
-				--Œ‹‡B
-				while  $selection.count>1 do
-				(
-					attach p $selection[$selection.count];
+					
+					FBXImporterSetParam "ScaleConversion" false
+					FBXImporterSetParam "UpAxis" "Z"
+					ImportFile filepath #noPrompt
+					importObj = $
+			
+					filename = getFilenameFile filepath
+					
+					--å…¨ã¦ã‚’ç·¨é›†å¯èƒ½ãƒãƒªã‚´ãƒ³ã«å¤‰æ›ã™ã‚‹ã€‚
+					delObjArray = #()
+					for i=1 to $selection.count do
+					(
+						p = convertToMesh($selection[i]);
+						--ç·¨é›†å¯èƒ½ãƒãƒªã‚´ãƒ³ã«å¤‰æ›ã§ããªã‹ã£ãŸå ´åˆã¯ã€å‰Šé™¤ãƒªã‚¹ãƒˆã«ç©ã‚€ã€‚
+						if p == undefined then(
+							append delObjArray $selection[i]
+						)
+					)
+					--ç·¨é›†å¯èƒ½ãƒãƒªã‚´ãƒ³ã«å¤‰æ›ã§ããªã‹ã£ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤ã€‚
+					for i=1 to delObjArray.count do
+					(
+						delete delObjArray[i]
+					)
+					parentBox = box length:1 width:1 height:1
+					p = convertToMesh(parentBox)
+					importObj.parent = parentBox
+					select p
+					selectMore $.children
+					--çµåˆã€‚
+					while  $selection.count>1 do
+					(
+						attach p $selection[$selection.count];
+					)
+	
+					--ãƒ€ãƒŸãƒ¼ã‚’ãƒ¬ãƒ™ãƒ«ã®ä¸‹ã«ã½ã„ã£ã¨ãªã€‚
+					$selection[1].pivot = Point3 0 0 0
+					selection[1].name = filename
+					addModifier selection[1] (maxPlugin())	
+					$selection[1].parent = editLevelObj
+					return selection[1]
 				)
 
-				--ƒ_ƒ~[‚ğƒŒƒxƒ‹‚Ì‰º‚É‚Û‚¢‚Á‚Æ‚ÈB
-				$selection[1].pivot = Point3 0 0 0
-				selection[1].name = filename
-				addModifier selection[1] (maxPlugin())	
-				$selection[1].parent = editLevelObj
+		)
+
+		/*
+		* Levelã‚’èª­ã¿è¾¼ã¿ã€‚
+		*/
+		on LoadLoc pressed do
+		(
+			filepath = getOpenFileName caption:"" types: "tkl (*tkl)|*.tkl|All Files (*.*)|*.*|"
+			if filepath != undefined then
+			(
+			pos = findString filepath "level"
+			modelPath = substring filepath 1 (pos-1)
+			modelPath = modelPath + "modelData\\"
+
+			if filepath != undefined then
+			(
+				file = fopen filepath "rb"
+				try(
+					--ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’èª­ã¿è¾¼ã¿ã€‚
+					--tklãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚’èª­ã¿è¾¼ã¿ã€‚
+					fileTklVersion = ReadLong file
+					if TKL_VERSION != fileTklVersion do (
+						messageBox "tkExporterã¨tklãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãŒç•°ãªã‚Šã¾ã™ã€‚"
+						--tklã«æ©Ÿèƒ½è¿½åŠ ãŒã‚ã£ãŸæ™‚ã«æ—§ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®èª­ã¿è¾¼ã¿å‡¦ç†ã¯åˆ¥ã®ä½•å‡¦ã‹ã§ã‚„ã‚‹ã¨ã‹ï¼Ÿ
+						--ifæ–‡ã§èª­ã¿è¾¼ã¿ã‚¹ã‚­ãƒƒãƒ—ã¨ã‹ã™ã‚‹ã‹ãï½ã€‚
+					)
+					paramCount = ReadLong file
+
+					print paramCount
+					for i = 1 to paramCount do(
+						objParam = ObjectParam "" true true 0 #() 0 #() 0 #() #() 0 #() Matrix3 Matrix3 -1 Node
+
+						nameCount = ReadByte file
+						objParam.objName = ReadString file
+						objParam.parentId = ReadLong file
+
+						--ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã‚’èª­ã¿è¾¼ã¿ã€‚
+						bindx = #(0,0,0)
+						bindy = #(0,0,0)
+						bindz = #(0,0,0)
+						for i = 1 to 4 do(
+							bindx[i] = ReadFloat file 
+							bindy[i] = ReadFloat file 
+							bindz[i] = ReadFloat file 
+						)
+
+						--ãƒã‚¤ãƒ³ãƒ‰ãƒãƒ¼ã‚ºã®é€†è¡Œåˆ—ã‚’èª­ã¿è¾¼ã¿ã€‚
+						for i = 1 to 4 do(
+							x = ReadFloat file 
+							y = ReadFloat file 
+							z = ReadFloat file
+						)
+						objParam.isShadowCaster = ReadByte file
+						objParam.isShadowReceiver = ReadByte file
+						--intãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®æ•°
+						objParam.numIntParam = ReadLong file
+						--intãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+						for i = 1 to objParam.numIntParam do (
+							intParam = ReadLong file
+							append objParam.intParams  intParam
+						)
+						--floatãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®æ•°
+						objParam.numFloatParam = ReadLong file
+						--floatãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+						for i = 1 to objParam.numFloatParam do (
+							floatParam = ReadFloat file
+							append objParam.floatParams  floatParam
+						)
+						 --stringãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+						objParam.numStringParam = ReadLong file
+						for i = 1 to objParam.numStringParam do (
+							--stringãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®é•·ã•ã€‚
+							strlength = ReadLong file 
+							append objParam.stringParamLength strlength
+							--stringãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã€‚
+							str = ReadString file
+							append objParam.stringParams str
+						)
+						--vector3ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+						objParam.numVec3Param = ReadLong file
+						for i = 1 to objParam.numVec3Param do (
+							x = ReadFloat file 
+							y = ReadFloat file 
+							z = ReadFloat file
+							append objParam.vec3Params [x,y,z]
+						)
+						--ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é…ç½®
+						if objParam.parentId == -1 do continue
+						fbxPath = modelPath + objParam.objName  + ".FBX"
+						levelObj = LoadFbxFile(fbxPath)
+
+						myTransform = levelObj.transform
+						myTransform.row1 = [bindx[1],bindy[1],bindz[1]]
+						myTransform.row2 = [bindx[2],bindy[2],bindz[2]]
+						myTransform.row3 = [bindx[3],bindy[3],bindz[3]]
+						myTransform.row4 = [bindx[4],bindy[4],bindz[4]]
+						levelObj.transform = myTransform
+
+						levelObj.modifiers[maxPlugin].caster = objParam.isShadowCaster
+						levelObj.modifiers[maxPlugin].receiver = objParam.isShadowReceiver	
+						
+						levelObj.modifiers[maxPlugin].floatList = objParam.floatParams
+						levelObj.modifiers[maxPlugin].strList = objParam.stringParams
+						levelObj.modifiers[maxPlugin].vec3List = objParam.vec3Params
+
+					)	
+				)catch(
+					Messagebox "ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ"
+					format "*** % ***\n" (getCurrentException())
+				)
+				FClose file
+			)
 			)
 		)
+		
+		/*
+		 *  ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®ä¿å­˜ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
+		 */
+		on btn_saveAnimationClip pressed do
+		(
+			--ã¨ã‚Šã‚ãˆãšå…¨ã‚¯ãƒªãƒƒãƒ—å‡ºåŠ›ã™ã‚‹ã€‚
+			skeletonRoot = GetSkeletonRoot objects
+			
+			if skeletonRoot == undefined  then(
+				--ã‚·ãƒ¼ãƒ³ã«ã‚¹ã‚­ãƒ³ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤ã‚¢ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã€‚
+				if selection[1] == undefined  then(
+					Messagebox "ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è‡ªå‹•åˆ¤åˆ¥ãŒã§ãã¾ã›ã‚“ã§ã—ãŸã€‚\nã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã—ã¦ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã‚’ä¿å­˜ã—ã¦ãã ã•ã„ã€‚\n"
+					return 0
+				)
+				skeletonRoot = selection[1]
+			)
+			g_objectParams = #()
+			--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’0ã«ã™ã‚‹ã€‚
+			startFrame = animClipStartFrame.text as integer
+			endFrame = animClipEndFrame.text as integer
+			animationRange = interval startFrame endFrame
+			slidertimer = 0
+			animate on(
+				--ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œä¸­ã®å‡¦ç†ã€‚
+				BuildOutputNodeInfo skeletonRoot -1
+				try(
+					SaveAnimationClip()
+				)catch(
+					messageBox "ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸ"
+				)
+			)
+		)
+		
+		function selectHierarchy =
+		(
+			for p in selection do
+			(
+				if p.children != undefined do
+				(
+					selectmore p.children
+				)
+			)
+		)
+		
+		/*
+		 *ã€€é…ç½®ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚³ãƒ”ãƒ¼
+		 */
+		on btn_copy_locObject pressed do
+		(
+			if selection.count == 0  then(
+				Messagebox "ã‚³ãƒ”ãƒ¼ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã—ã¦ãã ã•ã„ã€‚"
+			)else(
+				selectHierarchy()
+				parentObj = copy selection[1]
+				parentObj.name = selection[1].name
+				for obj in 2 to selection.count do (
+					cloneObj = copy selection[obj]
+					cloneObj.name = selection[obj].name
+					cloneObj.parent = parentObj
+					parentObj = merge( parentObj cloneObj )
+					deselect cloneObj
+				)
+				select parentObj
+			)
+		)
+
+
+		/*
+		 * é…ç½®ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ­ãƒ¼ãƒ‰ã€‚
+		 */
+		 on btn_load_locObject pressed do
+		(
+			if  levelName.text == "" then(
+				Messagebox "ç·¨é›†ã™ã‚‹ãƒ¬ãƒ™ãƒ«ã®åå‰ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„ã€‚"
+			)else(
+				filepath = getOpenFileName caption:"" types: "fbx (*fbx)|*.fbx|All Files (*.*)|*.*|"
+				LoadFbxFile(filepath)
+			)
+		)
+
+		/*
+		 *  FBXå‡ºåŠ›ç”¨ã®è¨­å®šã‚’è¡Œã†ã€‚
+		 */
+		fn SetupFbxExportSettings = 
+		(
+			--ä»–ã«ã‚‚ã‚ªãƒ—ã‚·ãƒ§ãƒ³ãŒå¿…è¦ãªã‚‰è¿½åŠ ã—ã¦ã„ã£ã¦ãã ã•ã„ã€‚
+			FBXExporterSetParam "ResetExport"
+			FBXExporterSetParam "ScaleFactor" 1.0
+			FBXExporterSetParam "UpAxis" "Z"
+			FBXExporterSetParam "TangentSpaceExport" true
+			FBXExporterSetParam "Triangulate" true
+			FBXExporterSetParam "ASCII" true
+		)
+		
+		
+		/*!
+		 * @brief	FBXã®Saveã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
+		 */
+		on btn_save_fbx pressed do
+		(
+			--å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’tkmãƒ•ã‚¡ã‚¤ãƒ«ã¨ã—ã¦å‡ºåŠ›ã™ã‚‹ã€‚
+			expoter = TkmExporter()
+			expoter.SaveTkm objects filepath flat_shading.checked
+		)
+		
+		/*!
+		 * @brief	FBXã®Save Selectedã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã¨ãã®å‡¦ç†ã€‚
+		 */
+		on btn_save_selected_fbx pressed do
+		(
+			--é¸æŠã•ã‚Œã¦ã„ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’tkmãƒ•ã‚¡ã‚¤ãƒ«ã¨ã—ã¦å‡ºåŠ›ã™ã‚‹ã€‚
+			expoter = TkmExporter()
+			expoter.SaveTkm selection filepath flat_shading.checked
+		)
 	)
-	/*
-	 *  FBXo—Í—p‚Ìİ’è‚ğs‚¤B
-	 */
-	fn SetupFbxExportSettings = 
-	(
-		--‘¼‚É‚àƒIƒvƒVƒ‡ƒ“‚ª•K—v‚È‚ç’Ç‰Á‚µ‚Ä‚¢‚Á‚Ä‚­‚¾‚³‚¢B
-		FBXExporterSetParam "ResetExport"
-		FBXExporterSetParam "ScaleFactor" 1.0
-		FBXExporterSetParam "UpAxis" "Z"
-		FBXExporterSetParam "TangentSpaceExport" true
-		FBXExporterSetParam "Triangulate" true
-		FBXExporterSetParam "ASCII" true
-	)
-	
-	
-	/*!
-	 * @brief	FBX‚ÌSave‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
-	 */
-	on btn_save_fbx pressed do
-	(
-		--‘SƒIƒuƒWƒFƒNƒg‚ğtkmƒtƒ@ƒCƒ‹‚Æ‚µ‚Äo—Í‚·‚éB
-		expoter = TkmExporter()
-		expoter.SaveTkm objects filepath flat_shading.checked
-	)
-	
-	/*!
-	 * @brief	FBX‚ÌSave Selected‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—B
-	 */
-	on btn_save_selected_fbx pressed do
-	(
-		--‘I‘ğ‚³‚ê‚Ä‚¢‚éƒIƒuƒWƒFƒNƒg‚ğtkmƒtƒ@ƒCƒ‹‚Æ‚µ‚Äo—Í‚·‚éB
-		expoter = TkmExporter()
-		expoter.SaveTkm selection filepath flat_shading.checked
-	)
-)
-addrollout tkExporter style:#(#style_titlebar, #style_sysmenu)
+	addrollout tkExporter style:#(#style_titlebar, #style_sysmenu)
