@@ -15,6 +15,7 @@ namespace tkEngine {
 		/// </summary>
 		void Init(const SShadowRenderConfig& cfg)
 		{
+			m_isEnable = cfg.isEnable;
 			OnInit(cfg);
 		}
 		/// <summary>
@@ -23,8 +24,21 @@ namespace tkEngine {
 		/// <param name="rc"></param>
 		void RenderToShadowMap(IRenderContext& rc)
 		{
+			if (m_isEnable == false) {
+				return;
+			}
+			//レンダリングステップをシャドウマップ作成に変更する。
+			rc.SetRenderStep(enRenderStep_CreateDirectionalShadowMap);
 			OnRenderToShadowMap(rc);
 		}
+		/// <summary>
+		/// シャドウマップへのレンダリングの完了待ち。
+		/// </summary>
+		/// <remarks>
+		/// レンダリングの完了待ちが必要なプラットフォームで実装してください。
+		/// </remarks>
+		/// <param name="rc"></param>
+		virtual void WaitEndRenderToShadowMap(IRenderContext& rc) = 0;
 		/// <summary>
 		/// 更新処理。
 		/// </summary>
@@ -77,10 +91,23 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="rc"></param>
 		virtual void OnRenderToShadowMap(IRenderContext& rc) = 0;
-	private:
+	protected:
+		/// <summary>
+		/// この中身を変更したら、modelCB.hのShadowCbも変更するように。
+		/// </summary>
+		struct SShadowCb {
+			CMatrix mLVP[NUM_SHADOW_MAP];
+			CVector4 texOffset[NUM_SHADOW_MAP];
+			float depthOffset[NUM_SHADOW_MAP];
+			float pading;
+			float shadowAreaDepthInViewSpace[NUM_SHADOW_MAP];	//カメラ空間での影を落とすエリアの深度テーブル。
+		};
 		enum { NUN_SHADOW_MAP = 3 };					//シャドウマップの数。
 		std::vector<CModel*>	m_shadowCasters;		//シャドウキャスターのリスト。
 		CMatrix	m_LVPMatrix[NUM_SHADOW_MAP];			//ライトビュープロジェクション行列。
+		SShadowCb m_shadowCbEntity;
+	private:
+		
 		CVector3 m_lightDirection;						//ライトの方向。
 		float m_shadowAreas[NUM_SHADOW_MAP] = { 0.0f };	//影が落ちる範囲。
 		float m_lightHeight = 100.0f;					//ライトの高さ。

@@ -58,12 +58,24 @@ namespace tkEngine {
 		//指向性シャドウマップの更新。
 		m_directionalShadowMap->Update();
 	}
-	void IGraphicsEngine::Render(CGameObjectManager* goMgr)
+	void IGraphicsEngine::PreRender()
 	{
+		OnBeginPreRender();
 		m_lightManager->Render(*m_renderContext);
 		//指向性シャドウマップのレンダリング。
 		m_directionalShadowMap->RenderToShadowMap(*m_renderContext);
 
+		OnEndPreRender();
+	}
+	void IGraphicsEngine::Render(CGameObjectManager* goMgr)
+	{
+		OnBeginRender();
+
+		//事前レンダリング。
+		PreRender();
+		
 		OnRender(goMgr);
+
+		OnEndRender();
 	}
 }

@@ -87,6 +87,10 @@ namespace tkEngine {
 		}
 	private:
 		/// <summary>
+		/// プリレンダリング。
+		/// </summary>
+		void PreRender();
+		/// <summary>
 		/// 初期化時に呼ばれる処理。
 		/// </summary>
 		/// <param name="hwnd"></param>
@@ -98,6 +102,22 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="goMgr">ゲームオブジェクトマネージャ</param>
 		virtual void OnRender(CGameObjectManager* goMgr) = 0;
+		/// <summary>
+		/// レンダリング開始時に呼ばれる処理。
+		/// </summary>
+		virtual void OnBeginRender() = 0;
+		/// <summary>
+		/// レンダリング終了時に呼ばれる処理。
+		/// </summary>
+		virtual void OnEndRender() = 0;
+		/// <summary>
+		/// プリレンダリング開始時に呼ばれる処理。
+		/// </summary>
+		virtual void OnBeginPreRender() = 0;
+		/// <summary>
+		/// プリレンダリング終了時に呼ばれる処理。
+		/// </summary>
+		virtual void OnEndPreRender() = 0;
 	protected:
 		int	m_frameBufferWidth = 0;			//フレームバッファの幅。
 		int m_frameBufferHeight = 0;		//フレームバッファの高さ。

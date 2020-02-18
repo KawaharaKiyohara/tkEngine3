@@ -25,10 +25,13 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="rc"></param>
 		void OnRenderToShadowMap(IRenderContext& rc) override final;
+		/// <summary>
+		/// シャドウマップへのレンダリングの完了待ち。
+		/// </summary>
+		/// <param name="rc"></param>
+		void WaitEndRenderToShadowMap(IRenderContext& rc) override final;
 	private:
-		enum { NUN_SHADOW_MAP = 3 };								//シャドウマップの数。
-		std::vector<CModel*>	m_shadowCasters;					//シャドウキャスターのリスト。
-		CMatrix	m_LVPMatrix[NUM_SHADOW_MAP] = { g_matIdentity };	//ライトビュープロジェクション行列。
+		CConstantBufferDx12 m_shadowCb;
 		CRenderTargetDx12 m_shadowMaps[NUM_SHADOW_MAP];				//シャドウマップ。
 	};
 }

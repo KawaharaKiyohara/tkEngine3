@@ -99,11 +99,19 @@ namespace tkEngine {
 		/// <summary>
 		/// 1フレーム描画開始時の処理。
 		/// </summary>
-		void BeginRender();
+		void OnBeginRender() override final;
 		/// <summary>
 		/// 1フレームの描画終了時の処理。
 		/// </summary>
-		void EndRender();
+		void OnEndRender() override final;
+		/// <summary>
+		/// プリレンダリング開始時に呼ばれる処理。
+		/// </summary>
+		void OnBeginPreRender()override final;
+		/// <summary>
+		/// プリレンダリング終了時に呼ばれる処理。
+		/// </summary>
+		void OnEndPreRender() override final;
 		/// <summary>
 		/// DXGIファクトリの作成。
 		/// </summary>

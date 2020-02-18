@@ -342,7 +342,7 @@ namespace tkEngine {
 		}
 		return true;
 	}
-	void CGraphicsEngineDx12::BeginRender()
+	void CGraphicsEngineDx12::OnBeginRender()
 	{
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		//ディスクリプタヒーププールのリセット。
@@ -365,7 +365,7 @@ namespace tkEngine {
 		rcDx12.ClearRenderTargetView(m_mainRenderTarget, clearColor);
 		rcDx12.ClearDepthStencilView(m_mainRenderTarget, 1.0f);
 	}
-	void CGraphicsEngineDx12::EndRender()
+	void CGraphicsEngineDx12::OnEndRender()
 	{
 
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
@@ -411,16 +411,18 @@ namespace tkEngine {
 		WaitDraw();
 
 	}
+	void CGraphicsEngineDx12::OnBeginPreRender()
+	{
+	}
+	void CGraphicsEngineDx12::OnEndPreRender()
+	{
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		//シャドウマップへの書き込み待ち
+		m_directionalShadowMap->WaitEndRenderToShadowMap(rcDx12);
+	}
 	void CGraphicsEngineDx12::OnRender(CGameObjectManager* goMgr)
 	{
-		BeginRender();
-
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
-		//シャドウマップへのレンダリング。
-		goMgr->RenderToShadowMap(rcDx12);
-
-		//G-Bufferへのレンダリングパス。
-		goMgr->RenderGBuffer(rcDx12);
 
 		//フォワードレンダリングパス。
 		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
@@ -434,7 +436,5 @@ namespace tkEngine {
 		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
 		rcDx12.SetPipelineState(CPipelineStatesDx12::m_spritePipeline);
 		goMgr->RenderHUD(rcDx12);
-
-		EndRender();
 	}
 }

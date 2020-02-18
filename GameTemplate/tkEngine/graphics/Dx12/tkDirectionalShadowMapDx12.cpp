@@ -6,12 +6,21 @@
 namespace tkEngine {
 	void CDirectionalShadowMapDx12::OnRenderToShadowMap(IRenderContext& rc)
 	{
-		//レンダリングステップをシャドウマップ作成に変更する。
-		rc.SetRenderStep(enRenderStep_CreateDirectionalShadowMap);
+		auto& rcDx12 = rc.As<CRenderContextDx12>();
+
 		for (int i = 0; i < NUN_SHADOW_MAP; i++) {
+			//レンダリングターゲットとして使用可能になるまで待つ。
+			rcDx12.WaitUntilToPossibleSetRenderTarget(m_shadowMaps[i]);
 			for (auto& caster : m_shadowCasters) {
 				caster->Draw(rc, m_LVPMatrix[i], g_matIdentity);
 			}
+		}
+	}
+	void CDirectionalShadowMapDx12::WaitEndRenderToShadowMap(IRenderContext& rc)
+	{
+		auto& rcDx12 = rc.As<CRenderContextDx12>();
+		for (int i = 0; i < NUN_SHADOW_MAP; i++) {
+			rcDx12.WaitUntilFinishDrawingToRenderTarget(m_shadowMaps[i]);
 		}
 	}
 	void CDirectionalShadowMapDx12::OnInit(const SShadowRenderConfig& cfg)
@@ -39,5 +48,8 @@ namespace tkEngine {
 				DXGI_FORMAT_D32_FLOAT,
 				clearColor);
 		}
+
+		//定数バッファを初期化。
+		m_shadowCb.Init(sizeof(m_shadowCbEntity), nullptr);
 	}
 }
