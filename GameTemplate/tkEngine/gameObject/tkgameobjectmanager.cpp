@@ -10,32 +10,32 @@
 namespace tkEngine{
 	void CGameObjectManager::Start()
 	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				obj->StartWrapper();
 			}
 		}
 	}
 	void CGameObjectManager::PreUpdate()
 	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				obj->PreUpdateWrapper();
 			}
 		}
 	}
 	void CGameObjectManager::Update()
 	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				obj->UpdateWrapper();
 			}
 		}
 	}
 	void CGameObjectManager::PostUpdate()
 	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				obj->PostUpdateWrapper();
 			}
 		}
@@ -48,16 +48,16 @@ namespace tkEngine{
 	void CGameObjectManager::ForwardRender(IRenderContext& rc)
 	{
 		rc.SetRenderStep(enRenderStep_ForwardRender);
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				obj->ForwardRenderWrapper(rc);
 			}
 		}
 	}
 	void CGameObjectManager::RenderToShadowMap(IRenderContext& rc)
 	{
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				//todo カメラ行列とプロジェクション行列は適当。
 				obj->RenderToShadowMapWrapper(rc, g_camera3D->GetViewMatrix(), g_camera3D->GetProjectionMatrix());
 			}
@@ -66,8 +66,8 @@ namespace tkEngine{
 	void CGameObjectManager::RenderHUD(IRenderContext& rc)
 	{
 	
-		for (GameObjectList objList : m_gameObjectListArray) {
-			for (IGameObject* obj : objList) {
+		for (auto& objList : m_gameObjectListArray) {
+			for (auto& obj : objList) {
 				obj->RenderHUD(rc);
 			}
 		}
@@ -98,8 +98,8 @@ namespace tkEngine{
 		int preBufferNo = m_currentDeleteObjectBufferNo;
 		//バッファを切り替え。
 		m_currentDeleteObjectBufferNo = 1 ^ m_currentDeleteObjectBufferNo;
-		for(GameObjectList& goList : m_deleteObjectArray[preBufferNo]){
-			for(IGameObject* go : goList){
+		for(auto& goList : m_deleteObjectArray[preBufferNo]){
+			for(auto& go : goList){
 				GameObjectPrio prio = go->GetPriority();
 				GameObjectList& goExecList = m_gameObjectListArray.at(prio);
 				auto it = std::find( goExecList.begin(),goExecList.end(),go );
