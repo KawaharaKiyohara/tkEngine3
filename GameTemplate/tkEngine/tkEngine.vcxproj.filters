@@ -158,9 +158,6 @@
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h">
       <Filter>Source Files\graphics\Dx12</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\tkIModelImp.h">
-      <Filter>Source Files\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\tkModel.h">
       <Filter>Source Files\graphics</Filter>
     </ClInclude>
