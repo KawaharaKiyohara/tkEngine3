@@ -419,8 +419,6 @@ namespace tkEngine {
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		//シャドウマップへの書き込み待ち
 		m_directionalShadowMap->WaitEndRenderToShadowMap(rcDx12);
-		//レンダリングターゲットを戻す。
-		rcDx12.SetRenderTargetAndViewport(m_mainRenderTarget);
 	}
 	void CGraphicsEngineDx12::OnRender(CGameObjectManager* goMgr)
 	{
