@@ -21,6 +21,10 @@ namespace tkEngine {
 		/// 平均輝度の計算。
 		/// </summary>
 		void CalcLuminanceAvarage(CRenderContextDx12& rc);
+		/// <summary>
+		/// ディスクリプタヒープを作成。
+		/// </summary>
+		void CreateDescriptorHeap();
 	public:
 		static const int MAX_SAMPLES = 16;
 	private:
@@ -32,6 +36,10 @@ namespace tkEngine {
 		static const int NUM_CALC_AVG_RT = 5;							//平均輝度計算用のレンダリングターゲットの枚数。
 		CRenderTargetDx12 m_calcAvgRT[NUM_CALC_AVG_RT];	//平均輝度計算用のレンダリングターゲット。
 		CRenderTargetDx12 m_avgRT[2];									//平均輝度が格納されるレンダリングターゲット。
+		CDescriptorHeapDx12 m_calcAvgDescriptorHeap[NUM_CALC_AVG_RT];	//平均輝度計算時に使用されるディスクリプタヒープ。
+		CDescriptorHeapDx12 m_lightDarkAdaptationFirstDS;				//明暗順応の最初の描画の時のディスクリプタヒープ。
+		CDescriptorHeapDx12 m_lightDarkAdaptation[2];					//明暗順応のディスクリプタヒープ。
+		CDescriptorHeapDx12 m_finalCombineDS[2];						//最終合成用のディスクリプタヒープ。
 		int m_currentAvgRt = 0;
 		CRootSignatureDx12 m_rootSignature;	//トーンマップ描画用のルートシグネチャ。
 		CPipelineStateDx12 m_calcLuminanceLogAvaragePipelineState;	//輝度の対数平均を求めるときのパイプラインステート。

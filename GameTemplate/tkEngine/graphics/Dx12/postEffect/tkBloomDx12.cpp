@@ -176,11 +176,11 @@ namespace tkEngine {
 	void CBloomDx12::CreateDescriptorHeap()
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		m_sampleLuminanceDiscripterHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+		m_sampleLuminanceDiscripterHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_sampleLuminanceDiscripterHeap.RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
 		m_sampleLuminanceDiscripterHeap.Commit();
 
-		m_combineBokeImageDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+		m_combineBokeImageDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_combineBokeImageDescriptorHeap.RegistShaderResource(0, m_downSamplingRT[3].GetRenderTargetTexture());
 		m_combineBokeImageDescriptorHeap.RegistShaderResource(1, m_downSamplingRT[5].GetRenderTargetTexture());
 		m_combineBokeImageDescriptorHeap.RegistShaderResource(2, m_downSamplingRT[7].GetRenderTargetTexture());
@@ -194,7 +194,7 @@ namespace tkEngine {
 		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++) {
 			//Xブラー。
 			{
-				m_downSampleDescriptorHeap[rtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+				m_downSampleDescriptorHeap[rtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 				m_downSampleDescriptorHeap[rtNo].RegistShaderResource(0, prevRt->GetRenderTargetTexture());
 				m_downSampleDescriptorHeap[rtNo].RegistConstantBuffer(0, m_blurParamCB[rtNo]);
 				m_downSampleDescriptorHeap[rtNo].Commit();
@@ -203,7 +203,7 @@ namespace tkEngine {
 			rtNo++;
 			//Yブラー。
 			{
-				m_downSampleDescriptorHeap[rtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+				m_downSampleDescriptorHeap[rtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 				m_downSampleDescriptorHeap[rtNo].RegistConstantBuffer(0, m_blurParamCB[rtNo]);
 				m_downSampleDescriptorHeap[rtNo].RegistShaderResource(0, prevRt->GetRenderTargetTexture());
 				m_downSampleDescriptorHeap[rtNo].Commit();
@@ -212,7 +212,7 @@ namespace tkEngine {
 			rtNo++;
 		}
 
-		m_combineMainRenderTargetDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+		m_combineMainRenderTargetDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_combineMainRenderTargetDescriptorHeap.RegistShaderResource(0, m_combineRT.GetRenderTargetTexture());
 		m_combineMainRenderTargetDescriptorHeap.Commit();
 	}

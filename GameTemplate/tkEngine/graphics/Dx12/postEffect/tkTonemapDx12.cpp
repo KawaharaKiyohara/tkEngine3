@@ -130,6 +130,65 @@ namespace tkEngine {
 
 		psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psFinal.GetCompiledBlob().Get());
 		m_finalPipelineState.Init(psoDesc);
+
+		//ディスクリプタヒープを作成。
+		CreateDescriptorHeap();
+	}
+	void CTonemapDx12::CreateDescriptorHeap()
+	{
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		int curRtNo = NUM_CALC_AVG_RT - 1;
+		{
+			m_calcAvgDescriptorHeap[curRtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			m_calcAvgDescriptorHeap[curRtNo].RegistConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
+			m_calcAvgDescriptorHeap[curRtNo].RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture()); (1, m_cbCalcLuminance[curRtNo]);
+			m_calcAvgDescriptorHeap[curRtNo].Commit();
+		}
+		curRtNo--;
+		{
+			while (curRtNo > 0) {
+				m_calcAvgDescriptorHeap[curRtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+				m_calcAvgDescriptorHeap[curRtNo].RegistConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
+				m_calcAvgDescriptorHeap[curRtNo].RegistShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture()); (1, m_cbCalcLuminance[curRtNo]);
+				m_calcAvgDescriptorHeap[curRtNo].Commit();
+				curRtNo--;
+			}
+		}
+		m_calcAvgDescriptorHeap[curRtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_calcAvgDescriptorHeap[curRtNo].RegistConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
+		m_calcAvgDescriptorHeap[curRtNo].RegistShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture());
+		m_calcAvgDescriptorHeap[curRtNo].Commit();
+
+		//明暗順応。
+		m_lightDarkAdaptationFirstDS.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_lightDarkAdaptationFirstDS.RegistShaderResource(0, m_calcAvgRT[0].GetRenderTargetTexture());
+		m_lightDarkAdaptationFirstDS.Commit();
+
+		m_lightDarkAdaptation[0].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_lightDarkAdaptation[0].RegistConstantBuffer(0, m_cbTonemapCommon);
+		m_lightDarkAdaptation[0].RegistShaderResource(1, m_calcAvgRT[0].GetRenderTargetTexture());
+		m_lightDarkAdaptation[0].RegistShaderResource(2, m_avgRT[1].GetRenderTargetTexture()); //0のときは１
+		m_lightDarkAdaptation[0].Commit();
+
+		m_lightDarkAdaptation[1].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_lightDarkAdaptation[1].RegistConstantBuffer(0, m_cbTonemapCommon);
+		m_lightDarkAdaptation[1].RegistShaderResource(1, m_calcAvgRT[0].GetRenderTargetTexture());
+		m_lightDarkAdaptation[1].RegistShaderResource(2, m_avgRT[0].GetRenderTargetTexture()); //1のときは0
+		m_lightDarkAdaptation[1].Commit();
+
+		//最終合成用のディスクリプタヒープ。
+		m_finalCombineDS[0].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_finalCombineDS[0].RegistConstantBuffer(0, m_cbTonemapCommon);
+		m_finalCombineDS[0].RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
+		m_finalCombineDS[0].RegistShaderResource(1, m_avgRT[0].GetRenderTargetTexture());
+		m_finalCombineDS[0].Commit();
+
+		m_finalCombineDS[1].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_finalCombineDS[1].RegistConstantBuffer(0, m_cbTonemapCommon);
+		m_finalCombineDS[1].RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
+		m_finalCombineDS[1].RegistShaderResource(1, m_avgRT[0].GetRenderTargetTexture());
+		m_finalCombineDS[1].Commit();
+
 	}
 	void CTonemapDx12::CalcLuminanceAvarage(CRenderContextDx12& rc)
 	{
@@ -156,13 +215,15 @@ namespace tkEngine {
 		{
 			rc.WaitUntilToPossibleSetRenderTarget(m_calcAvgRT[curRtNo]);
 			rc.SetRenderTargetAndViewport(m_calcAvgRT[curRtNo]);
+
 			m_cbCalcLuminance[curRtNo].Update(m_avSampleOffsets);
 			rc.SetPipelineState(m_calcLuminanceLogAvaragePipelineState);
 			//シェーダーリソースビューと定数バッファをセットする。
-			rc.SetConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
-			rc.SetShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
+			rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
+			rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
+			rc.SetGraphicsRootDescriptorTable(1, m_calcAvgDescriptorHeap[curRtNo].GetShaderResourceGpuDescritorStartHandle());
 			
-			rc.DrawIndexed(4);
+			rc.DrawIndexedFast(4);
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 		}
 		//ここからはダウンサンプリングで求める。
@@ -174,11 +235,13 @@ namespace tkEngine {
 				GetSampleOffsets_DownScale4x4(m_calcAvgRT[curRtNo].GetWidth(), m_calcAvgRT[curRtNo].GetHeight(), m_avSampleOffsets);
 				m_cbCalcLuminance[curRtNo].Update(&m_avSampleOffsets);
 				//シェーダーリソースビューと定数バッファをセットする。
-				rc.SetConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
-				rc.SetShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture());
+				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
+				rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
+				rc.SetGraphicsRootDescriptorTable(1, m_calcAvgDescriptorHeap[curRtNo].GetShaderResourceGpuDescritorStartHandle());
+
 			
 				rc.SetPipelineState(m_calsLuminanceAvaragePipelineState);
-				rc.DrawIndexed(4);
+				rc.DrawIndexedFast(4);
 				rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 				curRtNo--;
 			}
@@ -190,12 +253,13 @@ namespace tkEngine {
 			GetSampleOffsets_DownScale4x4(m_calcAvgRT[curRtNo].GetWidth(), m_calcAvgRT[curRtNo].GetHeight(), m_avSampleOffsets);
 			m_cbCalcLuminance[curRtNo].Update(&m_avSampleOffsets);
 			//シェーダーリソースビューと定数バッファをセットする。
-			rc.SetConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
-			rc.SetShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture());
+			rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
+			rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
+			rc.SetGraphicsRootDescriptorTable(1, m_calcAvgDescriptorHeap[curRtNo].GetShaderResourceGpuDescritorStartHandle());
 
 			//パイプラインステートを設定。
 			rc.SetPipelineState(m_calsLuminanceExpAvaragePipelineState);
-			rc.DrawIndexed(4);
+			rc.DrawIndexedFast(4);
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 		}
 
@@ -210,8 +274,10 @@ namespace tkEngine {
 				rc.SetShaderResource(0, m_calcAvgRT[0].GetRenderTargetTexture());
 			
 				//パイプラインステートを設定する。
-				rc.SetPipelineState(m_psCalcAdaptedLuminanceFirstPipelineState);
-				rc.DrawIndexed(4);
+				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
+				rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
+
+				rc.DrawIndexedFast(4);
 				m_isFirstWhenChangeScene = false;
 			}
 			else {
@@ -222,12 +288,13 @@ namespace tkEngine {
 				rc.WaitUntilToPossibleSetRenderTarget(m_avgRT[m_currentAvgRt]);
 				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);
 
-				rc.SetShaderResource(1, m_calcAvgRT[0].GetRenderTargetTexture());
-				rc.SetShaderResource(2, lastRT.GetRenderTargetTexture());
-				rc.SetConstantBuffer(0, m_cbTonemapCommon);
+				rc.SetDescriptorHeap(m_lightDarkAdaptation[m_currentAvgRt]);
+				rc.SetGraphicsRootDescriptorTable(0, m_lightDarkAdaptation[m_currentAvgRt].GetConstantBufferGpuDescritorStartHandle());
+				rc.SetGraphicsRootDescriptorTable(1, m_lightDarkAdaptation[m_currentAvgRt].GetShaderResourceGpuDescritorStartHandle());
+
 
 				rc.SetPipelineState(m_psCalcAdaptedLuminancePipelineState);
-				rc.DrawIndexed(4);
+				rc.DrawIndexedFast(4);
 			}
 			rc.WaitUntilFinishDrawingToRenderTarget(m_avgRT[m_currentAvgRt]);
 		}
@@ -250,12 +317,12 @@ namespace tkEngine {
 		rc12.WaitUntilToPossibleSetRenderTarget(ge12.GetMainRenderTarget());
 		rc12.SetRenderTargetAndViewport(ge12.GetMainRenderTarget());
 		
-		rc12.SetConstantBuffer(0, m_cbTonemapCommon);
-		rc12.SetShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
-		rc12.SetShaderResource(1, m_avgRT[m_currentAvgRt].GetRenderTargetTexture());
-		
+		rc12.SetDescriptorHeap(m_finalCombineDS[m_currentAvgRt]);
+		rc12.SetGraphicsRootDescriptorTable(0, m_finalCombineDS[m_currentAvgRt].GetConstantBufferGpuDescritorStartHandle());
+		rc12.SetGraphicsRootDescriptorTable(1, m_finalCombineDS[m_currentAvgRt].GetShaderResourceGpuDescritorStartHandle());
+
 		rc12.SetPipelineState(m_finalPipelineState);
-		rc12.DrawIndexed(4);
+		rc12.DrawIndexedFast(4);
 
 		rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}

@@ -5,7 +5,7 @@
 
 namespace tkEngine {
 
-	void CDescriptorHeapDx12::Init(D3D12_DESCRIPTOR_HEAP_TYPE type, int numDescriptor)
+	void CDescriptorHeapDx12::Init(D3D12_DESCRIPTOR_HEAP_TYPE type)
 	{
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = ge12.GetD3DDevice();

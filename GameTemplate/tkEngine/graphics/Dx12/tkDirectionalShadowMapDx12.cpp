@@ -11,7 +11,6 @@ namespace tkEngine {
 		for (int i = 0; i < NUN_SHADOW_MAP; i++) {
 			//レンダリングターゲットとして使用可能になるまで待つ。
 			rcDx12.WaitUntilToPossibleSetRenderTarget(m_shadowMaps[i]);
-			rcDx12.SetRenderTargetAndViewport(m_shadowMaps[i]);
 			for (auto& caster : m_shadowCasters) {
 				caster->Draw(rc, m_LVPMatrix[i], g_matIdentity);
 			}
