@@ -1,7 +1,7 @@
 #include "tkEngine/tkEnginePreCompile.h"
 #include "tkEngine/graphics/tkModel.h"
 #include "tkEngine/graphics/tkLightManager.h"
-
+#include "tkEngine/graphics/tkDirectionalShadowMap.h"
 
 namespace tkEngine {
 	void CModel::LoadTkmFileAsync(const char* filePath)
@@ -39,6 +39,9 @@ namespace tkEngine {
 		mRot.MakeRotationFromQuaternion(rot);
 		mScale.MakeScaling(scale);
 		m_world = mBias * mScale * mRot * mTrans;
+		if (m_isShadowCaster == true) {
+			g_graphicsEngine->GetDirectionalShadowMap()->Entry(this);
+		}
 	}
 	void CModel::Draw(
 		IRenderContext& rc, 

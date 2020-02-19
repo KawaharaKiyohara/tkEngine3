@@ -30,6 +30,7 @@ namespace tkEngine {
 			//レンダリングステップをシャドウマップ作成に変更する。
 			rc.SetRenderStep(enRenderStep_CreateDirectionalShadowMap);
 			OnRenderToShadowMap(rc);
+			m_shadowCasters.clear();
 		}
 		/// <summary>
 		/// シャドウマップへのレンダリングの完了待ち。
@@ -56,6 +57,28 @@ namespace tkEngine {
 		void SetDisable()
 		{
 			m_isEnable = false;
+		}
+		/// <summary>
+		/// シャドウマップへレンダリングするオブジェクト登録。
+		/// </summary>
+		/// <param name="rc"></param>
+		void Entry(CModel* caster) {
+			if (!m_isEnable) {
+				return;
+			}
+			m_shadowCasters.push_back(caster);
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="caster">キャスター</param>
+		void Remove(CModel* caster)
+		{
+			auto it = std::find(m_shadowCasters.begin(), m_shadowCasters.end(), caster);
+			if (it != m_shadowCasters.end()) {
+				//見つけたので削除。
+				m_shadowCasters.erase(it);
+			}
 		}
 	private:
 		/// <summary>

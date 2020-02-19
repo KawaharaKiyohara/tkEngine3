@@ -67,10 +67,28 @@ namespace tkEngine {
 		{
 			return m_world;
 		}
+		/*!
+		* @brief	シャドウキャスターのフラグを設定。
+		*@param[in]	flag	シャドウキャスターのフラグ。
+		*/
+		void SetShadowCasterFlag(bool flag)
+		{
+			m_isShadowCaster = flag;
+		}
+		/*!
+		* @brief	シャドウレシーバーのフラグを設定。
+		*@param[in]	flag	シャドウレシーバーのフラグ。
+		*/
+		void SetShadowReceiverFlag(bool flag)
+		{
+			m_isShadowReceiver = flag;
+		}
 	private:
 		CMatrix m_world;			//ワールド行列。
 		CTkmFile m_tkmFile;			//tkmファイル。
 		CSkeleton m_skeleton;		//スケルトン。
 		UPIMeshParts m_meshParts;	//メッシュパーツ。
+		bool m_isShadowCaster = true;							//!<シャドウキャスター？
+		bool m_isShadowReceiver = true;						//!<シャドウレシーバー？
 	};
 }

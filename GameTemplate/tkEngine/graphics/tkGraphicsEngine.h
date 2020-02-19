@@ -78,6 +78,14 @@ namespace tkEngine {
 			return m_lightManager;
 		}
 		/// <summary>
+		/// ディレクショナルシャドウマップを取得。
+		/// </summary>
+		/// <returns></returns>
+		UPIDirectionalShadowMap& GetDirectionalShadowMap()
+		{
+			return m_directionalShadowMap;
+		}
+		/// <summary>
 		/// CGraphicsEngineのインスタンスの型変換。
 		/// </summary>
 		template<class T>
