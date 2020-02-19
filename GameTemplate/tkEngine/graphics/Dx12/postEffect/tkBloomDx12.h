@@ -60,7 +60,11 @@ namespace tkEngine {
 		/// <param name="ge12"></param>
 		/// <param name="rc12"></param>
 		void CombineMainRenderTarget(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12);
-
+	private:
+		/// <summary>
+		/// ディスクリプタヒープの作成。
+		/// </summary>
+		void CreateDescriptorHeap();
 	private:
 		static const int NUM_WEIGHTS = 8;
 		static const int NUM_DOWN_SAMPLING_RT = 10;
@@ -93,6 +97,6 @@ namespace tkEngine {
 		CShaderDx12 m_copyVS;			//コピー用の頂点シェーダー。	
 		CShaderDx12 m_copyPS;			//コピー用のピクセルシェーダー。
 		CConstantBufferDx12 m_blurParamCB[NUM_DOWN_SAMPLING_RT];	//ブラー用の定数バッファ。
-
+		CDescriptorHeapDx12 m_discripterHeap;		//ディスクリプタヒープ。
 	};
 }

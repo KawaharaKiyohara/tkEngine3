@@ -171,6 +171,10 @@ namespace tkEngine {
 		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_luminanceRT);	
 	}
+	void CBloomDx12::CreateDescriptorHeap()
+	{
+
+	}
 	void CBloomDx12::BlurLuminanceTexture(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12)
 	{
 		CRenderTargetDx12* prevRt = &m_luminanceRT;
@@ -225,11 +229,10 @@ namespace tkEngine {
 		rc12.SetRenderTargetAndViewport(m_combineRT);
 
 		//シェーダーリソースビューと定数バッファをセットする。
-		
 		rc12.SetShaderResource(0, m_downSamplingRT[3].GetRenderTargetTexture());
-		rc12.SetShaderResource(1, m_downSamplingRT[3].GetRenderTargetTexture());
-		rc12.SetShaderResource(2, m_downSamplingRT[3].GetRenderTargetTexture());
-		rc12.SetShaderResource(3, m_downSamplingRT[3].GetRenderTargetTexture());
+		rc12.SetShaderResource(1, m_downSamplingRT[5].GetRenderTargetTexture());
+		rc12.SetShaderResource(2, m_downSamplingRT[7].GetRenderTargetTexture());
+		rc12.SetShaderResource(3, m_downSamplingRT[9].GetRenderTargetTexture());
 		
 		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);

@@ -17,7 +17,7 @@ namespace tkEngine {
 	/// メッシュ
 	/// </summary>
 	struct SMesh {
-		CVertexBufferDx12 m_vertexBuffer;						//頂点バッファ。
+		CVertexBufferDx12 m_vertexBuffer;					//頂点バッファ。
 		vector< UPCIndexBufferDx12 > m_indexBufferArray;	//インデックスバッファ。
 		vector< UPCMaterialDx12 >	m_materials;			//マテリアル。
 		vector<int>					skinFlags;				//スキンを持っているかどうかのフラグ。
