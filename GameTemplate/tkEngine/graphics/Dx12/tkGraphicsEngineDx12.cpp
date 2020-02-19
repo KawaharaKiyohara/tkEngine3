@@ -100,6 +100,10 @@ namespace tkEngine {
 			TK_ASSERT(false, "メインレンダリングターゲットの作成に失敗しました。");
 			return false;
 		}
+
+		//CBR_SVRのディスクリプタのサイズを取得。
+		m_cbrSrvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
 		//パイプラインステートを初期化。
 		CPipelineStatesDx12::Init();
 
@@ -127,9 +131,7 @@ namespace tkEngine {
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		rcDx12.SetCommandList(m_commandList);
 
-		//CBR_SVRのディスクリプタのサイズを取得。
-		m_cbrSrvDescriptorSize = m_d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+		
 		//ディスクリプタヒーププールの初期化。
 		m_descriptorHeapPool.Init();
 

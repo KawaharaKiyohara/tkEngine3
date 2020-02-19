@@ -51,10 +51,16 @@ namespace tkEngine {
 		//Dx12版のグラフィックスエンジンに型変換。
 		auto& geDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto backBufferIndex = geDx12.GetBackBufferIndex();
+
+		RegistConstantBufferView(descriptorHandle, backBufferIndex);
+	}
+	void CConstantBufferDx12::RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	{
 		//D3Dデバイスを取得。
+		auto& geDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto device = geDx12.GetD3DDevice();
 		D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
-		desc.BufferLocation = m_constantBuffer[backBufferIndex]->GetGPUVirtualAddress();
+		desc.BufferLocation = m_constantBuffer[bufferNo]->GetGPUVirtualAddress();
 		desc.SizeInBytes = m_allocSize;
 		device->CreateConstantBufferView(&desc, descriptorHandle);
 	}

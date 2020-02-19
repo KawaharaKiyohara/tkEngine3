@@ -14,7 +14,7 @@ public:
 	~Game();
 	bool Start() override;
 	void Update() override;
-	void ForwardRender(IRenderContext& rc) override ;
+	void ForwardRender(IRenderContext& rc) override;
 	void RenderHUD(IRenderContext& rc) override;
 private:
 	enum EnInitStep {
@@ -22,6 +22,8 @@ private:
 		enInitStep_Loaded,		//ì«Ç›çûÇ›èIóπÅB
 	};
 	enum EnModel {
+		enRobo,
+		enUnity,
 		enNinja,
 		enNumModel,
 	};

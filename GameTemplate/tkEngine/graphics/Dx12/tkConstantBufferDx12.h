@@ -26,6 +26,7 @@ namespace tkEngine{
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
 		void RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle);
+		void RegistConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo);
     private:
 		ComPtr<ID3D12Resource>	m_constantBuffer[2];	//定数バッファ。
 		void* m_constBufferCPU[2] = { nullptr };		//CPU側からアクセスできるする定数バッファのアドレス。

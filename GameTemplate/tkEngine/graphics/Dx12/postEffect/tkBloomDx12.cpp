@@ -32,7 +32,8 @@ namespace tkEngine {
 			//定数バッファを初期化。
 			cb.Init(sizeof(m_blurParam), nullptr);
 		}
-
+		//ディスクリプタヒープを作成。
+		CreateDescriptorHeap();
 		
 	}
 	void CBloomDx12::InitRenderTargets()
@@ -166,10 +167,54 @@ namespace tkEngine {
 		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		rc12.ClearRenderTargetView(m_luminanceRT, clearColor);
 		//シェーダーリソースビューと定数バッファをセットする。
-		rc12.SetShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
+		rc12.SetDescriptorHeap(m_sampleLuminanceDiscripterHeap);
+		rc12.SetGraphicsRootDescriptorTable(1, m_sampleLuminanceDiscripterHeap.GetShaderResourceGpuDescritorStartHandle());
 		//ドロドロ。
-		rc12.DrawIndexed(4);
+		rc12.DrawIndexedFast(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_luminanceRT);	
+	}
+	void CBloomDx12::CreateDescriptorHeap()
+	{
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		m_sampleLuminanceDiscripterHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+		m_sampleLuminanceDiscripterHeap.RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
+		m_sampleLuminanceDiscripterHeap.Commit();
+
+		m_combineBokeImageDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+		m_combineBokeImageDescriptorHeap.RegistShaderResource(0, m_downSamplingRT[3].GetRenderTargetTexture());
+		m_combineBokeImageDescriptorHeap.RegistShaderResource(1, m_downSamplingRT[5].GetRenderTargetTexture());
+		m_combineBokeImageDescriptorHeap.RegistShaderResource(2, m_downSamplingRT[7].GetRenderTargetTexture());
+		m_combineBokeImageDescriptorHeap.RegistShaderResource(3, m_downSamplingRT[9].GetRenderTargetTexture());
+		m_combineBokeImageDescriptorHeap.Commit();
+
+
+		CRenderTargetDx12* prevRt = &m_luminanceRT;
+
+		int rtNo = 0;
+		for (int i = 0; i < NUM_DOWN_SAMPLING_RT / 2; i++) {
+			//Xブラー。
+			{
+				m_downSampleDescriptorHeap[rtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+				m_downSampleDescriptorHeap[rtNo].RegistShaderResource(0, prevRt->GetRenderTargetTexture());
+				m_downSampleDescriptorHeap[rtNo].RegistConstantBuffer(0, m_blurParamCB[rtNo]);
+				m_downSampleDescriptorHeap[rtNo].Commit();
+			}
+			prevRt = &m_downSamplingRT[rtNo];
+			rtNo++;
+			//Yブラー。
+			{
+				m_downSampleDescriptorHeap[rtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+				m_downSampleDescriptorHeap[rtNo].RegistConstantBuffer(0, m_blurParamCB[rtNo]);
+				m_downSampleDescriptorHeap[rtNo].RegistShaderResource(0, prevRt->GetRenderTargetTexture());
+				m_downSampleDescriptorHeap[rtNo].Commit();
+			}
+			prevRt = &m_downSamplingRT[rtNo];
+			rtNo++;
+		}
+
+		m_combineMainRenderTargetDescriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+		m_combineMainRenderTargetDescriptorHeap.RegistShaderResource(0, m_combineRT.GetRenderTargetTexture());
+		m_combineMainRenderTargetDescriptorHeap.Commit();
 	}
 	void CBloomDx12::BlurLuminanceTexture(CGraphicsEngineDx12& ge12, CRenderContextDx12& rc12)
 	{
@@ -188,10 +233,12 @@ namespace tkEngine {
 				rc12.SetRenderTargetAndViewport(m_downSamplingRT[rtIndex]);
 				
 				//シェーダーリソースビューと定数バッファをセットする。
-				rc12.SetShaderResource(0, prevRt->GetRenderTargetTexture());
-				rc12.SetConstantBuffer(0, m_blurParamCB[rtIndex]);
+				auto& dheap = m_downSampleDescriptorHeap[rtIndex];
+				rc12.SetDescriptorHeap(m_downSampleDescriptorHeap[rtIndex]);
+				rc12.SetGraphicsRootDescriptorTable(0, m_downSampleDescriptorHeap[rtIndex].GetConstantBufferGpuDescritorStartHandle());
+				rc12.SetGraphicsRootDescriptorTable(1, m_downSampleDescriptorHeap[rtIndex].GetShaderResourceGpuDescritorStartHandle());
 
-				rc12.DrawIndexed(4);
+				rc12.DrawIndexedFast(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
 			prevRt = &m_downSamplingRT[rtIndex];
@@ -207,11 +254,11 @@ namespace tkEngine {
 				rc12.SetPipelineState(m_yblurLuminancePipelineState);
 
 				//シェーダーリソースビューと定数バッファをセットする。
+				rc12.SetDescriptorHeap(m_downSampleDescriptorHeap[rtIndex]);
+				rc12.SetGraphicsRootDescriptorTable(0, m_downSampleDescriptorHeap[rtIndex].GetConstantBufferGpuDescritorStartHandle());
+				rc12.SetGraphicsRootDescriptorTable(1, m_downSampleDescriptorHeap[rtIndex].GetShaderResourceGpuDescritorStartHandle());
 				
-				rc12.SetConstantBuffer(0, m_blurParamCB[rtIndex]);
-				rc12.SetShaderResource(0, prevRt->GetRenderTargetTexture());
-				
-				rc12.DrawIndexed(4);
+				rc12.DrawIndexedFast(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
 			prevRt = &m_downSamplingRT[rtIndex];
@@ -225,13 +272,11 @@ namespace tkEngine {
 		rc12.SetRenderTargetAndViewport(m_combineRT);
 
 		//シェーダーリソースビューと定数バッファをセットする。
-		
-		rc12.SetShaderResource(0, m_downSamplingRT[3].GetRenderTargetTexture());
-		rc12.SetShaderResource(1, m_downSamplingRT[3].GetRenderTargetTexture());
-		rc12.SetShaderResource(2, m_downSamplingRT[3].GetRenderTargetTexture());
-		rc12.SetShaderResource(3, m_downSamplingRT[3].GetRenderTargetTexture());
-		
-		rc12.DrawIndexed(4);
+		rc12.SetDescriptorHeap(m_combineBokeImageDescriptorHeap);
+		rc12.SetGraphicsRootDescriptorTable(1, m_combineBokeImageDescriptorHeap.GetShaderResourceGpuDescritorStartHandle());
+
+		rc12.DrawIndexedFast(4);
+
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);
 
 	}
@@ -242,8 +287,9 @@ namespace tkEngine {
 		rc12.SetRenderTargetAndViewport(ge12.GetMainRenderTarget());
 
 		//シェーダーリソースビューと定数バッファをセットする。
-		rc12.SetShaderResource(0, m_combineRT.GetRenderTargetTexture());
-		rc12.DrawIndexed(4);
+		rc12.SetDescriptorHeap(m_combineMainRenderTargetDescriptorHeap);
+		rc12.SetGraphicsRootDescriptorTable(1, m_combineMainRenderTargetDescriptorHeap.GetShaderResourceGpuDescritorStartHandle());
+		rc12.DrawIndexedFast(4);
 	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}
 	void CBloomDx12::Render(IRenderContext& rc)

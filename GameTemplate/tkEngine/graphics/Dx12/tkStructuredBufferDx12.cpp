@@ -50,12 +50,18 @@ namespace tkEngine {
 	}
 	void CStructuredBufferDx12::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle)
 	{
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		RegistShaderResourceView(descriptorHandle, ge12.GetBackBufferIndex());
+	}
+
+	void CStructuredBufferDx12::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	{
 		if (!m_isInited) {
 			return;
 		}
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto device = ge12.GetD3DDevice();
-	
+
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
 		ZeroMemory(&srvDesc, sizeof(srvDesc));
 		srvDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -65,10 +71,9 @@ namespace tkEngine {
 		srvDesc.Buffer.NumElements = static_cast<UINT>(m_numElement);
 		srvDesc.Buffer.StructureByteStride = m_sizeOfElement;
 		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-		auto backBufferIndex = ge12.GetBackBufferIndex();
 		device->CreateShaderResourceView(
-			m_buffersOnGPU[backBufferIndex].Get(), 
-			&srvDesc, 
+			m_buffersOnGPU[bufferNo].Get(),
+			&srvDesc,
 			descriptorHandle
 		);
 	}

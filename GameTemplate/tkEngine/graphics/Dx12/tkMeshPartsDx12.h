@@ -17,7 +17,7 @@ namespace tkEngine {
 	/// メッシュ
 	/// </summary>
 	struct SMesh {
-		CVertexBufferDx12 m_vertexBuffer;						//頂点バッファ。
+		CVertexBufferDx12 m_vertexBuffer;					//頂点バッファ。
 		vector< UPCIndexBufferDx12 > m_indexBufferArray;	//インデックスバッファ。
 		vector< UPCMaterialDx12 >	m_materials;			//マテリアル。
 		vector<int>					skinFlags;				//スキンを持っているかどうかのフラグ。
@@ -58,6 +58,10 @@ namespace tkEngine {
 		/// 共通定数バッファの作成。
 		/// </summary>
 		void CreateCommonConstantBuffer();
+		/// <summary>
+		/// ディスクリプタヒープを作成。
+		/// </summary>
+		void CreateDescriptorHeaps();
 	private:
 		/// <summary>
 		/// 定数バッファ。
@@ -73,7 +77,9 @@ namespace tkEngine {
 		CConstantBufferDx12 m_commonConstantBuffer;				//メッシュ共通の定数バッファ。
 		CStructuredBufferDx12 m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
 		vector< UPSMesh > m_meshs;								//メッシュ。
-		CSkeleton* m_skeleton = nullptr;	//スケルトン。
+		vector< CDescriptorHeapDx12 > m_descriptorHeap;			//ディスクリプタヒープ。
+		CSkeleton* m_skeleton = nullptr;						//スケルトン。
+		bool m_isCreateDescriptorHeap = false;					//ディスクリプタヒープを作成済み？
 	};
 }
 
