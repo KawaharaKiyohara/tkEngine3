@@ -24,6 +24,7 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="descriptorHandle"></param>
 		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle) override final;
+		void RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo) override final;
 		/// <summary>
 		/// 構造化バッファの内容を更新。
 		/// </summary>

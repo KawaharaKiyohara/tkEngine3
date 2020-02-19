@@ -18,6 +18,45 @@ namespace tkEngine {
 		//共通定数バッファの作成。
 		m_commonConstantBuffer.Init(sizeof(SConstantBuffer), nullptr);
 	}
+	void CMeshPartsDx12::CreateDescriptorHeaps()
+	{
+		//ディスクリプタヒープの数を計算。
+		int numDescriptorHeap = 0;
+		for (auto & mesh : m_meshs) {
+			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
+				numDescriptorHeap++;
+			}
+		}
+		//ディスクリプタヒープをドカッと確保。
+		m_descriptorHeap.resize(numDescriptorHeap);
+		//ディスクリプタヒープを構築していく。
+		int descriptorHeapNo = 0;
+
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto& lightMgr = ge12.GetLightManager()->As<CLightManagerDx12>();
+
+		for (auto& mesh : m_meshs) {
+			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
+				auto& descriptorHeap = m_descriptorHeap.at(descriptorHeapNo);
+				descriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 8);
+				//ディスクリプタヒープにディスクリプタを登録していく。
+				descriptorHeap.RegistShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());
+				descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());
+				descriptorHeap.RegistShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());
+				descriptorHeap.RegistShaderResource(3, m_boneMatricesStructureBuffer);
+				descriptorHeap.RegistShaderResource(4, lightMgr.GetDirectionLightStructuredBuffer());
+
+				descriptorHeap.RegistConstantBuffer(0, m_commonConstantBuffer);
+				descriptorHeap.RegistConstantBuffer(1, lightMgr.GetLightParamConstantBuffer());
+				descriptorHeap.RegistConstantBuffer(2, mesh->m_materials[matNo]->GetConstantBuffer());
+				//ディスクリプタヒープへの登録を確定。
+				descriptorHeap.Commit();
+
+				descriptorHeapNo++;
+			}
+		}
+		m_isCreateDescriptorHeap = true;
+	}
 	void CMeshPartsDx12::CreateMeshFromTkmMesh(const CTkmFile::SMesh& tkmMesh, int meshNo)
 	{
 		//頂点バッファを作成。
@@ -87,6 +126,7 @@ namespace tkEngine {
 			m_skeleton->GetNumBones(),
 			m_skeleton->GetBoneMatricesTopAddress()
 		);
+		
 	}
 	void CMeshPartsDx12::Draw(
 		IRenderContext& rc, 
@@ -94,6 +134,10 @@ namespace tkEngine {
 		const CMatrix& mView, 
 		const CMatrix& mProj)
 	{
+		if (m_isCreateDescriptorHeap == false) {
+			//ディスクリプタヒープを作成。
+			CreateDescriptorHeaps();
+		}
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		//レンダリングコンテキストをDx12版にダウンキャスト
 		auto& rc12 = rc.As<CRenderContextDx12>();
@@ -115,7 +159,7 @@ namespace tkEngine {
 			//ボーン行列を更新する。
 			m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
 		}
-
+		int descriptorHeapNo = 0;
 		for (auto& mesh : m_meshs) {
 			//頂点バッファを設定。
 			rc12.SetVertexBuffer(mesh->m_vertexBuffer);
@@ -124,22 +168,27 @@ namespace tkEngine {
 				//このマテリアルが貼られているメッシュの描画開始。
 				mesh->m_materials[matNo]->BeginRender(rc, mesh->skinFlags[matNo]);
 
-				rc12.SetShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());
-				rc12.SetShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());
-				rc12.SetShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());
-				rc12.SetShaderResource(3, m_boneMatricesStructureBuffer);
-				rc12.SetShaderResource(4, lightMgr.GetDirectionLightStructuredBuffer());
+				auto& descriptorHeap = m_descriptorHeap.at(descriptorHeapNo);
 
-				rc12.SetConstantBuffer(0, m_commonConstantBuffer);
-				rc12.SetConstantBuffer(1, lightMgr.GetLightParamConstantBuffer());
-				rc12.SetConstantBuffer(2, mesh->m_materials[matNo]->GetConstantBuffer());
-
+				rc12.SetDescriptorHeap(descriptorHeap);
+				//ディスクリプタヒープをディスクリプタテーブルに登録する。
+				rc12.SetGraphicsRootDescriptorTable(
+					0,
+					descriptorHeap.GetConstantBufferGpuDescritorStartHandle()
+				);
+				rc12.SetGraphicsRootDescriptorTable(
+					1,
+					descriptorHeap.GetShaderResourceGpuDescritorStartHandle()
+				);
+				descriptorHeapNo++;
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];
 				rc12.SetIndexBuffer(ib);
 			
 				//ドロー。
-				rc12.DrawIndexed(ib->GetCount());
+				rc12.DrawIndexedFast(ib->GetCount());
+
+
 			}
 		}
 	}

@@ -105,5 +105,9 @@ namespace tkEngine {
 			device->CreateShaderResourceView(m_texture.Get(), &srvDesc, descriptorHandle);
 		}
 	}
+	void CTextureDx12::RegistShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandle, int bufferNo)
+	{
+		RegistShaderResourceView(descriptorHandle);
+	}
 }
 #endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

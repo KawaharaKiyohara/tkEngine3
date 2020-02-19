@@ -164,6 +164,11 @@ namespace tkEngine {
 			m_descriptorHeaps[0] = descHeap.Get();	//カリカリカリ
 			m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
 		}
+		void SetDescriptorHeap(CDescriptorHeapDx12& descriptorHeap)
+		{
+			m_descriptorHeaps[0] = descriptorHeap.Get();	//カリカリカリ
+			m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
+		}
 		void SetGraphicsRootDescriptorTable(
 			UINT RootParameterIndex,
 			D3D12_GPU_DESCRIPTOR_HANDLE BaseDescriptor)
@@ -317,10 +322,14 @@ namespace tkEngine {
 		/// 描画の共通処理
 		/// </summary>
 		void DrawCommon();
+	public:
+		void DrawIndexedFast(UINT indexCount)
+		{
+			m_commandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
+		}
 	private:
 		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
-		enum { MAX_CONSTANT_BUFFER = 8 };	//定数バッファの最大数。足りなくなったら増やしてね。
-		enum { MAX_SHADER_RESOURCE = 16 };	//シェーダーリソースの最大数。足りなくなったら増やしてね。
+		
 		ComPtr<ID3D12GraphicsCommandList> m_commandList;	//コマンドリスト。
 		ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];
 		CConstantBufferDx12* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };

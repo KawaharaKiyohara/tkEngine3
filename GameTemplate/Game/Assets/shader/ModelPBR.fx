@@ -123,6 +123,11 @@ cbuffer MaterialParamCb : register(b2){
 	int hasSpecularMap;			//!<スペキュラマップある？
 };
 
+//スキニング用の頂点データをひとまとめ。
+struct SSkinVSIn{
+	int4  Indices  	: BLENDINDICES0;
+    float4 Weights  : BLENDWEIGHT0;
+};
 //頂点シェーダーへの入力。
 struct SVSIn{
 	float4 pos 		: POSITION;
@@ -130,8 +135,8 @@ struct SVSIn{
 	float3 Tangent  : TANGENT;
 	float3 biNormal : BINORMAL;
 	float2 uv 		: TEXCOORD0;
-	int4  Indices  	: BLENDINDICES0;
-    float4 Weights  : BLENDWEIGHT0;
+	SSkinVSIn skinVert;			//スキン用の頂点データ。
+	
 };
 //ピクセルシェーダーへの入力。
 struct SPSIn{
@@ -143,6 +148,15 @@ struct SPSIn{
 	float3 worldPos		: TEXCOORD1;
 };
 
+//シャドウマップ用の頂点シェーダーへの入力。
+struct SShadowMapVSIn{
+	float4 pos 		: POSITION;
+	SSkinVSIn skinVert;
+};
+//シャドウマップ用のピクセルシェーダーへの入力。
+struct SShadowMapPSIn{
+	float4 pos			: SV_POSITION;
+};
 //アルベドテクスチャ。
 Texture2D<float4> g_albedoMap : register(t0);	//アルベドマップ
 Texture2D<float4> g_normalMap : register(t1);	//法線マップ
@@ -156,18 +170,18 @@ StructuredBuffer<SDirectionLight> directionLight : register(t4);
 sampler g_sampler : register(s0);
 
 //スキン行列を計算する。
-float4x4 CalcSkinMatrix(SVSIn In)
+float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 {
 	float4x4 skinning = 0;	
 	float w = 0.0f;
 	[unroll]
     for (int i = 0; i < 3; i++)
     {
-        skinning += boneMatrix[In.Indices[i]] * In.Weights[i];
-        w += In.Weights[i];
+        skinning += boneMatrix[skinVert.Indices[i]] * skinVert.Weights[i];
+        w += skinVert.Weights[i];
     }
     
-    skinning += boneMatrix[In.Indices[3]] * (1.0f - w);
+    skinning += boneMatrix[skinVert.Indices[3]] * (1.0f - w);
     return skinning;
 }
 
@@ -177,7 +191,7 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	SPSIn psIn;
 	float4x4 m;
 	if( hasSkin ){
-		m = CalcSkinMatrix(vsIn);
+		m = CalcSkinMatrix(vsIn.skinVert);
 	}else{
 		m = mWorld;
 	}
@@ -238,4 +252,27 @@ float4 PSMain( SPSIn psIn ) : SV_Target0
 	float4 finalColor = 1.0f;
 	finalColor.xyz = albedoColor.xyz * lig;
 	return finalColor;
+}
+//スキンなしモデルのシャドウマップ書き込み用の頂点シェーダー。
+SShadowMapPSIn VSMainNonSkinShadowMap( SShadowMapVSIn vsIn )
+{
+	SShadowMapPSIn psIn;
+	psIn.pos = mul(mWorld, vsIn.pos);
+	psIn.pos = mul(mView, psIn.pos);
+	psIn.pos = mul(mProj, psIn.pos);
+	return psIn;
+}
+SShadowMapPSIn VSMainSkinShadowMap( SShadowMapVSIn vsIn )
+{
+	SShadowMapPSIn psIn;
+	float4x4 skinMatrix = CalcSkinMatrix(vsIn.skinVert);
+	psIn.pos = mul(skinMatrix, vsIn.pos);
+	psIn.pos = mul(mView, psIn.pos);
+	psIn.pos = mul(mProj, psIn.pos);
+	return psIn;
+}
+//シャドウマップ書き込み用のピクセルシェーダー。
+float4 PSMainShadowMap( SShadowMapPSIn psIn) : SV_Target0
+{
+	return psIn.pos.z / psIn.pos.w;
 }
