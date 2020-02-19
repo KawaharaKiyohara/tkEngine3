@@ -18,7 +18,7 @@ namespace tkEngine {
 		/// </summary>
 		/// <param name="type">ヒープの種類。</param>
 		/// <param name="numDescriptor">ディスクリプタの数。</param>
-		void Init(D3D12_DESCRIPTOR_HEAP_TYPE type, int numDescriptor);
+		void Init(D3D12_DESCRIPTOR_HEAP_TYPE type);
 		/// <summary>
 		/// 
 		/// </summary>

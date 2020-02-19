@@ -38,7 +38,7 @@ namespace tkEngine {
 		for (auto& mesh : m_meshs) {
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 				auto& descriptorHeap = m_descriptorHeap.at(descriptorHeapNo);
-				descriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 8);
+				descriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 				//ディスクリプタヒープにディスクリプタを登録していく。
 				descriptorHeap.RegistShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());
 				descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());
@@ -172,14 +172,8 @@ namespace tkEngine {
 
 				rc12.SetDescriptorHeap(descriptorHeap);
 				//ディスクリプタヒープをディスクリプタテーブルに登録する。
-				rc12.SetGraphicsRootDescriptorTable(
-					0,
-					descriptorHeap.GetConstantBufferGpuDescritorStartHandle()
-				);
-				rc12.SetGraphicsRootDescriptorTable(
-					1,
-					descriptorHeap.GetShaderResourceGpuDescritorStartHandle()
-				);
+				rc12.SetGraphicsRootDescriptorTable(0,descriptorHeap.GetConstantBufferGpuDescritorStartHandle());
+				rc12.SetGraphicsRootDescriptorTable(1,descriptorHeap.GetShaderResourceGpuDescritorStartHandle());
 				descriptorHeapNo++;
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];
