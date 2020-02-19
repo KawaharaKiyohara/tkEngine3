@@ -97,6 +97,9 @@ namespace tkEngine {
 		CShaderDx12 m_copyVS;			//コピー用の頂点シェーダー。	
 		CShaderDx12 m_copyPS;			//コピー用のピクセルシェーダー。
 		CConstantBufferDx12 m_blurParamCB[NUM_DOWN_SAMPLING_RT];	//ブラー用の定数バッファ。
-		CDescriptorHeapDx12 m_discripterHeap;		//ディスクリプタヒープ。
+		CDescriptorHeapDx12 m_sampleLuminanceDiscripterHeap;		//輝度抽出時に使用するディスクリプタヒープ。
+		CDescriptorHeapDx12 m_combineBokeImageDescriptorHeap;		//ボケ画像合成に使用するディスクリプタヒープ。
+		CDescriptorHeapDx12 m_downSampleDescriptorHeap[NUM_DOWN_SAMPLING_RT];	//ダウンサンプリング用のディスクリプタヒープ。
+		CDescriptorHeapDx12 m_combineMainRenderTargetDescriptorHeap;			//メインレンダリングターゲットへの合成に使用するディスクリプタヒープ。
 	};
 }
