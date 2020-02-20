@@ -40,12 +40,24 @@ namespace tkEngine {
 	{
 		//ルートシグネチャとパイプラインステートを設定。
 		auto& rcDx12 = rc.As<CRenderContextDx12>();
-		
-		if (hasSkin) {
-			rcDx12.SetPipelineState(CPipelineStatesDx12::m_skinModelPipeline);
+
+		auto renderStep = rcDx12.GetRenderStep();
+		if (renderStep == enRenderStep_CreateDirectionalShadowMap) {
+			if (hasSkin) {
+				rcDx12.SetPipelineState(CPipelineStatesDx12::m_skinModelShadowMapPipeline);
+			}
+			else {
+				rcDx12.SetPipelineState(CPipelineStatesDx12::m_nonSkinModelShadowMapPipeline);
+			}
 		}
-		else {
-			rcDx12.SetPipelineState(CPipelineStatesDx12::m_nonSkinModelPipeline);
+
+		if (renderStep == enRenderStep_ForwardRender) {
+			if (hasSkin) {
+				rcDx12.SetPipelineState(CPipelineStatesDx12::m_skinModelPipeline);
+			}
+			else {
+				rcDx12.SetPipelineState(CPipelineStatesDx12::m_nonSkinModelPipeline);
+			}
 		}
 	}
 
