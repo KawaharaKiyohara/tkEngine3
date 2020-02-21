@@ -69,13 +69,16 @@ namespace tkEngine {
 	}
 	void IGraphicsEngine::Render(CGameObjectManager* goMgr)
 	{
+		CStopwatch sw;
+		sw.Start();
 		OnBeginRender();
 
 		//事前レンダリング。
 		PreRender();
 		
 		OnRender(goMgr);
-
+		sw.Stop();
+		TK_LOG("render time = %f\n", sw.GetElapsedMillisecond());
 		OnEndRender();
 	}
 }

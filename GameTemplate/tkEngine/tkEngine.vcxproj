@@ -114,16 +114,16 @@
     <IntDir>$(Configuration)Objects\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(LibraryPath);$(ProjectDir)/exlib/x64;$(ProjectDir)/DirectXTK/Bin/Desktop_2017_Win10/x64/Release;$(ProjectDir)/Photon-cpp/lib;$(ProjectDir)/Common-cpp/lib;$(ProjectDir)/Photon/Photon-cpp/lib;$(ProjectDir)/Photon/Common-cpp/lib;$(ProjectDir)/Photon/LoadBalancing-cpp/lib</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(ProjectDir)/exlib/x64;$(ProjectDir)/DirectXTK/Bin/Desktop_2019_Win10/x64/Release;$(ProjectDir)/Photon-cpp/lib;$(ProjectDir)/Common-cpp/lib;$(ProjectDir)/Photon/Photon-cpp/lib;$(ProjectDir)/Photon/Common-cpp/lib;$(ProjectDir)/Photon/LoadBalancing-cpp/lib</LibraryPath>
     <IncludePath>$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/bulletPhysics/src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/Photon/;$(ProjectDir)/EffekseerRuntime130/src/include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">
-    <LibraryPath>$(LibraryPath);$(ProjectDir)/exlib/x64;$(ProjectDir)/DirectXTK/Bin/Desktop_2017_Win10/x64/Release;$(ProjectDir)/Photon/Photon-cpp/lib;$(ProjectDir)/Photon/Common-cpp/lib;$(ProjectDir)/Photon/LoadBalancing-cpp/lib</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(ProjectDir)/exlib/x64;$(ProjectDir)/DirectXTK/Bin/Desktop_2019_Win10/x64/Release;$(ProjectDir)/Photon/Photon-cpp/lib;$(ProjectDir)/Photon/Common-cpp/lib;$(ProjectDir)/Photon/LoadBalancing-cpp/lib</LibraryPath>
     <IncludePath>$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/bulletPhysics/src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/Photon/;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)/../;$(IncludePath);$(ProjectDir)/bulletPhysics/src;$(ProjectDir)/EffekseerRuntime130/src/include;$(ProjectDir)/Photon/;$(ProjectDir)/EffekseerRuntime130/src/include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(ProjectDir)/exlib/x64;$(ProjectDir)/DirectXTK/Bin/Desktop_2017_Win10/x64/Debug;$(ProjectDir)/Photon/Photon-cpp/lib;$(ProjectDir)/Photon/Common-cpp/lib;$(ProjectDir)/Photon/LoadBalancing-cpp/lib</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(ProjectDir)/exlib/x64;$(ProjectDir)/DirectXTK/Bin/Desktop_2019_Win10/x64/Debug;$(ProjectDir)/Photon/Photon-cpp/lib;$(ProjectDir)/Photon/Common-cpp/lib;$(ProjectDir)/Photon/LoadBalancing-cpp/lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
