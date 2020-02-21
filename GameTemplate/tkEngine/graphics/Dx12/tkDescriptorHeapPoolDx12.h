@@ -55,8 +55,8 @@ namespace tkEngine {
 		//ディスクリプタの数。
 		const int NUM_DESCRIPTOR_HEAP_4 = 32;
 		const int NUM_DESCRIPTOR_HEAP_8 = 32;
-		const int NUM_DESCRIPTOR_HEAP_16 = 32;
-		const int NUM_DESCRIPTOR_HEAP_32 = 32;
+		const int NUM_DESCRIPTOR_HEAP_16 = 128;
+		const int NUM_DESCRIPTOR_HEAP_32 = 128;
 
 		std::vector<CDescriptorHeapDx12> m_cbvSrvUavBufferDescriptor4;
 		std::vector<CDescriptorHeapDx12> m_cbvSrvUavBufferDescriptor8;
