@@ -168,7 +168,6 @@ namespace tkEngine {
 		rc12.ClearRenderTargetView(m_luminanceRT, clearColor);
 		//シェーダーリソースビューと定数バッファをセットする。
 		rc12.SetDescriptorHeap(m_sampleLuminanceDiscripterHeap);
-		rc12.SetGraphicsRootDescriptorTable(1, m_sampleLuminanceDiscripterHeap.GetShaderResourceGpuDescritorStartHandle());
 		//ドロドロ。
 		rc12.DrawIndexedFast(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_luminanceRT);	
@@ -235,9 +234,7 @@ namespace tkEngine {
 				//シェーダーリソースビューと定数バッファをセットする。
 				auto& dheap = m_downSampleDescriptorHeap[rtIndex];
 				rc12.SetDescriptorHeap(m_downSampleDescriptorHeap[rtIndex]);
-				rc12.SetGraphicsRootDescriptorTable(0, m_downSampleDescriptorHeap[rtIndex].GetConstantBufferGpuDescritorStartHandle());
-				rc12.SetGraphicsRootDescriptorTable(1, m_downSampleDescriptorHeap[rtIndex].GetShaderResourceGpuDescritorStartHandle());
-
+				
 				rc12.DrawIndexedFast(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
@@ -255,8 +252,6 @@ namespace tkEngine {
 
 				//シェーダーリソースビューと定数バッファをセットする。
 				rc12.SetDescriptorHeap(m_downSampleDescriptorHeap[rtIndex]);
-				rc12.SetGraphicsRootDescriptorTable(0, m_downSampleDescriptorHeap[rtIndex].GetConstantBufferGpuDescritorStartHandle());
-				rc12.SetGraphicsRootDescriptorTable(1, m_downSampleDescriptorHeap[rtIndex].GetShaderResourceGpuDescritorStartHandle());
 				
 				rc12.DrawIndexedFast(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
@@ -273,8 +268,6 @@ namespace tkEngine {
 
 		//シェーダーリソースビューと定数バッファをセットする。
 		rc12.SetDescriptorHeap(m_combineBokeImageDescriptorHeap);
-		rc12.SetGraphicsRootDescriptorTable(1, m_combineBokeImageDescriptorHeap.GetShaderResourceGpuDescritorStartHandle());
-
 		rc12.DrawIndexedFast(4);
 
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);
@@ -288,7 +281,6 @@ namespace tkEngine {
 
 		//シェーダーリソースビューと定数バッファをセットする。
 		rc12.SetDescriptorHeap(m_combineMainRenderTargetDescriptorHeap);
-		rc12.SetGraphicsRootDescriptorTable(1, m_combineMainRenderTargetDescriptorHeap.GetShaderResourceGpuDescritorStartHandle());
 		rc12.DrawIndexedFast(4);
 	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}

@@ -8,10 +8,10 @@ namespace tkEngine {
 	}
 	void CSpriteDx12::OnInit(ITexture* texture, float w, float h)
 	{
-		//ディスクリプタヒープを初期化。
-		InitDescriptorHeap();
 		//定数バッファの作成。
 		m_constantBufferGPU.Init(sizeof(m_constantBufferCPU), nullptr);
+		//ディスクリプタヒープを初期化。
+		InitDescriptorHeap();
 	}
 	void CSpriteDx12::OnUpdate(const CVector3& pos, const CQuaternion& rot, const CVector3& scale, const CVector2& pivot)
 	{
@@ -36,6 +36,8 @@ namespace tkEngine {
 		//プリミティブトポロジーを設定する。
 		rc12.SetPrimitiveTopology(enPrimitiveTopology_TriangleStrip);
 
+		rc12.SetDescriptorHeap(m_descriptorHeap);
+
 		//定数バッファとシェーダーリソースを設定。
 		auto& texture = m_texture->As<CTextureDx12 >();
 	
@@ -44,21 +46,16 @@ namespace tkEngine {
 		rc12.SetConstantBuffer(0, m_constantBufferGPU);
 	
 		//ドロー。
-		rc12.DrawIndexed(m_indexBuffer->GetCount());
+		rc12.DrawIndexedFast(m_indexBuffer->GetCount());
 	}
 
 	void CSpriteDx12::InitDescriptorHeap()
 	{
-		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
-		auto d3dDevice = ge12.GetD3DDevice();
-
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-		srvHeapDesc.NumDescriptors = 8;
-		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		auto hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_descriptorHeap));
-		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
-
+		m_descriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		m_descriptorHeap.RegistConstantBuffer(0, m_constantBufferGPU);
+		auto& texture = m_texture->As<CTextureDx12 >();
+		m_descriptorHeap.RegistShaderResource(0, texture);
+		m_descriptorHeap.Commit();
 	}
 
 }
