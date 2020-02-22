@@ -25,6 +25,7 @@ namespace tkEngine {
 	}
 	void CDescriptorHeapDx12::Commit()
 	{
+		//ディスクリプタヒープを作成。
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = ge12.GetD3DDevice();
 
@@ -38,7 +39,7 @@ namespace tkEngine {
 		hr = d3dDevice->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&m_descriptorHeap[1]));
 		TK_ASSERT(SUCCEEDED(hr), "CSpriteDx12::CreateDescriptorHeaps：ディスクリプタヒープの作成に失敗しました。");
 
-
+		//定数バッファやシェーダーリソースのディスクリプタをヒープに書き込んでいく。
 		int bufferNo = 0;
 		for (auto& descriptorHeap : m_descriptorHeap) {
 			auto cpuHandle = descriptorHeap->GetCPUDescriptorHandleForHeapStart();

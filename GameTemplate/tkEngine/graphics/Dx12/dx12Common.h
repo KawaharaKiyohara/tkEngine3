@@ -8,8 +8,6 @@ namespace tkEngine {
 	using UPCIndexBufferDx12 = std::unique_ptr<CIndexBufferDx12>;
 	static const char* g_vsShaderModelName = "vs_5_0"; //頂点シェーダーのシェーダーモデル名。
 	static const char* g_psShaderModelName = "ps_5_0";	//ピクセルシェーダーのシェーダモデル名。
-	enum { MAX_CONSTANT_BUFFER = 8 };	//定数バッファの最大数。足りなくなったら増やしてね。
-	enum { MAX_SHADER_RESOURCE = 16 };	//シェーダーリソースの最大数。足りなくなったら増やしてね。
 }
 #include "tkGraphicsInstanceFactoryDx12.h"
 #include "tkShaderResourceDx12.h"
