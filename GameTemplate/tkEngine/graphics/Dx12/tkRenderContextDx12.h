@@ -40,26 +40,6 @@ namespace tkEngine {
 			m_commandList->RSSetViewports(1, &viewport);
 		}
 		/// <summary>
-	/// 定数バッファを設定。
-	/// </summary>
-	/// <param name="registerNo">設定するレジスタの番号。</param>
-	/// <param name="cb">定数バッファ。</param>
-		void SetConstantBuffer(int registerNo, CConstantBufferDx12& cb)
-		{
-			TK_ASSERT(registerNo >= 0 && registerNo < MAX_CONSTANT_BUFFER, "レジスタ番号が範囲外です\n");
-			m_constantBuffers[registerNo] = &cb;
-		}
-		/// <summary>
-		/// シェーダーリソースを設定。
-		/// </summary>
-		/// <param name="registerNo">設定するレジスタの番号。</param>
-		/// <param name="srv">シェーダーリソース</param>
-		void SetShaderResource(int registerNo, IShaderResourceDx12& srv)
-		{
-			TK_ASSERT(registerNo >= 0 && registerNo < MAX_SHADER_RESOURCE, "レジスタ番号が範囲外です\n");
-			m_shaderResources[registerNo] = &srv;
-		}
-		/// <summary>
 		/// シザリング矩形を設定
 		/// </summary>
 		/// <param name="rect"></param>
@@ -147,13 +127,15 @@ namespace tkEngine {
 		/// </summary>
 		void SetDescriptorHeap(ComPtr< ID3D12DescriptorHeap>& descHeap)
 		{
-			m_descriptorHeaps[0] = descHeap.Get();	//カリカリカリ
-			m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
+			ID3D12DescriptorHeap* descriptorHeapTbl[1];
+			descriptorHeapTbl[0] = descHeap.Get();
+			m_commandList->SetDescriptorHeaps(1, descriptorHeapTbl);
 		}
 		void SetDescriptorHeap(CDescriptorHeapDx12& descriptorHeap)
 		{
-			m_descriptorHeaps[0] = descriptorHeap.Get();	//カリカリカリ
-			m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
+			ID3D12DescriptorHeap* descriptorHeapTbl[1];
+			descriptorHeapTbl[0] = descriptorHeap.Get();
+			m_commandList->SetDescriptorHeaps(1, descriptorHeapTbl);
 			//ディスクリプタテーブルに登録する。
 			SetGraphicsRootDescriptorTable(0, descriptorHeap.GetConstantBufferGpuDescritorStartHandle());
 			SetGraphicsRootDescriptorTable(1, descriptorHeap.GetShaderResourceGpuDescritorStartHandle());
@@ -252,22 +234,19 @@ namespace tkEngine {
 		/// <param name="renderTarget">レンダリングターゲット</param>
 		void WaitUntilFinishDrawingToRenderTarget(CRenderTargetDx12& renderTarget)
 		{
-			m_commandList->ResourceBarrier(
-				1,
-				&CD3DX12_RESOURCE_BARRIER::Transition(
-					renderTarget.GetRenderTargetTexture().Get(),
-					D3D12_RESOURCE_STATE_RENDER_TARGET,
-					D3D12_RESOURCE_STATE_COMMON)
-			);
+			auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+				renderTarget.GetRenderTargetTexture().Get(),
+				D3D12_RESOURCE_STATE_RENDER_TARGET,
+				D3D12_RESOURCE_STATE_COMMON);
+			m_commandList->ResourceBarrier(	1, &resourceBarrier	);
 		}
 		void WaitUntilFinishDrawingToRenderTarget(ComPtr<ID3D12Resource>& renderTarget)
 		{
-			m_commandList->ResourceBarrier(
-				1,
-				&CD3DX12_RESOURCE_BARRIER::Transition(
-					renderTarget.Get(),
-					D3D12_RESOURCE_STATE_RENDER_TARGET,
-					D3D12_RESOURCE_STATE_PRESENT));
+			auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+				renderTarget.Get(),
+				D3D12_RESOURCE_STATE_RENDER_TARGET,
+				D3D12_RESOURCE_STATE_PRESENT);
+			m_commandList->ResourceBarrier(	1, &resourceBarrier );
 		}
 		/// <summary>
 		/// レンダリングターゲットとして使用可能になるまで待つ。
@@ -279,16 +258,13 @@ namespace tkEngine {
 		void WaitUntilToPossibleSetRenderTarget(CRenderTargetDx12& renderTarget)
 		{
 			//レンダリングターゲットが利用可能になるまでリソースバリア。
-			m_commandList->ResourceBarrier(1,
-				&CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET)
-			);
+			auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.GetRenderTargetTexture().Get(), D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
+			m_commandList->ResourceBarrier( 1,&resourceBarrier );
 		}
 		void WaitUntilToPossibleSetRenderTarget(ComPtr<ID3D12Resource>& renderTarget)
 		{
-			m_commandList->ResourceBarrier(
-				1,
-				&CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
-			);
+			auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(renderTarget.Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+			m_commandList->ResourceBarrier( 1, &resourceBarrier );
 		}
 		/// <summary>
 		/// コマンドリストを閉じる
@@ -309,12 +285,7 @@ namespace tkEngine {
 	public:
 
 	private:
-		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
-		
 		ComPtr<ID3D12GraphicsCommandList> m_commandList;	//コマンドリスト。
-		ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];
-		CConstantBufferDx12* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };
-		IShaderResourceDx12* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };
 	};
 }
 

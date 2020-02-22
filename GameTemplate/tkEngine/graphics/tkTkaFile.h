@@ -64,7 +64,7 @@ namespace tkEngine {
 		/// <returns></returns>
 		int GetNumAnimationEvent() const
 		{
-			return m_animationEvents.size();
+			return static_cast<int>(m_animationEvents.size());
 		}
 		/// <summary>
 		/// キーフレームの数を取得。
@@ -72,7 +72,7 @@ namespace tkEngine {
 		/// <returns></returns>
 		int GetNumKeyFrame() const
 		{
-			return m_keyFrames.size();
+			return static_cast<int>(m_keyFrames.size());
 		}
 	private:
 		vector< AnimationEvent> m_animationEvents;	//アニメーションイベント。

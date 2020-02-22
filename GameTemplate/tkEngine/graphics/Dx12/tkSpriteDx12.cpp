@@ -37,13 +37,6 @@ namespace tkEngine {
 		rc12.SetPrimitiveTopology(enPrimitiveTopology_TriangleStrip);
 
 		rc12.SetDescriptorHeap(m_descriptorHeap);
-
-		//定数バッファとシェーダーリソースを設定。
-		auto& texture = m_texture->As<CTextureDx12 >();
-	
-		rc12.SetShaderResource(0, texture);
-	
-		rc12.SetConstantBuffer(0, m_constantBufferGPU);
 	
 		//ドロー。
 		rc12.DrawIndexed(m_indexBuffer->GetCount());

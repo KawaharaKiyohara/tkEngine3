@@ -244,12 +244,12 @@ namespace tkEngine {
 			std::unique_ptr<char[]>& ddsFileMemory, 
 			unsigned int& fileSize
 		) {
-			int filePathLength = texFilePath.length();
+			int filePathLength = static_cast<int>(texFilePath.length());
 			if (texFileName.length() > 0) {
 				//モデルのファイルパスからラストのフォルダ区切りを探す。
 				auto replaseStartPos = texFilePath.find_last_of('/');
 				if (replaseStartPos == std::string::npos) {
-					replaseStartPos == texFilePath.find_last_of('\\');
+					replaseStartPos = texFilePath.find_last_of('\\');
 				}
 				replaseStartPos += 1;
 				auto replaceLen = filePathLength - replaseStartPos;
@@ -321,14 +321,14 @@ namespace tkEngine {
 			//マテリアル情報を記録できる領域を確保。
 			meshParts.materials.resize(meshPartsHeader.numMaterial);
 			//マテリアル情報を構築していく。
-			for (int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
+			for (int materialNo = 0; materialNo < (int)meshPartsHeader.numMaterial; materialNo++) {
 				auto& material = meshParts.materials[materialNo];
 				BuildMaterial(material, fp, filePath);
 			}
 			
 			//続いて頂点バッファ。
 			meshParts.vertexBuffer.resize(meshPartsHeader.numVertex);
-			for (int vertNo = 0; vertNo < meshPartsHeader.numVertex; vertNo++) {
+			for (int vertNo = 0; vertNo < (int)meshPartsHeader.numVertex; vertNo++) {
 				tkmFileFormat::SVertex vertexTmp;
 				fread(&vertexTmp, sizeof(vertexTmp), 1, fp);
 				auto& vertex = meshParts.vertexBuffer[vertNo];
@@ -356,7 +356,7 @@ namespace tkEngine {
 				meshParts.indexBuffer32Array.resize(meshPartsHeader.numMaterial);
 			}
 			
-			for (int materialNo = 0; materialNo < meshPartsHeader.numMaterial; materialNo++) {
+			for (int materialNo = 0; materialNo < (int)meshPartsHeader.numMaterial; materialNo++) {
 				//ポリゴン数をロード。
 				int numPolygon;
 				fread(&numPolygon, sizeof(numPolygon), 1, fp);

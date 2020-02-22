@@ -83,7 +83,7 @@ namespace tkEngine {
 			mesh->m_indexBufferArray.reserve(tkmMesh.indexBuffer16Array.size());
 			for (auto& tkIb : tkmMesh.indexBuffer16Array) {
 				auto ib = std::make_unique< CIndexBufferDx12>();
-				ib->Init(tkIb.indices.size() * 2, 2);
+				ib->Init((int)tkIb.indices.size() * 2, 2);
 				ib->Copy((void*)&tkIb.indices.at(0));
 				
 				//スキンがあるかどうかを設定する。
@@ -97,7 +97,7 @@ namespace tkEngine {
 			mesh->m_indexBufferArray.reserve(tkmMesh.indexBuffer32Array.size());
 			for (auto& tkIb : tkmMesh.indexBuffer32Array) {
 				auto ib = std::make_unique< CIndexBufferDx12>();
-				ib->Init(tkIb.indices.size() * 4, 4);
+				ib->Init((int)tkIb.indices.size() * 4, 4);
 				ib->Copy((void*)&tkIb.indices.at(0));
 
 				//スキンがあるかどうかを設定する。

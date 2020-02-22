@@ -25,8 +25,8 @@ namespace tkEngine {
 		m_camera2D.SetTarget(CVector3::Zero);
 		m_camera2D.SetPosition({ 0.0f, 0.0f, -10.0f });
 		m_camera2D.SetUpdateProjMatrixFunc(CCamera::enUpdateProjMatrixFunc_Ortho);
-		m_camera2D.SetWidth(m_2dSpaceScreenWidth);
-		m_camera2D.SetHeight(m_2dSpaceScreenHeight);
+		m_camera2D.SetWidth(static_cast<float>(m_2dSpaceScreenWidth));
+		m_camera2D.SetHeight(static_cast<float>(m_2dSpaceScreenHeight));
 		m_camera2D.SetNear(0.1f);
 		m_camera2D.SetFar(1000.0f);
 		m_camera2D.Update();
@@ -34,8 +34,8 @@ namespace tkEngine {
 		m_cameraPostEffect.SetTarget(CVector3::Zero);
 		m_cameraPostEffect.SetPosition({ 0.0f, 0.0f, -10.0f });
 		m_cameraPostEffect.SetUpdateProjMatrixFunc(CCamera::enUpdateProjMatrixFunc_Ortho);
-		m_cameraPostEffect.SetWidth(m_frameBufferWidth);
-		m_cameraPostEffect.SetHeight(m_frameBufferHeight);
+		m_cameraPostEffect.SetWidth(static_cast<float>(m_frameBufferWidth));
+		m_cameraPostEffect.SetHeight(static_cast<float>(m_frameBufferHeight));
 		m_cameraPostEffect.SetNear(0.1f);
 		m_cameraPostEffect.SetFar(1000.0f);
 		m_cameraPostEffect.Update();

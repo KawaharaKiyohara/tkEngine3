@@ -110,7 +110,10 @@ namespace tkEngine {
 		//ポストエフェクトの初期化。
 		m_postEffect.Init(initParam.graphicsConfing);
 
-		m_copyFullScreenSprite.Init(&m_mainRenderTarget.GetRenderTargetTexture(), initParam.frameBufferWidth, initParam.frameBufferHeight);
+		m_copyFullScreenSprite.Init(
+			&m_mainRenderTarget.GetRenderTargetTexture(), 
+			static_cast<float>(initParam.frameBufferWidth), 
+			static_cast<float>(initParam.frameBufferHeight));
 		//ビューポートを初期化。
 		m_viewport.TopLeftX = 0;
 		m_viewport.TopLeftY = 0;
