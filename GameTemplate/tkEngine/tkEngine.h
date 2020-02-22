@@ -135,6 +135,7 @@ namespace tkEngine{
 		UPIGraphicsInstanceFactory m_graphisInstanceFactory;				//グラフィックスインスタンスのファクトリ。
 		UPIGraphicsEngine		m_graphicsEngine;							//グラフィックエンジン。
 		CGameTime				m_gameTime;									//ゲームタイム。
+		CPhysicsWorld			m_physicsWorld;		//物理ワールド。
 		int						m_screenWidth = 0;							//!<スクリーンの幅。
 		int						m_screenHeight = 0;							//!<スクリーンの高さ。
 		CPad					m_pad[CPad::CONNECT_PAD_MAX];				//!<ゲームパッド。
@@ -159,6 +160,7 @@ namespace tkEngine{
 	extern CGameTime* g_gameTime;
 	extern ILightManager* g_lightManager;
 	extern std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;
+	extern CPhysicsWorld* g_physicsWorld;
 
 	/*!
 	* @brief	CSoundEngineのインスタンスを取得。

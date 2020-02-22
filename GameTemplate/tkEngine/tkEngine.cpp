@@ -15,6 +15,7 @@ namespace tkEngine {
 	CCamera* g_camera2D = nullptr;
 	CGameTime* g_gameTime = nullptr;
 	ILightManager* g_lightManager = nullptr;
+	CPhysicsWorld* g_physicsWorld = nullptr;
 
 	std::array<CPad*, CPad::CONNECT_PAD_MAX> g_pad;
 
@@ -27,6 +28,8 @@ namespace tkEngine {
 		g_camera3D = &m_graphicsEngine->GetCamera3D();
 		g_camera2D = &m_graphicsEngine->GetCamera2D();
 		g_gameTime = &m_gameTime;
+		g_physicsWorld = &m_physicsWorld;
+
 		for (int i = 0; i < CPad::CONNECT_PAD_MAX; i++) {
 			g_pad[i] = &m_pad[i];
 		}
@@ -53,7 +56,9 @@ namespace tkEngine {
 		g_lightManager = m_graphicsEngine->GetLightManager().get();
 		//SoundEngineの初期化
 		m_soundEngine.Init();
-		;
+		//物理エンジンの初期化。
+		m_physicsWorld.Init();
+
 		//乱数を初期化。
 		m_random.Init((unsigned long)time(NULL));
 		//パッドを初期化。
@@ -150,6 +155,8 @@ namespace tkEngine {
 		}
 		//サウンドエンジンの更新。
 		m_soundEngine.Update();
+		//物理エンジンの更新。
+		m_physicsWorld.Update();
 		//グラフィックスエンジンの更新。
 		m_graphicsEngine->Update();
 		//GameObjectManager更新

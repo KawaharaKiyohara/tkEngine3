@@ -131,7 +131,7 @@ using namespace std;
 
 #include "gameObject/tkGameObjectManager.h"
 
-
+#include "tkEngine/physics/tkPhysics.h"
 #include "tkEngine/util/tkNameKey.h"
 #include "tkEngine/timer/tkGameTime.h"
 #include "tkEngine/Input/tkPad.h"
