@@ -169,7 +169,7 @@ namespace tkEngine {
 		//シェーダーリソースビューと定数バッファをセットする。
 		rc12.SetDescriptorHeap(m_sampleLuminanceDiscripterHeap);
 		//ドロドロ。
-		rc12.DrawIndexedFast(4);
+		rc12.DrawIndexed(4);
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_luminanceRT);	
 	}
 	void CBloomDx12::CreateDescriptorHeap()
@@ -235,7 +235,7 @@ namespace tkEngine {
 				auto& dheap = m_downSampleDescriptorHeap[rtIndex];
 				rc12.SetDescriptorHeap(m_downSampleDescriptorHeap[rtIndex]);
 				
-				rc12.DrawIndexedFast(4);
+				rc12.DrawIndexed(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
 			prevRt = &m_downSamplingRT[rtIndex];
@@ -253,7 +253,7 @@ namespace tkEngine {
 				//シェーダーリソースビューと定数バッファをセットする。
 				rc12.SetDescriptorHeap(m_downSampleDescriptorHeap[rtIndex]);
 				
-				rc12.DrawIndexedFast(4);
+				rc12.DrawIndexed(4);
 				rc12.WaitUntilFinishDrawingToRenderTarget(m_downSamplingRT[rtIndex]);
 			}
 			prevRt = &m_downSamplingRT[rtIndex];
@@ -268,7 +268,7 @@ namespace tkEngine {
 
 		//シェーダーリソースビューと定数バッファをセットする。
 		rc12.SetDescriptorHeap(m_combineBokeImageDescriptorHeap);
-		rc12.DrawIndexedFast(4);
+		rc12.DrawIndexed(4);
 
 		rc12.WaitUntilFinishDrawingToRenderTarget(m_combineRT);
 
@@ -281,7 +281,7 @@ namespace tkEngine {
 
 		//シェーダーリソースビューと定数バッファをセットする。
 		rc12.SetDescriptorHeap(m_combineMainRenderTargetDescriptorHeap);
-		rc12.DrawIndexedFast(4);
+		rc12.DrawIndexed(4);
 	//	rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}
 	void CBloomDx12::Render(IRenderContext& rc)

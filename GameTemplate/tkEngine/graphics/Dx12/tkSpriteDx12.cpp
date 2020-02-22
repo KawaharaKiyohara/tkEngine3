@@ -46,7 +46,7 @@ namespace tkEngine {
 		rc12.SetConstantBuffer(0, m_constantBufferGPU);
 	
 		//ƒhƒ[B
-		rc12.DrawIndexedFast(m_indexBuffer->GetCount());
+		rc12.DrawIndexed(m_indexBuffer->GetCount());
 	}
 
 	void CSpriteDx12::InitDescriptorHeap()

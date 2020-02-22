@@ -3,7 +3,6 @@
 #if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
 
 #include "dx12Common.h"
-#include "tkTriangleShapeDx12.h"
 #include "tkMeshPartsDx12.h"
 #include "tkLightManagerDx12.h"
 #include "tkDirectionalShadowMapDx12.h"
@@ -28,10 +27,6 @@ namespace tkEngine {
 	UPIRenderContext CGraphicsInstanceFactoryDx12::CreateRenderContext()
 	{
 		return make_unique<CRenderContextDx12>();
-	}
-	UPIShape CGraphicsInstanceFactoryDx12::CreateTriangleShape(const wchar_t* textureFilePath)
-	{
-		return make_unique<CTriangleShapeDx12>(textureFilePath);
 	}
 	UPITexture CGraphicsInstanceFactoryDx12::CreateTextureFromDDSFile(const wchar_t* filePath)
 	{

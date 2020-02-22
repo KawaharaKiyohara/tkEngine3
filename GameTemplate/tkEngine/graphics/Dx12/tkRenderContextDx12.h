@@ -113,25 +113,11 @@ namespace tkEngine {
 		}
 
 		/// <summary>
-		/// 定数バッファ、シェーダーリソース、UAV(UnorderResrouceView)をディスクリプタヒープに登録する。
-		/// </summary>
-		/// <param name="constantBufferArray">定数バッファの配列</param>
-		/// <param name="numSRV">シェーダーリソースの数</param>
-		/// /// <param name="numCBR">定数バッファの数</param>
-		/// <param name="srvArray">シェーダーリソースの配列</param>
-		/*void SetCBR_SRV_UAV(
-			CConstantBufferDx12* constantBufferArray[],
-			IShaderResourceDx12* shaderResourceArray[],
-			int numConstantBuffer,
-			int numShaderResource
-		);*/
-		/// <summary>
 		/// インデックスつきプリミティブを描画。
 		/// </summary>
 		/// <param name="indexCount">インデックスの数。</param>
 		void DrawIndexed(UINT indexCount)
 		{
-			DrawCommon();
 			m_commandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
 		}
 		/// <summary>
@@ -320,16 +306,8 @@ namespace tkEngine {
 		{
 			m_commandList->Reset(commandAllocator.Get(), pipelineState.Get());
 		}
-	private:
-		/// <summary>
-		/// 描画の共通処理
-		/// </summary>
-		void DrawCommon();
 	public:
-		void DrawIndexedFast(UINT indexCount)
-		{
-			m_commandList->DrawIndexedInstanced(indexCount, 1, 0, 0, 0);
-		}
+
 	private:
 		enum { MAX_DESCRIPTOR_HEAP = 4 };	//ディスクリプタヒープの最大数。
 		

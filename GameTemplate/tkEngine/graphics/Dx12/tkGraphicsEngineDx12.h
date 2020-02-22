@@ -10,7 +10,6 @@
 #include "tkRenderTargetDx12.h"
 #include "tkSpriteDx12.h"
 
-#include "tkDescriptorHeapPoolDx12.h"
 #include "postEffect/tkPostEffectDx12.h"
 
 namespace tkEngine {
@@ -86,15 +85,7 @@ namespace tkEngine {
 		{
 			return m_viewport;
 		}
-		/// <summary>
-		/// ディスクリプタヒープを確保。
-		/// </summary>
-		/// <param name="numDescriptor"></param>
-		/// <returns></returns>
-		CDescriptorHeapDx12& AllocDescriptorHeap( int numDescriptor )
-		{
-			return m_descriptorHeapPool.AllocCbrSrvUavDescriptorHeap( numDescriptor );
-		}
+
 	private:
 		/// <summary>
 		/// 1フレーム描画開始時の処理。
@@ -165,7 +156,6 @@ namespace tkEngine {
 		/// </summary>
 		void WaitDraw();
 	private:
-		CDescriptorHeapPoolDx12				m_descriptorHeapPool;	//ディスクリプタヒーププール。
 		D3D12_VIEWPORT						m_viewport;				//ビューポート。
 		D3D12_RECT							m_scissorRect;			//シザリング矩形。
 		ComPtr<ID3D12Device>				m_d3dDevice;			//D3Dデバイス。

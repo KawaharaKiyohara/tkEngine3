@@ -131,10 +131,6 @@ namespace tkEngine {
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
 		rcDx12.SetCommandList(m_commandList);
 
-		
-		//ディスクリプタヒーププールの初期化。
-		m_descriptorHeapPool.Init();
-
 		return true;
 	}
 
@@ -347,8 +343,7 @@ namespace tkEngine {
 	void CGraphicsEngineDx12::OnBeginRender()
 	{
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
-		//ディスクリプタヒーププールのリセット。
-		m_descriptorHeapPool.Reset();
+
 		//コマンドアロケータをリセット。
 		m_commandAllocator->Reset();
 		//レンダリング子テキストもリセット。

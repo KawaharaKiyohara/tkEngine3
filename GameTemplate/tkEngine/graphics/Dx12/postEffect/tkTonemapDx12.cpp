@@ -220,7 +220,7 @@ namespace tkEngine {
 			rc.SetPipelineState(m_calcLuminanceLogAvaragePipelineState);
 			//シェーダーリソースビューと定数バッファをセットする。
 			rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);			
-			rc.DrawIndexedFast(4);
+			rc.DrawIndexed(4);
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 		}
 		//ここからはダウンサンプリングで求める。
@@ -234,7 +234,7 @@ namespace tkEngine {
 				//ディスクリプタヒープをセット。
 				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
 				rc.SetPipelineState(m_calsLuminanceAvaragePipelineState);
-				rc.DrawIndexedFast(4);
+				rc.DrawIndexed(4);
 				rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 				curRtNo--;
 			}
@@ -250,7 +250,7 @@ namespace tkEngine {
 			
 			//パイプラインステートを設定。
 			rc.SetPipelineState(m_calsLuminanceExpAvaragePipelineState);
-			rc.DrawIndexedFast(4);
+			rc.DrawIndexed(4);
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 		}
 
@@ -264,7 +264,7 @@ namespace tkEngine {
 				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);		
 				//ディスクリプヒープを設定する。
 				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
-				rc.DrawIndexedFast(4);
+				rc.DrawIndexed(4);
 				m_isFirstWhenChangeScene = false;
 			}
 			else {
@@ -278,7 +278,7 @@ namespace tkEngine {
 				rc.SetDescriptorHeap(m_lightDarkAdaptation[m_currentAvgRt]);
 				
 				rc.SetPipelineState(m_psCalcAdaptedLuminancePipelineState);
-				rc.DrawIndexedFast(4);
+				rc.DrawIndexed(4);
 			}
 			rc.WaitUntilFinishDrawingToRenderTarget(m_avgRT[m_currentAvgRt]);
 		}
@@ -304,7 +304,7 @@ namespace tkEngine {
 		rc12.SetDescriptorHeap(m_finalCombineDS[m_currentAvgRt]);
 
 		rc12.SetPipelineState(m_finalPipelineState);
-		rc12.DrawIndexedFast(4);
+		rc12.DrawIndexed(4);
 
 		rc12.WaitUntilFinishDrawingToRenderTarget(ge12.GetMainRenderTarget());
 	}

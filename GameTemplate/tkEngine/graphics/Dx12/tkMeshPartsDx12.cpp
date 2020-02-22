@@ -177,7 +177,7 @@ namespace tkEngine {
 				rc12.SetIndexBuffer(ib);
 			
 				//ƒhƒ[B
-				rc12.DrawIndexedFast(ib->GetCount());
+				rc12.DrawIndexed(ib->GetCount());
 
 
 			}

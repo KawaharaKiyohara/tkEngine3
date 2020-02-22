@@ -297,7 +297,6 @@
     <ClInclude Include="graphics\Dx12\postEffect\tkTonemapDx12.h" />
     <ClInclude Include="graphics\Dx12\tkConstantBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkDescriptorHeapDx12.h" />
-    <ClInclude Include="graphics\Dx12\tkDescriptorHeapPoolDx12.h" />
     <ClInclude Include="graphics\Dx12\tkDirectionalShadowMapDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsEngineDx12.h" />
     <ClInclude Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.h" />
@@ -316,7 +315,6 @@
     <ClInclude Include="graphics\Dx12\tkSpriteDx12.h" />
     <ClInclude Include="graphics\Dx12\tkStructuredBufferDx12.h" />
     <ClInclude Include="graphics\Dx12\tkTextureDx12.h" />
-    <ClInclude Include="graphics\Dx12\tkTriangleShapeDx12.h" />
     <ClInclude Include="graphics\Dx12\tkVertexBufferDx12.h" />
     <ClInclude Include="graphics\tkAnimation.h" />
     <ClInclude Include="graphics\tkAnimationClip.h" />
@@ -384,7 +382,6 @@
     <ClCompile Include="graphics\Dx12\postEffect\tkTonemapDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkConstantBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkDescriptorHeapDx12.cpp" />
-    <ClCompile Include="graphics\Dx12\tkDescriptorHeapPoolDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkDirectionalShadowMapDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsEngineDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkGraphicsInstanceFactoryDx12.cpp" />
@@ -400,7 +397,6 @@
     <ClCompile Include="graphics\Dx12\tkSpriteDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkStructuredBufferDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkTextureDx12.cpp" />
-    <ClCompile Include="graphics\Dx12\tkTriangleShapeDx12.cpp" />
     <ClCompile Include="graphics\Dx12\tkVertexBufferDx12.cpp" />
     <ClCompile Include="graphics\tkAnimation.cpp" />
     <ClCompile Include="graphics\tkAnimationClip.cpp" />
