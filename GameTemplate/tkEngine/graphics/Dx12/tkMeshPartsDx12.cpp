@@ -171,9 +171,6 @@ namespace tkEngine {
 				auto& descriptorHeap = m_descriptorHeap.at(descriptorHeapNo);
 
 				rc12.SetDescriptorHeap(descriptorHeap);
-				//ディスクリプタヒープをディスクリプタテーブルに登録する。
-				rc12.SetGraphicsRootDescriptorTable(0,descriptorHeap.GetConstantBufferGpuDescritorStartHandle());
-				rc12.SetGraphicsRootDescriptorTable(1,descriptorHeap.GetShaderResourceGpuDescritorStartHandle());
 				descriptorHeapNo++;
 				//インデックスバッファを設定。
 				auto& ib = mesh->m_indexBufferArray[matNo];

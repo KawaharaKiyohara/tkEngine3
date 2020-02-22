@@ -75,7 +75,7 @@ namespace tkEngine {
 		PreRender();
 		
 		OnRender(goMgr);
-
+	
 		OnEndRender();
 	}
 }

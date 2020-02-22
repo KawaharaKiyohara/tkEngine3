@@ -3,6 +3,7 @@
 #include "tkRootSignatureDx12.h"
 #include "tkShaderDx12.h"
 #include "tkConstantBufferDx12.h"
+#include "tkDescriptorHeapDx12.h"
 
 namespace tkEngine {
 	class CSpriteDx12 : public ISprite {
@@ -49,6 +50,6 @@ namespace tkEngine {
 		};
 		SConstantBuffer m_constantBufferCPU;			//CPU側の定数バッファ。
 		CConstantBufferDx12 m_constantBufferGPU;		//GPU側の定数バッファ。
-		ComPtr< ID3D12DescriptorHeap> m_descriptorHeap;	//ディスクリプタヒープ。
+		CDescriptorHeapDx12 m_descriptorHeap;			//ディスクリプタヒープ。
 	};
 }

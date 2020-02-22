@@ -2,6 +2,7 @@
 
 
 namespace tkEngine {
+	class IShaderResourceDx12;
 	/// <summary>
 	/// ディスクリプタヒープ。
 	/// </summary>

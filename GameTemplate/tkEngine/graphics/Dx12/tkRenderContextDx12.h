@@ -168,6 +168,9 @@ namespace tkEngine {
 		{
 			m_descriptorHeaps[0] = descriptorHeap.Get();	//カリカリカリ
 			m_commandList->SetDescriptorHeaps(1, m_descriptorHeaps);
+			//ディスクリプタテーブルに登録する。
+			SetGraphicsRootDescriptorTable(0, descriptorHeap.GetConstantBufferGpuDescritorStartHandle());
+			SetGraphicsRootDescriptorTable(1, descriptorHeap.GetShaderResourceGpuDescritorStartHandle());
 		}
 		void SetGraphicsRootDescriptorTable(
 			UINT RootParameterIndex,

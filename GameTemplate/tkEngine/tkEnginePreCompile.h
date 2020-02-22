@@ -146,3 +146,6 @@ using namespace std;
 #include "tkEngine/graphics/tkLightManager.h"
 #include "tkEngine/graphics/tkDirectionalShadowMap.h"
 
+#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12
+#include "tkEngine/graphics/dx12/dx12Common.h"
+#endif //#if TK_GRAPHICS_API == TK_GRAPHICS_API_DIRECTX_12

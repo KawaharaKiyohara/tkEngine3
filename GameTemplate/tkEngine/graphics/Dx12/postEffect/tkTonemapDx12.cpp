@@ -219,10 +219,7 @@ namespace tkEngine {
 			m_cbCalcLuminance[curRtNo].Update(m_avSampleOffsets);
 			rc.SetPipelineState(m_calcLuminanceLogAvaragePipelineState);
 			//シェーダーリソースビューと定数バッファをセットする。
-			rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
-			rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
-			rc.SetGraphicsRootDescriptorTable(1, m_calcAvgDescriptorHeap[curRtNo].GetShaderResourceGpuDescritorStartHandle());
-			
+			rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);			
 			rc.DrawIndexedFast(4);
 			rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
 		}
@@ -234,12 +231,8 @@ namespace tkEngine {
 				rc.SetRenderTargetAndViewport(m_calcAvgRT[curRtNo]);
 				GetSampleOffsets_DownScale4x4(m_calcAvgRT[curRtNo].GetWidth(), m_calcAvgRT[curRtNo].GetHeight(), m_avSampleOffsets);
 				m_cbCalcLuminance[curRtNo].Update(&m_avSampleOffsets);
-				//シェーダーリソースビューと定数バッファをセットする。
+				//ディスクリプタヒープをセット。
 				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
-				rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
-				rc.SetGraphicsRootDescriptorTable(1, m_calcAvgDescriptorHeap[curRtNo].GetShaderResourceGpuDescritorStartHandle());
-
-			
 				rc.SetPipelineState(m_calsLuminanceAvaragePipelineState);
 				rc.DrawIndexedFast(4);
 				rc.WaitUntilFinishDrawingToRenderTarget(m_calcAvgRT[curRtNo]);
@@ -254,9 +247,7 @@ namespace tkEngine {
 			m_cbCalcLuminance[curRtNo].Update(&m_avSampleOffsets);
 			//シェーダーリソースビューと定数バッファをセットする。
 			rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
-			rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
-			rc.SetGraphicsRootDescriptorTable(1, m_calcAvgDescriptorHeap[curRtNo].GetShaderResourceGpuDescritorStartHandle());
-
+			
 			//パイプラインステートを設定。
 			rc.SetPipelineState(m_calsLuminanceExpAvaragePipelineState);
 			rc.DrawIndexedFast(4);
@@ -269,14 +260,10 @@ namespace tkEngine {
 				//シーンが切り替わって初回。
 				m_currentAvgRt = 1 ^ m_currentAvgRt;
 				rc.WaitUntilToPossibleSetRenderTarget(m_avgRT[m_currentAvgRt]);
-				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);
-			
-				rc.SetShaderResource(0, m_calcAvgRT[0].GetRenderTargetTexture());
-			
-				//パイプラインステートを設定する。
-				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
-				rc.SetGraphicsRootDescriptorTable(0, m_calcAvgDescriptorHeap[curRtNo].GetConstantBufferGpuDescritorStartHandle());
 
+				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);		
+				//ディスクリプヒープを設定する。
+				rc.SetDescriptorHeap(m_calcAvgDescriptorHeap[curRtNo]);
 				rc.DrawIndexedFast(4);
 				m_isFirstWhenChangeScene = false;
 			}
@@ -289,10 +276,7 @@ namespace tkEngine {
 				rc.SetRenderTargetAndViewport(m_avgRT[m_currentAvgRt]);
 
 				rc.SetDescriptorHeap(m_lightDarkAdaptation[m_currentAvgRt]);
-				rc.SetGraphicsRootDescriptorTable(0, m_lightDarkAdaptation[m_currentAvgRt].GetConstantBufferGpuDescritorStartHandle());
-				rc.SetGraphicsRootDescriptorTable(1, m_lightDarkAdaptation[m_currentAvgRt].GetShaderResourceGpuDescritorStartHandle());
-
-
+				
 				rc.SetPipelineState(m_psCalcAdaptedLuminancePipelineState);
 				rc.DrawIndexedFast(4);
 			}
@@ -318,8 +302,6 @@ namespace tkEngine {
 		rc12.SetRenderTargetAndViewport(ge12.GetMainRenderTarget());
 		
 		rc12.SetDescriptorHeap(m_finalCombineDS[m_currentAvgRt]);
-		rc12.SetGraphicsRootDescriptorTable(0, m_finalCombineDS[m_currentAvgRt].GetConstantBufferGpuDescritorStartHandle());
-		rc12.SetGraphicsRootDescriptorTable(1, m_finalCombineDS[m_currentAvgRt].GetShaderResourceGpuDescritorStartHandle());
 
 		rc12.SetPipelineState(m_finalPipelineState);
 		rc12.DrawIndexedFast(4);
