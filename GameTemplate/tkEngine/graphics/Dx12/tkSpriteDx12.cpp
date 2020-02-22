@@ -44,7 +44,6 @@ namespace tkEngine {
 
 	void CSpriteDx12::InitDescriptorHeap()
 	{
-		m_descriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_descriptorHeap.RegistConstantBuffer(0, m_constantBufferGPU);
 		auto& texture = m_texture->As<CTextureDx12 >();
 		m_descriptorHeap.RegistShaderResource(0, texture);

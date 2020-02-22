@@ -139,7 +139,6 @@ namespace tkEngine {
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		int curRtNo = NUM_CALC_AVG_RT - 1;
 		{
-			m_calcAvgDescriptorHeap[curRtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 			m_calcAvgDescriptorHeap[curRtNo].RegistConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
 			m_calcAvgDescriptorHeap[curRtNo].RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture()); (1, m_cbCalcLuminance[curRtNo]);
 			m_calcAvgDescriptorHeap[curRtNo].Commit();
@@ -147,43 +146,36 @@ namespace tkEngine {
 		curRtNo--;
 		{
 			while (curRtNo > 0) {
-				m_calcAvgDescriptorHeap[curRtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 				m_calcAvgDescriptorHeap[curRtNo].RegistConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
 				m_calcAvgDescriptorHeap[curRtNo].RegistShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture()); (1, m_cbCalcLuminance[curRtNo]);
 				m_calcAvgDescriptorHeap[curRtNo].Commit();
 				curRtNo--;
 			}
 		}
-		m_calcAvgDescriptorHeap[curRtNo].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_calcAvgDescriptorHeap[curRtNo].RegistConstantBuffer(1, m_cbCalcLuminance[curRtNo]);
 		m_calcAvgDescriptorHeap[curRtNo].RegistShaderResource(0, m_calcAvgRT[curRtNo + 1].GetRenderTargetTexture());
 		m_calcAvgDescriptorHeap[curRtNo].Commit();
 
 		//明暗順応。
-		m_lightDarkAdaptationFirstDS.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_lightDarkAdaptationFirstDS.RegistShaderResource(0, m_calcAvgRT[0].GetRenderTargetTexture());
 		m_lightDarkAdaptationFirstDS.Commit();
 
-		m_lightDarkAdaptation[0].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_lightDarkAdaptation[0].RegistConstantBuffer(0, m_cbTonemapCommon);
 		m_lightDarkAdaptation[0].RegistShaderResource(1, m_calcAvgRT[0].GetRenderTargetTexture());
 		m_lightDarkAdaptation[0].RegistShaderResource(2, m_avgRT[1].GetRenderTargetTexture()); //0のときは１
 		m_lightDarkAdaptation[0].Commit();
 
-		m_lightDarkAdaptation[1].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_lightDarkAdaptation[1].RegistConstantBuffer(0, m_cbTonemapCommon);
 		m_lightDarkAdaptation[1].RegistShaderResource(1, m_calcAvgRT[0].GetRenderTargetTexture());
 		m_lightDarkAdaptation[1].RegistShaderResource(2, m_avgRT[0].GetRenderTargetTexture()); //1のときは0
 		m_lightDarkAdaptation[1].Commit();
 
 		//最終合成用のディスクリプタヒープ。
-		m_finalCombineDS[0].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_finalCombineDS[0].RegistConstantBuffer(0, m_cbTonemapCommon);
 		m_finalCombineDS[0].RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
 		m_finalCombineDS[0].RegistShaderResource(1, m_avgRT[0].GetRenderTargetTexture());
 		m_finalCombineDS[0].Commit();
 
-		m_finalCombineDS[1].Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		m_finalCombineDS[1].RegistConstantBuffer(0, m_cbTonemapCommon);
 		m_finalCombineDS[1].RegistShaderResource(0, ge12.GetMainRenderTarget().GetRenderTargetTexture());
 		m_finalCombineDS[1].RegistShaderResource(1, m_avgRT[0].GetRenderTargetTexture());

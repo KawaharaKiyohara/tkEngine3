@@ -38,7 +38,6 @@ namespace tkEngine {
 		for (auto& mesh : m_meshs) {
 			for (int matNo = 0; matNo < mesh->m_materials.size(); matNo++) {
 				auto& descriptorHeap = m_descriptorHeap.at(descriptorHeapNo);
-				descriptorHeap.Init(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 				//ディスクリプタヒープにディスクリプタを登録していく。
 				descriptorHeap.RegistShaderResource(0, mesh->m_materials[matNo]->GetAlbedoMap());
 				descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());
