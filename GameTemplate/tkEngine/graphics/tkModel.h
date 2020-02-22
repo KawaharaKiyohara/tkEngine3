@@ -67,6 +67,14 @@ namespace tkEngine {
 		{
 			return m_world;
 		}
+		/// <summary>
+		/// tkmファイルを取得。
+		/// </summary>
+		/// <returns></returns>
+		const CTkmFile& GetTkmFile() const
+		{
+			return m_tkmFile;
+		}
 	private:
 		CMatrix m_world;			//ワールド行列。
 		CTkmFile m_tkmFile;			//tkmファイル。

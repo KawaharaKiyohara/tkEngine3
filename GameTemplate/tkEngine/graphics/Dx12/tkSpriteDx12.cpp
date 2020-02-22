@@ -35,7 +35,7 @@ namespace tkEngine {
 		rc12.SetIndexBuffer(m_indexBuffer);
 		//プリミティブトポロジーを設定する。
 		rc12.SetPrimitiveTopology(enPrimitiveTopology_TriangleStrip);
-
+		//ディスクリプタヒープの設定。
 		rc12.SetDescriptorHeap(m_descriptorHeap);
 	
 		//ドロー。
@@ -45,7 +45,7 @@ namespace tkEngine {
 	void CSpriteDx12::InitDescriptorHeap()
 	{
 		m_descriptorHeap.RegistConstantBuffer(0, m_constantBufferGPU);
-		auto& texture = m_texture->As<CTextureDx12 >();
+		auto& texture = m_texture->As<CTextureDx12>();
 		m_descriptorHeap.RegistShaderResource(0, texture);
 		m_descriptorHeap.Commit();
 	}
