@@ -8,6 +8,9 @@
 #include "tkBoxCollider.h"
 #include "tkSphereCollider.h"
 #include "tkCapsuleCollider.h"
+#include "tkMeshCollider.h"
+#include "tkEngine/graphics/tkModel.h"
+#include "tkEngine/prefab/tkModelRender.h"
 
 using namespace std;
 namespace tkEngine{
@@ -37,26 +40,26 @@ namespace tkEngine{
 		m_collider = move(sphereCollider);
 		CreateCommon(pos, rot);
 	}
-#if 0 //todo
-	void CPhysicsObjectBase::CreateMesh(CVector3 pos, CQuaternion rot, const CSkinModelData& skinModelData)
+
+	void CPhysicsObjectBase::CreateMesh(CVector3 pos, CQuaternion rot, const CTkmFile& tkmFile)
 	{
 		Release();
 		auto meshCollider = make_unique<CMeshCollider>();
-		meshCollider->CreateFromSkinModel(skinModelData, nullptr);
+		meshCollider->CreateFromTkmFile(tkmFile, nullptr);
 		m_collider = move(meshCollider);
 		CreateCommon(pos, rot);
 	}
-	void CPhysicsObjectBase::CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, prefab::CSkinModelRender* skinModelRender)
+	void CPhysicsObjectBase::CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, prefab::CModelRender* modelRender)
 	{
-		CreateMesh(pos, rot, scale, skinModelRender->GetSkinModel());
+		CreateMesh(pos, rot, scale, modelRender->GetModel());
 	}
-	void CPhysicsObjectBase::CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, const CSkinModel& skinModel)
+	void CPhysicsObjectBase::CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, const CModel& model)
 	{
 		Release();
 		CMatrix mScale;
 		mScale.MakeScaling(scale);
 		auto meshCollider = make_unique<CMeshCollider>();
-		meshCollider->CreateFromSkinModel(skinModel, &mScale);
+		meshCollider->CreateFromModel(model, &mScale);
 		m_collider = move(meshCollider);
 		CreateCommon(
 			pos,
@@ -64,5 +67,4 @@ namespace tkEngine{
 		);
 		
 	}
-#endif
 }

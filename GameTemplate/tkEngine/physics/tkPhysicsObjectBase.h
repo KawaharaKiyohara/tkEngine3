@@ -4,6 +4,8 @@
 #pragma once
 
 namespace tkEngine{
+	class CModel;
+	class CTkmFile;
 	/*!
 	 *@brief	物理オブジェクトのベースクラス。
 	 *@detail
@@ -58,17 +60,16 @@ namespace tkEngine{
 		*@param[in]	radius		球体の半径。
 		*/
 		void CreateSphere(CVector3 pos, CQuaternion rot, float radius);
-#if 0 //todo
+
 		/*!
 		* @brief	メッシュ形状のゴーストオブジェクトを作成。
-		*@param[in]	pos					座標。
-		*@param[in]	rot					回転。
-		*@param[in]	skinModelData		スキンモデルデータ。
+		*@param[in]	pos			座標。
+		*@param[in]	rot			回転。
+		*@param[in]	tkmFile		tkmファイル。
 		*/
-		void CreateMesh(CVector3 pos, CQuaternion rot, const CSkinModelData& skinModelData);
-		void CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, const CSkinModel& skinModel);
-		void CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, prefab::CSkinModelRender* skinModelRender);
-#endif
+		void CreateMesh(CVector3 pos, CQuaternion rot, const CTkmFile& tkmFile);
+		void CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, const CModel& model);
+		void CreateMesh(CVector3 pos, CQuaternion rot, CVector3 scale, prefab::CModelRender* modelRender);
 	protected:
 		std::unique_ptr<ICollider> m_collider;	//!<コライダー。
 	};
