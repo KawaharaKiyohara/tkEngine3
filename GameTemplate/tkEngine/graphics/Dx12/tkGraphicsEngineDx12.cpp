@@ -413,6 +413,8 @@ namespace tkEngine {
 	}
 	void CGraphicsEngineDx12::OnBeginPreRender()
 	{
+		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
 	}
 	void CGraphicsEngineDx12::OnEndPreRender()
 	{
