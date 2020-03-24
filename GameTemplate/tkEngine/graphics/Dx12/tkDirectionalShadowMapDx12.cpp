@@ -11,8 +11,12 @@ namespace tkEngine {
 		for (int i = 0; i < NUN_SHADOW_MAP; i++) {
 			//レンダリングターゲットとして使用可能になるまで待つ。
 			rcDx12.WaitUntilToPossibleSetRenderTarget(m_shadowMaps[i]);
+			rcDx12.SetRenderTarget(m_shadowMaps[i]);
+			const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+			rcDx12.ClearRenderTargetView(m_shadowMaps[i], clearColor);
+			rcDx12.ClearDepthStencilView(m_shadowMaps[i], 1.0f);
 			for (auto& caster : m_shadowCasters) {
-				caster->Draw(rc, m_LVPMatrix[i], g_matIdentity);
+				caster->Draw(rcDx12, m_LVPMatrix[i], g_matIdentity);
 			}
 		}
 	}

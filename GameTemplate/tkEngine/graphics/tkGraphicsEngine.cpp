@@ -69,13 +69,14 @@ namespace tkEngine {
 	}
 	void IGraphicsEngine::Render(CGameObjectManager* goMgr)
 	{
-		OnBeginRender();
-
 		//事前レンダリング。
 		PreRender();
-		
+
+		//レンダリング
+		OnBeginRender();
+
 		OnRender(goMgr);
-	
+
 		OnEndRender();
 	}
 }
