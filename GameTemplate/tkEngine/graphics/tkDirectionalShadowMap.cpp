@@ -53,10 +53,12 @@ namespace tkEngine {
 		lightViewRot.m[2][2] = lightViewForward.z;
 		lightViewRot.m[2][3] = 0.0f;
 
-		
-
 		//ライトビューの高さを計算。
 		float lightHeight = m_lightHeight;
+
+		m_shadowAreas[0] = m_lightHeight * 0.8f;
+		m_shadowAreas[1] = m_lightHeight * 1.6f;
+		m_shadowAreas[2] = m_lightHeight * 3.6f;
 
 		SShadowCb shadowCB;
 		float nearPlaneZ = 0.0f;

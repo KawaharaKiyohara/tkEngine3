@@ -16,6 +16,8 @@ namespace tkEngine {
 		void Init(const SShadowRenderConfig& cfg)
 		{
 			m_isEnable = cfg.isEnable;
+			m_lightHeight = cfg.lightHeight;
+
 			OnInit(cfg);
 		}
 		/// <summary>
@@ -131,7 +133,7 @@ namespace tkEngine {
 		SShadowCb m_shadowCbEntity;
 	private:
 		
-		CVector3 m_lightDirection;						//ライトの方向。
+		CVector3 m_lightDirection = CVector3::Down;						//ライトの方向。
 		float m_shadowAreas[NUM_SHADOW_MAP] = { 0.0f };	//影が落ちる範囲。
 		float m_lightHeight = 100.0f;					//ライトの高さ。
 		bool m_isEnable = false;						//シャドウマップが有効かどうか。
