@@ -8,13 +8,23 @@ namespace tkEngine {
 	{
 		auto& rcDx12 = rc.As<CRenderContextDx12>();
 
+		D3D12_RECT scissorRect;
+		scissorRect.left = 0;
+		scissorRect.top = 0;
+
 		for (int i = 0; i < NUN_SHADOW_MAP; i++) {
+			scissorRect.right = m_shadowMaps[i].GetWidth();
+			scissorRect.bottom = m_shadowMaps[i].GetHeight();
+			rcDx12.SetScissorRect(scissorRect);
+
 			//レンダリングターゲットとして使用可能になるまで待つ。
 			rcDx12.WaitUntilToPossibleSetRenderTarget(m_shadowMaps[i]);
-			rcDx12.SetRenderTarget(m_shadowMaps[i]);
-			const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
+			rcDx12.SetRenderTargetAndViewport(m_shadowMaps[i]);
+			float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f }; 
 			rcDx12.ClearRenderTargetView(m_shadowMaps[i], clearColor);
-			rcDx12.ClearDepthStencilView(m_shadowMaps[i], 1.0f);
+			rcDx12.ClearDepthStencilView(m_shadowMaps[i],1.0);
+
 			for (auto& caster : m_shadowCasters) {
 				caster->Draw(rcDx12, m_LVPMatrix[i], g_matIdentity);
 			}
@@ -32,6 +42,7 @@ namespace tkEngine {
 		if (cfg.isEnable == false) {
 			return;
 		}
+
 		//シャドウマップの解像度
 		int wh[NUN_SHADOW_MAP][2] = {
 			{ cfg.shadowMapWidth, cfg.shadowMapHeight},				//近距離
@@ -55,5 +66,6 @@ namespace tkEngine {
 
 		//定数バッファを初期化。
 		m_shadowCb.Init(sizeof(m_shadowCbEntity), nullptr);
+
 	}
 }

@@ -53,6 +53,15 @@ namespace tkEngine {
 		{
 			return m_commandQueue;
 		}
+
+		/// <summary>
+		/// コマンドリストを取得。
+		/// </summary>
+		/// <returns></returns>
+		ComPtr<ID3D12GraphicsCommandList> GetCommandList() const
+		{
+			return m_commandList;
+		}
 		/// <summary>
 		/// バックバッファの番号を取得。
 		/// </summary>

@@ -68,6 +68,14 @@ namespace tkEngine {
 	{
 		auto& geDx12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto backBufferIndex = geDx12.GetBackBufferIndex();
+
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		D3D12_SUBRESOURCE_DATA bufferData{ &data,sizeof(data),sizeof(data) };
+		UpdateSubresources(ge12.GetCommandList().Get(),
+			m_constantBuffer[0].Get(),
+			m_constantBuffer[0].Get(),
+			0, 0, 2, &bufferData);
+
 		memcpy(m_constBufferCPU[backBufferIndex], data, m_size);
 	}
 }

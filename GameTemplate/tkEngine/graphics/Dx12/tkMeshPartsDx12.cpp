@@ -153,6 +153,15 @@ namespace tkEngine {
 		cb.mProj = mProj;
 
 		m_commonConstantBuffer.Update(&cb);
+		
+		auto pCmdList = ge12.GetCommandList();
+
+		//pCmdList->CopyBufferRegion(
+		//	m_commonConstantBuffer.GetResource(0).Get(), 
+		//	0,
+		//	m_commonConstantBuffer.GetResource(1).Get(),
+		//	0,
+		//	sizeof(SConstantBuffer));
 
 		if (m_boneMatricesStructureBuffer.IsInited()) {
 			//ボーン行列を更新する。

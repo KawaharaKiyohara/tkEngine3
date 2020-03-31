@@ -84,9 +84,11 @@ bool Game::Start()
 
 #endif
 #ifdef USE_WATANABE
-	m_level.Init("level/tkl3.0.tkl", [&](LevelObjectData& objData) {
-		return false;
-	});
+	m_modelRender[enRobo] = NewGO<prefab::CModelRender>(0);
+	m_modelRender[enRobo]->Init(
+		"modelData/robo.tkm");
+	m_modelRender[enRobo]->SetScale(12.0f, 12.0f, 12.0f);
+	m_modelRender[enRobo]->Move({ 200.0f, 0.0f, 0.0f });
 #endif
 	return true;
 }

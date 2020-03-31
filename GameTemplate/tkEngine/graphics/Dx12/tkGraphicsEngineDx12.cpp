@@ -351,19 +351,20 @@ namespace tkEngine {
 		m_commandAllocator->Reset();
 		//レンダリング子テキストもリセット。
 		rcDx12.Reset(m_commandAllocator, m_pipelineState);
-		//ビューポートを設定。
-		rcDx12.SetViewport(m_viewport);
-		//シザリング矩形を設定。
-		rcDx12.SetScissorRect(m_scissorRect);
 
-		//レンダリングターゲットをメインにする。
-		//レンダリングターゲットとして利用可能になるまで待つ。
-		rcDx12.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
-		//レンダリングターゲットを設定。
-		rcDx12.SetRenderTarget(m_mainRenderTarget);
-		const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-		rcDx12.ClearRenderTargetView(m_mainRenderTarget, clearColor);
-		rcDx12.ClearDepthStencilView(m_mainRenderTarget, 1.0f);
+		////ビューポートを設定。
+		//rcDx12.SetViewport(m_viewport);
+		////シザリング矩形を設定。
+		//rcDx12.SetScissorRect(m_scissorRect);
+
+		////レンダリングターゲットをメインにする。
+		////レンダリングターゲットとして利用可能になるまで待つ。
+		//rcDx12.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+		////レンダリングターゲットを設定。
+		//rcDx12.SetRenderTarget(m_mainRenderTarget);
+		//const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+		//rcDx12.ClearRenderTargetView(m_mainRenderTarget, clearColor);
+		//rcDx12.ClearDepthStencilView(m_mainRenderTarget, 1.0f);
 	}
 	void CGraphicsEngineDx12::OnEndRender()
 	{
@@ -425,6 +426,20 @@ namespace tkEngine {
 	void CGraphicsEngineDx12::OnRender(CGameObjectManager* goMgr)
 	{
 		auto& rcDx12 = m_renderContext->As<CRenderContextDx12>();
+
+		//レンダリングターゲットをメインにする。
+		//レンダリングターゲットとして利用可能になるまで待つ。
+		rcDx12.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+		//レンダリングターゲットを設定。
+		rcDx12.SetRenderTarget(m_mainRenderTarget);
+		const float clearColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+		rcDx12.ClearRenderTargetView(m_mainRenderTarget, clearColor);
+		rcDx12.ClearDepthStencilView(m_mainRenderTarget, 1.0f);
+
+		//ビューポートを設定。
+		rcDx12.SetViewport(m_viewport);
+		//シザリング矩形を設定。
+		rcDx12.SetScissorRect(m_scissorRect);
 
 		//フォワードレンダリングパス。
 		rcDx12.SetRootSignature(CPipelineStatesDx12::m_modelDrawRootSignature);
