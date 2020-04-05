@@ -8,7 +8,7 @@ namespace tkEngine {
 		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
 		auto d3dDevice = ge12.GetD3DDevice();
 		auto hr = d3dDevice->CreateCommittedResource(
-			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 			D3D12_HEAP_FLAG_NONE,
 			&CD3DX12_RESOURCE_DESC::Buffer(size),
 			D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -23,11 +23,21 @@ namespace tkEngine {
 	}
 	void CVertexBufferDx12::Copy(void* srcVertices)
 	{
-		UINT8* pVertexDataBegin;
-		CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
-		m_vertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
-		memcpy(pVertexDataBegin, srcVertices, m_vertexBufferView.SizeInBytes);
-		m_vertexBuffer->Unmap(0, nullptr);
+		auto& ge12 = g_graphicsEngine->As<CGraphicsEngineDx12>();
+		auto d3dDevice = ge12.GetD3DDevice();
+		DirectX::ResourceUploadBatch re(d3dDevice.Get());
+		re.Begin();
+		D3D12_SUBRESOURCE_DATA subResourceData;
+		subResourceData.pData = srcVertices;
+		subResourceData.RowPitch = m_vertexBufferView.SizeInBytes;
+		subResourceData.SlicePitch = 1;
+		re.Upload(
+			m_vertexBuffer.Get(),
+			0,
+			&subResourceData,
+			1);
+
+		re.End(ge12.GetCommandQueue().Get());
 
 	}
 }
