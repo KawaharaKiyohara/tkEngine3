@@ -43,11 +43,18 @@ bool Game::Start()
 	g_lightManager->SetAmbientLight({ 0.4f, 0.4f, 0.4f });
 #ifdef USE_KIYOHARA
 	m_bgModelRender = NewGO<prefab::CModelRender>(0);
-	m_bgModelRender->Init("modelData/bg/bg.tkm");
+	m_bgModelRender->InitAsync("modelData/bg/bg.tkm");
 	m_bgModelRender->SetScale({ 2.0f, 2.0f, 2.0f });
+	//背景から静的物理オブジェクトを作成する。
+	/*m_phyStaticObject.CreateMesh(
+		g_vec3Zero, 
+		g_quatIdentity, 
+		g_vec3One, 
+		m_bgModelRender
+	);*/
 
 	m_modelRender[enRobo] = NewGO<prefab::CModelRender>(0);
-	m_modelRender[enRobo]->Init(
+	m_modelRender[enRobo]->InitAsync(
 		"modelData/robo.tkm");
 	m_modelRender[enRobo]->SetScale(12.0f, 12.0f, 12.0f);
 	m_modelRender[enRobo]->Move({ 200.0f, 0.0f, 0.0f });
@@ -58,7 +65,7 @@ bool Game::Start()
 		"animData/unityChan/walk.tka",
 	};
 	m_modelRender[enUnity] = NewGO<prefab::CModelRender>(0);
-	m_modelRender[enUnity]->Init(
+	m_modelRender[enUnity]->InitAsync(
 		"modelData/unityChan.tkm",
 		tkaFilePaths
 	);
@@ -74,7 +81,7 @@ bool Game::Start()
 		"animData/thief/walk.tka",
 	};
 	m_modelRender[enNinja] = NewGO<prefab::CModelRender>(0);
-	m_modelRender[enNinja]->Init(
+	m_modelRender[enNinja]->InitAsync(
 		"modelData/Thethief_H.tkm",
 		ninjaTkaFilePaths
 	);

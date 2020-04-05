@@ -6,6 +6,7 @@
 #include "tkEngine/level/tkLevel.h"
 #include "tkEngine/level/tkMapChip.h"
 #include "tkEngine/level/tkMapChipRender.h"
+#include "tkEngine/physics/tkPhysicsStaticObject.h"
 
 class Game : public IGameObject
 {
@@ -38,5 +39,6 @@ private:
 	//スプライト作成テスト。
 	CSpriteDx12 m_sprite;
 	CLevel m_level;
+	CPhysicsStaticObject m_phyStaticObject;
 };
 

@@ -9,7 +9,7 @@
 
 namespace tkEngine{
 	namespace prefab {
-		class CSkinModelRender;
+		class CModelRender;
 	}
 	class CSkeleton;
 	using AnimationEventListener = std::function<void(const wchar_t* clipName, const wchar_t* eventName)>;

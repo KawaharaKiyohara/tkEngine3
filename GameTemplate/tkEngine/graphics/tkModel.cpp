@@ -29,11 +29,9 @@ namespace tkEngine {
 	}
 	void CModel::Update(CVector3 pos, CQuaternion rot, CVector3 scale)
 	{
+		//@todo 3dsMaxからzupの空間で出力されているため、yupの空間に変換するためのバイアス。
 		CMatrix mBias = CMatrix::Identity;
-	//todo	if (enUpdateAxis == enFbxUpAxisZ) {
-			//Z-up
-			mBias.MakeRotationX(CMath::PI * -0.5f);
-	//	}
+		mBias.MakeRotationX(CMath::PI * -0.5f);
 		CMatrix mTrans, mRot, mScale;
 		mTrans.MakeTranslation(pos);
 		mRot.MakeRotationFromQuaternion(rot);

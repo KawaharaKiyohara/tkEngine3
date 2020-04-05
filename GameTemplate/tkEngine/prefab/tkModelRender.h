@@ -14,7 +14,7 @@ namespace tkEngine {
 		class CModelRender : public IGameObject {
 		public:
 			/// <summary>
-			/// 初期化。
+			/// 同期の初期化処理。
 			/// </summary>
 			/// <remarks>
 			/// templateの黒魔術を使って、配列のサイズを調べられるようにしてます。
@@ -26,6 +26,32 @@ namespace tkEngine {
 			void Init(const char* tkmFilePath, TKA_FILE_ARRAY(&tkaFilePaths)[NUM_TKA_FILE])
 			{
 				m_tkmFilePath = tkmFilePath;
+				m_model.LoadTkmFile(tkmFilePath);
+				for (auto i = 0; i < NUM_TKA_FILE; i++) {
+					m_tkaFilePaths.push_back(tkaFilePaths[i]);
+				}
+				
+				//@todo InitCommon(tkaFilePaths);
+			}
+			void Init(const char* tkmFilePath)
+			{
+				m_tkmFilePath = tkmFilePath;
+				m_model.LoadTkmFile(tkmFilePath);
+			//@todo	InitCommon(tkaFilePaths);
+			}
+			/// <summary>
+			/// 非同期の初期化処理。
+			/// </summary>
+			/// <remarks>
+			/// templateの黒魔術を使って、配列のサイズを調べられるようにしてます。
+			/// 危険、マネするな。
+			/// </remarks>
+			/// <param name="tkmFilePath">tkmファイルのパス</param>
+			/// <param name="tkaFilePaths">tkaファイルのパスの配列</param>
+			template<typename TKA_FILE_ARRAY, std::size_t NUM_TKA_FILE>
+			void InitAsync(const char* tkmFilePath, TKA_FILE_ARRAY(&tkaFilePaths)[NUM_TKA_FILE])
+			{
+				m_tkmFilePath = tkmFilePath;
 				m_model.LoadTkmFileAsync(tkmFilePath);
 				for (auto i = 0; i < NUM_TKA_FILE; i++) {
 					m_tkaFilePaths.push_back(tkaFilePaths[i]);
@@ -33,7 +59,7 @@ namespace tkEngine {
 				//初期化ステータスをモデル初期化待ちにする。
 				m_initStatus = enInitStatus_WaitInitModel;
 			}
-			void Init(const char* tkmFilePath)
+			void InitAsync(const char* tkmFilePath)
 			{
 				m_tkmFilePath = tkmFilePath;
 				m_model.LoadTkmFileAsync(tkmFilePath);
@@ -157,6 +183,20 @@ namespace tkEngine {
 			{
 				return m_animation.CalcFootstepDeltaValueInWorldSpace(m_rotation, m_scale);
 			}
+			/// <summary>
+			/// モデルを取得。
+			/// </summary>
+			/// <returns></returns>
+			CModel& GetModel()
+			{
+				return m_model;
+			}
+		private:
+			/// <summary>
+			/// 同期初期化処理の共通処理。
+			/// </summary>
+			/// <param name="tkaFile">tkaファイル</param>
+			void InitCommon(CTkaFile* tkaFile);
 		private:
 			/// <summary>
 			/// 初期化ステータス。
