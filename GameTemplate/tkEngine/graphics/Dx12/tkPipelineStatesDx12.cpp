@@ -81,6 +81,7 @@ namespace tkEngine {
 			psoDesc.VS = CD3DX12_SHADER_BYTECODE(CPipelineStatesDx12::m_skinModelVS.GetCompiledBlob().Get());
 			psoDesc.PS = CD3DX12_SHADER_BYTECODE(CPipelineStatesDx12::m_skinModelPS.GetCompiledBlob().Get());
 			psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
 			psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 			psoDesc.DepthStencilState.DepthEnable = TRUE;
 			psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;

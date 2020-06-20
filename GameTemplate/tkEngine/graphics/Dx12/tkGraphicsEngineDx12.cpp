@@ -158,35 +158,62 @@ namespace tkEngine {
 	bool CGraphicsEngineDx12::CreateD3DDevice(ComPtr<IDXGIFactory4> dxgiFactory)
 	{
 		D3D_FEATURE_LEVEL fuatureLevel[] = {
-			D3D_FEATURE_LEVEL_12_1,
-			D3D_FEATURE_LEVEL_12_0
+			D3D_FEATURE_LEVEL_12_1,	//Direct3D 12.1の機能を使う。
+			D3D_FEATURE_LEVEL_12_0	//Direct3D 12.0の機能を使う。
 		};
-		IDXGIAdapter* adapter = nullptr;
-		for (int i = 0; dxgiFactory->EnumAdapters(i, &adapter) != DXGI_ERROR_NOT_FOUND; i++) {
+
+		IDXGIAdapter* adapterTmp = nullptr;
+		IDXGIAdapter* adapterVender[Num_GPUVender] = { nullptr };	//各ベンダーのアダプター。
+		IDXGIAdapter* adapterMaxVideoMemory = nullptr;				//最大ビデオメモリのアダプタ。
+		IDXGIAdapter* useAdapter = nullptr;							//最終的に使用するアダプタ。
+		SIZE_T videoMemorySize = 0;
+		for (int i = 0; dxgiFactory->EnumAdapters(i, &adapterTmp) != DXGI_ERROR_NOT_FOUND; i++) {
 			DXGI_ADAPTER_DESC desc;
-			adapter->GetDesc(&desc);
-			if (desc.DedicatedVideoMemory < 1 * 1024 * 1024 * 1024) {
-				//ビデオメモリが1GB以下はムリ。
-				continue;
+			adapterTmp->GetDesc(&desc);
+			
+			if (desc.DedicatedVideoMemory > videoMemorySize) {
+				//こちらのビデオメモリの方が多いので、こちらを使う。
+				adapterMaxVideoMemory = adapterTmp;
+				videoMemorySize = desc.DedicatedVideoMemory;
 			}
-			for (auto fuatureLevel : fuatureLevel) {
-				
-				auto hr = D3D12CreateDevice(
-					adapter,
-					fuatureLevel,
-					IID_PPV_ARGS(&m_d3dDevice)
-				);
-				if (SUCCEEDED(hr)) {
-					//D3Dデバイスの作成に成功した。
-					break;
-				}
+			if (wcsstr(desc.Description, L"NVIDIA") != nullptr) {
+				//NVIDIA製
+				adapterVender[GPU_VenderNvidia] = adapterTmp;
 			}
-			if (m_d3dDevice != nullptr) {
-				//D3Dデバイスの作成に失敗した。
-				break;;
+			else if (wcsstr(desc.Description, L"AMD") != nullptr) {
+				//AMD製
+				adapterVender[GPU_VenderAMD] = adapterTmp;
+			}
+			else if (wcsstr(desc.Description, L"Intel") != nullptr) {
+				//Intel製
+				adapterVender[GPU_VenderIntel] = adapterTmp;
 			}
 		}
+		//使用するアダプターを決める。
+		if (adapterVender[GPU_VenderNvidia] != nullptr) {
+			//NVIDIA製が最優先
+			useAdapter = adapterVender[GPU_VenderNvidia];
+		}
+		else if (adapterVender[GPU_VenderAMD] != nullptr) {
+			//次はAMDが優先。
+			useAdapter = adapterVender[GPU_VenderAMD];
+		}
+		else{
+			//NVIDIAとAMDのGPUがなければビデオメモリが一番多いやつを使う。
+			useAdapter = adapterMaxVideoMemory;
+		}
+		for (auto fuatureLevel : fuatureLevel) {
 
+			auto hr = D3D12CreateDevice(
+				useAdapter,
+				fuatureLevel,
+				IID_PPV_ARGS(&m_d3dDevice)
+			);
+			if (SUCCEEDED(hr)) {
+				//D3Dデバイスの作成に成功した。
+				break;
+			}
+		}
 		return m_d3dDevice != nullptr;
 	}
 	bool CGraphicsEngineDx12::CreateCommandQueue()

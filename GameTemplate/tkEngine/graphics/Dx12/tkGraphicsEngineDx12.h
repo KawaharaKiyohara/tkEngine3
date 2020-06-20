@@ -156,6 +156,13 @@ namespace tkEngine {
 		/// </summary>
 		void WaitDraw();
 	private:
+		//GPUベンダー定義。
+		enum GPU_Vender {
+			GPU_VenderNvidia,	//NVIDIA
+			GPU_VenderAMD,		//Intel
+			GPU_VenderIntel,	//AMD
+			Num_GPUVender,
+		};
 		D3D12_VIEWPORT						m_viewport;				//ビューポート。
 		D3D12_RECT							m_scissorRect;			//シザリング矩形。
 		ComPtr<ID3D12Device>				m_d3dDevice;			//D3Dデバイス。
