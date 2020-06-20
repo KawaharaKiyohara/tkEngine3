@@ -291,9 +291,9 @@ private
 	--テクスチャをDDSファイルにコンバートしていく。
 	fn ConvertTextureToDDS srcTexFilePath =(
 		if srcTexFilePath != "" then(
-			currentDir = pathConfig.GetDir(#scripts)
+			currentDir = pathConfig.GetDir(#userScripts)
 			command = currentDir+"\mk.bat"
-			arg = srcTexFilePath + " " + outputFolder
+			arg = "\"" + srcTexFilePath + "\" \"" + outputFolder + "\""
 			ShellLaunch command arg
 		)
 	),
